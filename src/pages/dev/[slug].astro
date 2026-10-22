@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+import JsonFormatter from '../../components/dev/JsonFormatter';
+import TokenEstimator from '../../components/dev/TokenEstimator';
+import Base64Tool from '../../components/dev/Base64Tool';
+
+export async function getStaticPaths() {
+  const tools = await getCollection('tools', ({ data }) => !data.draft);
+  return tools.map((t) => ({ params: { slug: t.id }, props: { tool: t } }));
+}
+const { tool } = Astro.props;
+const { Content } = await render(tool);
+const c = tool.data.component;
+---
+<Base title={tool.data.title} description={tool.data.summary} side="work">
+  <h1 class="text-3xl font-bold">{tool.data.title}</h1>
+  <p class="muted mt-1 mb-6">{tool.data.summary}</p>
+  {c === 'JsonFormatter' && <JsonFormatter client:visible />}
+  {c === 'TokenEstimator' && <TokenEstimator client:visible />}
+  {c === 'Base64Tool' && <Base64Tool client:visible />}
+  {!['JsonFormatter', 'TokenEstimator', 'Base64Tool'].includes(c) && <p class="card p-4">Componente no encontrado: {c}</p>}
+  <section class="prose-basic mt-10 max-w-3xl">
+    <Content />
+  </section>
+</Base>

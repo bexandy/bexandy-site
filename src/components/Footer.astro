@@ -1,0 +1,15 @@
+---
+import { site } from '../site';
+const year = new Date().getFullYear();
+---
+<footer class="no-print border-t mt-12" style="border-color: var(--border)">
+  <div class="max-w-5xl mx-auto px-4 py-6 text-sm muted flex flex-wrap gap-4 justify-between">
+    <span>© {year} {site.name}</span>
+    <span class="flex gap-4">
+      <a href={site.social.github} rel="me">GitHub</a>
+      <a href={site.social.linkedin} rel="me">LinkedIn</a>
+      <a href={site.social.youtube} rel="me">YouTube</a>
+      <a href={site.social.instagram} rel="me">Instagram</a>
+    </span>
+  </div>
+</footer>

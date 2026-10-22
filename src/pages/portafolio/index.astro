@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import Card from '../../components/Card.astro';
+import { getCollection } from 'astro:content';
+const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<Base title="Portafolio" side="work">
+  <h1 class="text-3xl font-bold">Portafolio</h1>
+  <p class="muted mt-2">Proyectos de trabajo y proyectos personales. Los de baile también cuentan.</p>
+  <div class="grid md:grid-cols-2 gap-4 mt-8">
+    {projects.map((p) => (
+      <Card href={`/portafolio/${p.id}`} title={p.data.title} subtitle={p.data.summary} tags={p.data.stack} side={p.data.side} />
+    ))}
+  </div>
+</Base>

@@ -1,0 +1,56 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+export async function getStaticPaths() {
+  const videos = await getCollection('videos', ({ data }) => !data.draft);
+  return videos.map((v) => ({ params: { slug: v.id }, props: { video: v } }));
+}
+const { video } = Astro.props;
+const { Content } = await render(video);
+const d = video.data;
+const mmss = (t: number) => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
+---
+<Base title={d.title} side="dance" description={`Clase de salsa ${d.level} (${d.style}): ${d.figures.join(', ')}`}>
+  <article class="max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold">{d.title}</h1>
+    <p class="muted mt-1">{d.level} · {d.style}{d.song && ` · ${d.song}`}{d.bpm && ` · ${d.bpm} bpm`} · {d.date.toLocaleDateString('es-CL')}</p>
+
+    <div class="aspect-video mt-6 rounded-xl overflow-hidden card">
+      <iframe
+        id="yt"
+        class="w-full h-full"
+        src={`https://www.youtube-nocookie.com/embed/${d.youtubeId}?enablejsapi=1`}
+        title={d.title}
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+
+    {d.chapters.length > 0 && (
+      <section class="mt-6">
+        <h2 class="font-bold mb-2">Capítulos</h2>
+        <ol class="grid sm:grid-cols-2 gap-1 text-sm">
+          {d.chapters.map((c) => (
+            <li><a href={`https://www.youtube.com/watch?v=${d.youtubeId}&t=${c.t}s`} data-t={c.t} class="chapter underline">{mmss(c.t)} · {c.label}</a></li>
+          ))}
+        </ol>
+      </section>
+    )}
+
+    <section class="prose-basic mt-8"><Content /></section>
+  </article>
+</Base>
+<script>
+  // Salta dentro del embed usando la API de IFrame de YouTube si está disponible; si no, sigue el enlace.
+  const iframe = document.getElementById('yt') as HTMLIFrameElement | null;
+  document.querySelectorAll<HTMLAnchorElement>('a.chapter').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      if (!iframe?.contentWindow) return;
+      e.preventDefault();
+      const t = Number(a.dataset.t);
+      iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'seekTo', args: [t, true] }), '*');
+      iframe.contentWindow.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), '*');
+    });
+  });
+</script>

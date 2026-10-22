@@ -1,0 +1,16 @@
+---
+interface Props { href?: string; title: string; subtitle?: string; tags?: string[]; side?: 'work' | 'dance' }
+const { href, title, subtitle, tags = [], side } = Astro.props;
+const Tag = href ? 'a' : 'div';
+const accent = side === 'dance' ? 'var(--color-dance)' : 'var(--color-work)';
+---
+<Tag href={href} class="card block p-5 hover:shadow-md transition-shadow" style={`border-left: 4px solid ${accent}`}>
+  <h3 class="font-semibold text-lg">{title}</h3>
+  {subtitle && <p class="muted text-sm mt-1">{subtitle}</p>}
+  <slot />
+  {tags.length > 0 && (
+    <ul class="flex flex-wrap gap-1.5 mt-3">
+      {tags.map((t) => <li class="text-xs px-2 py-0.5 rounded-full" style="background: var(--border)">{t}</li>)}
+    </ul>
+  )}
+</Tag>

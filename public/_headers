@@ -1,0 +1,12 @@
+# Aislamiento de origen solo para el reproductor: habilita SharedArrayBuffer (ONNX multihilo).
+# No aplicar al resto del sitio porque rompe los embebidos de YouTube.
+/salsa/player
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+/salsa/player/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Bexandy José Rodríguez Fernández",
+    "label": "Ingeniero Electrónico en Computación · Senior Backend Developer (PHP / Symfony)",
+    "email": "bexandy@gmail.com",
+    "url": "https://example.com",
+    "summary": "Ingeniero Electrónico en Computación con más de 15 años de experiencia en desarrollo de software, arquitectura web e infraestructura de redes. Especializado en backend con PHP (Symfony, Laravel), y con experiencia en Python, Node.js, Angular y Java. He construido e integrado sistemas críticos para el sector bancario y corporativo cubriendo todo el ciclo de vida del software, con foco en soluciones escalables, robustas y de alto rendimiento.",
+    "location": { "city": "Santiago", "region": "Región Metropolitana", "countryCode": "CL" },
+    "profiles": [
+      { "network": "LinkedIn", "username": "bexandyrodriguez", "url": "https://www.linkedin.com/in/bexandyrodriguez/" },
+      { "network": "GitHub", "username": "desarrollo-bexandy-rodriguez", "url": "https://github.com/desarrollo-bexandy-rodriguez" }
+    ]
+  },
+  "work": [
+    {
+      "name": "Agencia Sur SpA",
+      "location": "Santiago, Chile",
+      "position": "Desarrollador Web / Senior Backend Developer",
+      "startDate": "2019-05-01",
+      "summary": "Diseño, desarrollo y mantenimiento evolutivo de soluciones críticas para la banca con Symfony 5.x/6.x, PHP y bases de datos relacionales.",
+      "highlights": [
+        "Sistema de Requerimientos Corporativo de BancoEstado: gestión interna de solicitudes y mejora de la eficiencia operativa de las áreas usuarias.",
+        "Sistema de Compras de BancoEstado Express: estabilidad, seguridad en las transacciones y escalabilidad de la plataforma.",
+        "Buenas prácticas de arquitectura, POO y estándares de seguridad exigidos por la industria financiera."
+      ]
+    },
+    {
+      "name": "Inversiones Bexandy Rodríguez, F.C.",
+      "position": "Consultor y desarrollador web freelance",
+      "startDate": "2015-01-01",
+      "endDate": "2018-01-01",
+      "summary": "Firma personal de consultoría en desarrollo web y soluciones digitales a medida para clientes e instituciones.",
+      "highlights": [
+        "Temas y plugins personalizados para WordPress desde cero con Genesis Framework, Gantry y Underscores.",
+        "Optimización de rendimiento (SEO/velocidad), mantenimiento y soporte post-entrega."
+      ]
+    },
+    {
+      "name": "Instituto de Vialidad del Estado Zulia",
+      "position": "Jefe del Departamento de Informática",
+      "startDate": "2013-01-01",
+      "endDate": "2015-01-01",
+      "summary": "Diseño, ejecución y supervisión del despliegue completo de la infraestructura de telecomunicaciones e informática de la institución.",
+      "highlights": [
+        "Red local con cableado horizontal CAT6 (200 puntos), 2 cuartos de comunicaciones y backbone de fibra óptica.",
+        "Entorno de servidores (1 físico y 4 virtuales) para más de 80 usuarios."
+      ]
+    },
+    {
+      "name": "Telefónica Movistar Venezuela",
+      "position": "Técnico en Radiobases y Transmisión",
+      "startDate": "2007-01-01",
+      "endDate": "2011-01-01",
+      "summary": "Operación y mantenimiento de la red GSM, CDMA y de transmisión de alta disponibilidad.",
+      "highlights": [
+        "Radiobases BTS GSM Nokia (UltraSite/MetroSite), ModCell Lucent CDMA y radioenlaces Ericsson MiniLink/TN, Alcatel, Huawei RTN 650/950 y Nera.",
+        "Cumplimiento de SLA, resolución de incidencias y mantenimientos preventivos y correctivos en sitios clave."
+      ]
+    },
+    {
+      "name": "Fundación para el Desarrollo del Servicio Eléctrico",
+      "position": "Programador / Desarrollador de software",
+      "startDate": "2005-01-01",
+      "endDate": "2007-01-01",
+      "summary": "Módulos para el Sistema de Información del Sector Eléctrico (SISE) con Java Server Pages y PostgreSQL.",
+      "highlights": ["Optimización de consultas para el análisis de datos del sector eléctrico."]
+    }
+  ],
+  "education": [
+    { "institution": "Universidad Yacambú (Venezuela)", "area": "Electrónica en Computación", "studyType": "Ingeniería", "startDate": "2001-05-01", "endDate": "2005-05-01" }
+  ],
+  "skills": [
+    { "name": "Backend", "keywords": ["PHP", "Symfony 5/6", "Laravel", "Zend Framework", "Java EE / JSP", "Python", "Node.js"] },
+    { "name": "Frontend", "keywords": ["Angular", "TypeScript", "WordPress (Codex, REST API, temas y plugins)"] },
+    { "name": "Datos", "keywords": ["MySQL", "PostgreSQL", "SQL", "modelado relacional"] },
+    { "name": "Infraestructura", "keywords": ["Linux", "Docker", "redes y cableado estructurado", "servidores físicos y virtuales", "DevOps"] },
+    { "name": "Prácticas", "keywords": ["POO", "MVC", "arquitectura de software", "SDLC completo", "seguridad para banca"] }
+  ],
+  "languages": [
+    { "language": "Español", "fluency": "nativo" },
+    { "language": "Inglés", "fluency": "escrito intermedio, oral básico" }
+  ],
+  "projects": [
+    { "name": "Sistema de Requerimientos Corporativo (BancoEstado)", "url": "https://sistemaderequerimientos.cl/" },
+    { "name": "Sistema de Compras (BancoEstado Express)", "url": "https://comprasbex.cl/" },
+    { "name": "Portal Solar", "url": "https://portalsolar.com/" }
+  ],
+  "interests": [{ "name": "Salsa (On1 y On2), bailarín e instructor" }, { "name": "Música afrocubana" }, { "name": "Audio y procesamiento de señales en el navegador" }]
+}

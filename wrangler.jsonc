@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bexandy-site",
+  "compatibility_date": "2026-10-01",
+  // Sitio estático puro: sin código de Worker, solo assets. Los requests estáticos no consumen cuota.
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  }
+}

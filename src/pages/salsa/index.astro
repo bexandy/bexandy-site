@@ -1,0 +1,26 @@
+---
+import Base from '../../layouts/Base.astro';
+import Card from '../../components/Card.astro';
+import { getCollection } from 'astro:content';
+const videos = (await getCollection('videos', ({ data }) => !data.draft)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
+---
+<Base title="Salsa" side="dance">
+  <h1 class="text-3xl font-bold">Salsa</h1>
+  <p class="muted mt-2 max-w-2xl">Bailo y enseño salsa. Aquí están las herramientas que construí para practicar y los videos de mis clases.</p>
+
+  <div class="grid md:grid-cols-2 gap-4 mt-8">
+    <Card href="/salsa/player" title="Reproductor de práctica" subtitle="Separa los instrumentos de una canción, cambia la velocidad sin alterar el tono y marca los conteos 1-2-3 5-6-7." side="dance" tags={['stems', 'velocidad', 'conteos', 'metrónomo']} />
+    <Card href="/salsa/clases" title="Clases en video" subtitle="Grabaciones de mis clases, organizadas por nivel y figura, con capítulos." side="dance" tags={['On1', 'On2', 'shines']} />
+  </div>
+
+  {videos.length > 0 && (
+    <section class="mt-10">
+      <h2 class="text-xl font-bold mb-3">Últimas clases</h2>
+      <ul class="grid md:grid-cols-3 gap-4">
+        {videos.map((v) => (
+          <li><Card href={`/salsa/clases/${v.id}`} title={v.data.title} subtitle={`${v.data.level} · ${v.data.style}`} side="dance" tags={v.data.figures} /></li>
+        ))}
+      </ul>
+    </section>
+  )}
+</Base>

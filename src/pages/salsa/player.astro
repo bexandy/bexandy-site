@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import Player from '../../components/salsa/player/Player';
+---
+<Base title="Reproductor de práctica de salsa" side="dance" isolated description="Separa instrumentos, ajusta la velocidad y marca los conteos de salsa. Todo en tu navegador.">
+  <h1 class="text-3xl font-bold">Reproductor de práctica</h1>
+  <p class="muted mt-2 max-w-2xl">Carga una canción desde tu equipo. Nada se sube a ningún servidor: todo el procesamiento ocurre en tu navegador.</p>
+  <div class="mt-6">
+    <Player client:only="react" />
+  </div>
+  <section class="prose-basic mt-12 max-w-3xl text-sm">
+    <h2>Cómo funciona</h2>
+    <ul>
+      <li><strong>Velocidad</strong>: usa el motor de audio del navegador conservando el tono. Rango de 50 % a 120 %.</li>
+      <li><strong>Conteos</strong>: el tempo se estima automáticamente sobre la energía de la canción. El "1" rara vez se detecta solo en salsa, así que puedes marcarlo tocando el botón o la barra espaciadora en el 1, y ajustar la fase.</li>
+      <li><strong>Instrumentos</strong>: la separación en pistas (percusión, bajo, voz, otros) corre con Demucs en tu GPU vía WebGPU. Está en desarrollo; por ahora el reproductor trabaja con la mezcla completa.</li>
+    </ul>
+  </section>
+</Base>

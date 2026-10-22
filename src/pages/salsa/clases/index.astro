@@ -1,0 +1,42 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Card from '../../../components/Card.astro';
+import { getCollection } from 'astro:content';
+const videos = (await getCollection('videos', ({ data }) => !data.draft)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const levels = [...new Set(videos.map((v) => v.data.level))];
+const figures = [...new Set(videos.flatMap((v) => v.data.figures))].sort();
+---
+<Base title="Clases de salsa en video" side="dance">
+  <h1 class="text-3xl font-bold">Clases en video</h1>
+  <p class="muted mt-2">Filtra por nivel o figura. Cada video tiene capítulos para saltar a la parte que te interesa.</p>
+
+  <div class="flex flex-wrap gap-2 mt-6 text-sm" id="filters">
+    <button data-filter="" class="px-3 py-1 rounded-full card">Todos</button>
+    {levels.map((l) => <button data-filter={`level:${l}`} class="px-3 py-1 rounded-full card">{l}</button>)}
+    {figures.map((f) => <button data-filter={`fig:${f}`} class="px-3 py-1 rounded-full card">{f}</button>)}
+  </div>
+
+  <ul class="grid md:grid-cols-3 gap-4 mt-6" id="grid">
+    {videos.map((v) => (
+      <li data-level={v.data.level} data-figs={v.data.figures.join('|')}>
+        <Card href={`/salsa/clases/${v.id}`} title={v.data.title} subtitle={`${v.data.level} · ${v.data.style}${v.data.bpm ? ` · ${v.data.bpm} bpm` : ''}`} side="dance" tags={v.data.figures} />
+      </li>
+    ))}
+  </ul>
+</Base>
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('#filters button');
+  const items = document.querySelectorAll<HTMLLIElement>('#grid li');
+  buttons.forEach((b) =>
+    b.addEventListener('click', () => {
+      const f = b.dataset.filter ?? '';
+      buttons.forEach((x) => x.classList.toggle('font-bold', x === b));
+      items.forEach((li) => {
+        let show = true;
+        if (f.startsWith('level:')) show = li.dataset.level === f.slice(6);
+        if (f.startsWith('fig:')) show = (li.dataset.figs ?? '').split('|').includes(f.slice(4));
+        li.style.display = show ? '' : 'none';
+      });
+    }),
+  );
+</script>
