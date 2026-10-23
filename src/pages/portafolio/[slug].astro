@@ -15,7 +15,7 @@ const cover = img(project.data.cover);
   <article class="max-w-3xl mx-auto">
     {cover && (
       <div class="photo-fade to-bottom rounded-xl overflow-hidden aspect-[21/9] mb-8">
-        <Image src={cover} alt="" width={1200} widths={[700, 1200]} sizes="(min-width: 768px) 768px, 100vw" class="object-[50%_25%] saturate-[.85]" loading="eager" />
+        <Image src={cover} alt="" width={1200} widths={[700, 1200]} sizes="(min-width: 768px) 768px, 100vw" class="object-top" loading="eager" />
       </div>
     )}
     <div class="eyebrow mb-2">{project.data.date.getFullYear()}{project.data.role && ` · ${project.data.role}`}</div>

@@ -6,7 +6,7 @@ side: work
 role: Diseño y desarrollo
 stack: [Astro, React, TypeScript, Tailwind, Cloudflare Workers, R2]
 links: { repo: https://github.com/bexandy/bexandy-site }
-cover: cafe
+cover: cover-sitio
 featured: false
 ---
 Sitio estático con dos puertas, trabajo y baile. Las utilidades y el reproductor de salsa son componentes React que corren solo en el navegador.

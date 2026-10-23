@@ -6,7 +6,7 @@ side: work
 role: Senior Backend Developer, principal contribuidor (Agencia Sur)
 stack: [PHP, Symfony, MySQL, Docker]
 links: { live: https://sistemaderequerimientos.cl/ }
-cover: santiago
+cover: cover-requerimientos
 featured: true
 ---
 Sistema crítico para la gestión interna de requerimientos entre áreas de BancoEstado. Mejoró la eficiencia operativa de las áreas usuarias y cumple los estándares de seguridad exigidos por la industria financiera.

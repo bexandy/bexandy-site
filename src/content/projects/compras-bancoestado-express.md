@@ -6,7 +6,7 @@ side: work
 role: Senior Backend Developer, principal contribuidor (Agencia Sur)
 stack: [PHP, Symfony, Twig, SCSS, JavaScript, Docker]
 links: { live: https://comprasbex.cl/ }
-cover: ventana-bn
+cover: cover-compras
 featured: true
 ---
 Sistema de compras para BancoEstado Express. Asegura estabilidad, seguridad en las transacciones y escalabilidad de la plataforma.

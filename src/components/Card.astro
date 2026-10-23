@@ -8,7 +8,7 @@ const Tag = href ? 'a' : 'div';
 <Tag href={href} class="card block overflow-hidden hover:border-amber transition-colors">
   {cover && (
     <div class="aspect-[16/10] overflow-hidden">
-      <Image src={cover} alt="" width={640} widths={[400, 640, 900]} sizes="(min-width: 768px) 33vw, 100vw" class="w-full h-full object-cover object-[50%_25%] saturate-[.85]" loading="lazy" />
+      <Image src={cover} alt="" width={640} widths={[400, 640, 900]} sizes="(min-width: 768px) 33vw, 100vw" class="w-full h-full object-cover object-top" loading="lazy" />
     </div>
   )}
   <div class="p-4">

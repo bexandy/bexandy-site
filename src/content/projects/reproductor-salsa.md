@@ -6,7 +6,7 @@ side: dance
 role: Diseño, DSP y desarrollo
 stack: [React, Web Audio, AudioWorklet, ONNX Runtime Web, WebGPU, Demucs]
 links: { live: /salsa/player }
-cover: hero-baile
+cover: cover-player
 featured: true
 ---
 Herramienta para bailarines y profesores. Todo el procesamiento ocurre en el navegador del usuario; ninguna canción se sube a un servidor.
