@@ -6,6 +6,7 @@ import { analyze, onsetEnvelope, type BeatAnalysis } from './analysis/beatTracke
 import { estimateDownbeat, CLAVE_TEMPLATES, BASS_TEMPLATE } from './analysis/clavePhase';
 import { scheduleClick } from './audio/click';
 import { mixToWav, asAudioBufferLike, STEM_LABELS } from './audio/mix';
+import { exportStem, stemFileName, saveBlob, shareFiles, zipBlobs, type ExportFormat } from './audio/export';
 import type { RawAudio } from '../../../lib/demucs/wav-utils';
 import type { WorkerIn, WorkerOut } from './workers/demucs.worker';
 
@@ -38,6 +39,8 @@ export default function Player() {
   const [stems, setStems] = useState<Record<string, RawAudio> | null>(null);
   const [gains, setGains] = useState<Record<string, number>>({ drums: 1, bass: 1, other: 1, vocals: 1 });
   const [solo, setSolo] = useState<string | null>(null);
+  const [exporting, setExporting] = useState<string | null>(null);
+  const [exportMsg, setExportMsg] = useState<string | null>(null);
   const [sep, setSep] = useState<{ status: SepStatus; loaded?: number; total?: number; step?: number; steps?: number; provider?: string; message?: string; seconds?: number }>({ status: 'idle' });
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -143,12 +146,33 @@ export default function Player() {
     if (p.play) a.play().catch(() => {});
   }
 
-  function downloadStem(name: string) {
+  async function saveStems(which: string | 'all', format: ExportFormat, mode: 'download' | 'share') {
     if (!stems) return;
-    const blob = mixToWav({ [name]: stems[name] }, { [name]: 1 });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = `${(file?.name ?? 'pista').replace(/\.[^.]+$/, '')}-${name}.wav`;
-    a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    const song = file?.name ?? 'cancion';
+    const names = which === 'all' ? Object.keys(STEM_LABELS).filter((k) => stems[k]) : [which];
+    setExporting(which); setExportMsg(null);
+    try {
+      const files: File[] = [];
+      for (const n of names) {
+        const blob = await exportStem(stems, n, format);
+        files.push(new File([blob], stemFileName(song, n, format), { type: blob.type }));
+      }
+      if (mode === 'share') {
+        const ok = await shareFiles(files, `Pistas de ${song}`);
+        if (ok) { setExportMsg('Compartido.'); return; }
+        setExportMsg('Tu navegador no permite compartir archivos; se descargan en su lugar.');
+      }
+      if (files.length === 1) { saveBlob(files[0], files[0].name); }
+      else {
+        const zip = await zipBlobs(files.map((f) => ({ name: f.name, blob: f })));
+        saveBlob(zip, `${stemFileName(song, 'pistas', format).replace(/\.[^.]+$/, '')}.zip`);
+      }
+      setExportMsg(files.length === 1 ? `Guardado ${files[0].name}.` : `Guardado un ZIP con ${files.length} pistas.`);
+    } catch (e) {
+      setExportMsg(`No se pudo exportar: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setExporting(null);
+    }
   }
 
   function refineWithDrums() {
@@ -332,7 +356,8 @@ export default function Player() {
                 {sep.status === 'done' && stems && (
                   <>
                     <p className="muted">Listo en {sep.seconds} s con {sep.provider === 'webgpu' ? 'WebGPU' : 'WebAssembly'}. Ajusta el volumen de cada pista; la velocidad y el conteo siguen funcionando sobre la mezcla.</p>
-                    <StemMixer names={Object.keys(STEM_LABELS).filter((k) => stems[k])} gains={gains} solo={solo} onGain={(n, g) => setGains((x) => ({ ...x, [n]: g }))} onSolo={setSolo} onDownload={downloadStem} />
+                    <StemMixer names={Object.keys(STEM_LABELS).filter((k) => stems[k])} gains={gains} solo={solo} busy={exporting} onGain={(n, g) => setGains((x) => ({ ...x, [n]: g }))} onSolo={setSolo} onSave={saveStems} />
+                    {exportMsg && <p className="muted text-xs">{exportMsg}</p>}
                     <div className="flex flex-wrap gap-2 items-center">
                       <button className="card px-3 py-1" onClick={refineWithDrums}>Afinar conteo con la percusión</button>
                       <span className="muted text-xs">Vuelve a detectar tempo y pulsos usando solo la pista de percusión.</span>
