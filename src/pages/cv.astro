@@ -1,59 +1,72 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import cv from '../data/cv.json';
-const fmt = (d?: string) => (d ? new Date(d).toLocaleDateString('es-CL', { year: 'numeric', month: 'short', timeZone: 'UTC' }) : 'actual');
+import retrato from '../assets/img/retrato.jpg';
+const fmt = (d?: string) => (d ? new Date(d).toLocaleDateString('es-CL', { year: 'numeric', month: 'short', timeZone: 'UTC' }) : 'hoy');
 ---
 <Base title="Currículum" side="work" description={`Currículum de ${cv.basics.name}: ${cv.basics.label}`}>
   <article class="max-w-3xl mx-auto">
-    <header class="flex flex-wrap items-start justify-between gap-4">
+    <header class="grid sm:grid-cols-[120px_1fr] gap-6 items-start">
+      <Image src={retrato} alt={`Retrato de ${cv.basics.name}`} width={240} class="w-[120px] h-[120px] rounded-lg object-cover saturate-[.85]" loading="eager" />
       <div>
-        <h1 class="text-3xl font-bold">{cv.basics.name}</h1>
-        <p class="muted">{cv.basics.label}</p>
-        <p class="text-sm mt-1">{cv.basics.location.city}, {cv.basics.location.countryCode} · <a href={`mailto:${cv.basics.email}`}>{cv.basics.email}</a>{cv.basics.profiles.map((pr) => <span> · <a href={pr.url} class="underline">{pr.network}</a></span>)}</p>
+        <h1 class="display font-bold text-3xl leading-tight">{cv.basics.name}</h1>
+        <p class="font-bold mt-1" style="color: var(--amber)">{cv.basics.label}</p>
+        <p class="text-sm mt-2 muted">{cv.basics.location.city}, {cv.basics.location.countryCode} · <a href={`mailto:${cv.basics.email}`} class="underline">{cv.basics.email}</a>{cv.basics.profiles.map((pr) => <span> · <a href={pr.url} class="underline">{pr.network}</a></span>)}</p>
+        <button class="no-print btn mt-3 text-xs" onclick="window.print()">Descargar PDF</button>
       </div>
-      <button class="no-print card px-4 py-2 text-sm" onclick="window.print()">Descargar PDF</button>
     </header>
 
-    <p class="mt-6 leading-relaxed">{cv.basics.summary}</p>
+    <p class="mt-8 leading-relaxed">{cv.basics.summary}</p>
 
-    <h2 class="text-xl font-bold mt-8 mb-3">Experiencia</h2>
-    {cv.work.map((w) => (
-      <section class="mb-5">
-        <div class="flex flex-wrap justify-between gap-2">
-          <h3 class="font-semibold">{w.position} · {w.name}</h3>
-          <span class="muted text-sm">{fmt(w.startDate)} – {fmt((w as { endDate?: string }).endDate)}</span>
-        </div>
-        <p class="text-sm mt-1">{w.summary}</p>
-        {w.highlights?.length > 0 && <ul class="list-disc pl-5 text-sm mt-1">{w.highlights.map((h) => <li>{h}</li>)}</ul>}
-      </section>
-    ))}
+    <h2 class="display font-bold text-2xl mt-10 mb-4">Experiencia</h2>
+    <div class="border-l pl-5 grid gap-6" style="border-color: var(--border)">
+      {cv.work.map((w) => (
+        <section class="relative">
+          <span class="absolute -left-[26px] top-2 w-[9px] h-[9px] rounded-full" style="background: var(--amber)"></span>
+          <div class="flex flex-wrap justify-between gap-2">
+            <h3 class="font-bold">{w.position} · {w.name}</h3>
+            <span class="muted text-sm tabular-nums">{fmt(w.startDate)} – {fmt((w as { endDate?: string }).endDate)}</span>
+          </div>
+          <p class="text-sm mt-1">{w.summary}</p>
+          {w.highlights?.length > 0 && <ul class="list-disc pl-5 text-sm mt-2 grid gap-1">{w.highlights.map((h) => <li>{h}</li>)}</ul>}
+        </section>
+      ))}
+    </div>
 
-    <h2 class="text-xl font-bold mt-8 mb-3">Habilidades</h2>
+    {cv.projects?.length > 0 && (
+      <>
+        <h2 class="display font-bold text-2xl mt-10 mb-3">Sistemas en producción</h2>
+        <ul class="grid gap-2 text-sm">
+          {cv.projects.map((p) => (
+            <li class="card p-3 flex flex-wrap justify-between gap-2">
+              <a href={p.url} class="font-bold underline decoration-[var(--amber)]">{p.name}</a>
+              <span class="muted">{p.description}</span>
+            </li>
+          ))}
+        </ul>
+      </>
+    )}
+
+    <h2 class="display font-bold text-2xl mt-10 mb-3">Habilidades</h2>
     <div class="grid sm:grid-cols-2 gap-3">
       {cv.skills.map((s) => (
         <div class="card p-3">
-          <h3 class="font-semibold text-sm">{s.name}</h3>
+          <h3 class="font-bold text-sm">{s.name}</h3>
           <p class="text-sm muted">{s.keywords.join(' · ')}</p>
         </div>
       ))}
     </div>
 
-    <h2 class="text-xl font-bold mt-8 mb-3">Educación</h2>
+    <h2 class="display font-bold text-2xl mt-10 mb-3">Educación</h2>
     {cv.education.map((e) => (
       <p class="text-sm"><strong>{e.studyType} en {e.area}</strong>, {e.institution} ({fmt(e.startDate)} – {fmt(e.endDate)})</p>
     ))}
 
-    {cv.projects?.length > 0 && (
-      <>
-        <h2 class="text-xl font-bold mt-8 mb-3">Sistemas en producción</h2>
-        <ul class="list-disc pl-5 text-sm">{cv.projects.map((p) => <li><a href={p.url} class="underline">{p.name}</a></li>)}</ul>
-      </>
-    )}
-
-    <h2 class="text-xl font-bold mt-8 mb-3">Idiomas</h2>
+    <h2 class="display font-bold text-2xl mt-10 mb-3">Idiomas</h2>
     <p class="text-sm">{cv.languages.map((l) => `${l.language}: ${l.fluency}`).join(' · ')}</p>
 
-    <h2 class="text-xl font-bold mt-8 mb-3">Intereses</h2>
+    <h2 class="display font-bold text-2xl mt-10 mb-3">Intereses</h2>
     <p class="text-sm">{cv.interests.map((i) => i.name).join(' · ')}</p>
   </article>
 </Base>

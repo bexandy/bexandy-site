@@ -12,7 +12,7 @@ const mmss = (t: number) => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, 
 ---
 <Base title={d.title} side="dance" description={`Clase de salsa ${d.level} (${d.style}): ${d.figures.join(', ')}`}>
   <article class="max-w-3xl mx-auto">
-    <h1 class="text-3xl font-bold">{d.title}</h1>
+    <h1 class="display font-bold text-4xl">{d.title}</h1>
     <p class="muted mt-1">{d.level} · {d.style}{d.song && ` · ${d.song}`}{d.bpm && ` · ${d.bpm} bpm`} · {d.date.toLocaleDateString('es-CL')}</p>
 
     <div class="aspect-video mt-6 rounded-xl overflow-hidden card">
@@ -29,7 +29,7 @@ const mmss = (t: number) => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, 
 
     {d.chapters.length > 0 && (
       <section class="mt-6">
-        <h2 class="font-bold mb-2">Capítulos</h2>
+        <h2 class="display font-bold text-xl mb-2">Capítulos</h2>
         <ol class="grid sm:grid-cols-2 gap-1 text-sm">
           {d.chapters.map((c) => (
             <li><a href={`https://www.youtube.com/watch?v=${d.youtubeId}&t=${c.t}s`} data-t={c.t} class="chapter underline">{mmss(c.t)} · {c.label}</a></li>

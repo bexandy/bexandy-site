@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
+import { img } from '../../lib/images';
 import { getCollection, render } from 'astro:content';
 export async function getStaticPaths() {
   const projects = await getCollection('projects', ({ data }) => !data.draft);
@@ -7,18 +9,23 @@ export async function getStaticPaths() {
 }
 const { project } = Astro.props;
 const { Content } = await render(project);
+const cover = img(project.data.cover);
 ---
 <Base title={project.data.title} description={project.data.summary} side={project.data.side}>
-  <article class="max-w-3xl mx-auto prose-basic">
-    <h1 class="text-3xl font-bold">{project.data.title}</h1>
-    <p class="muted">{project.data.summary}</p>
-    <p class="text-sm mt-2">
-      {project.data.role && <span>{project.data.role} · </span>}
-      {project.data.date.getFullYear()}
-      {project.data.links.live && <span> · <a href={project.data.links.live}>Ver en vivo</a></span>}
-      {project.data.links.repo && <span> · <a href={project.data.links.repo}>Código</a></span>}
+  <article class="max-w-3xl mx-auto">
+    {cover && (
+      <div class="photo-fade to-bottom rounded-xl overflow-hidden aspect-[21/9] mb-8">
+        <Image src={cover} alt="" width={1200} widths={[700, 1200]} sizes="(min-width: 768px) 768px, 100vw" class="object-[50%_25%] saturate-[.85]" loading="eager" />
+      </div>
+    )}
+    <div class="eyebrow mb-2">{project.data.date.getFullYear()}{project.data.role && ` · ${project.data.role}`}</div>
+    <h1 class="display font-bold text-4xl leading-tight">{project.data.title}</h1>
+    <p class="muted mt-2 text-lg">{project.data.summary}</p>
+    <p class="text-sm mt-3 flex flex-wrap gap-3">
+      {project.data.links.live && <a href={project.data.links.live} class="btn solid text-xs">Ver en producción</a>}
+      {project.data.links.repo && <a href={project.data.links.repo} class="btn text-xs">Código</a>}
     </p>
-    <ul class="flex flex-wrap gap-1.5 mt-3 mb-6">{project.data.stack.map((t) => <li class="text-xs px-2 py-0.5 rounded-full" style="background: var(--border)">{t}</li>)}</ul>
-    <Content />
+    <ul class="flex flex-wrap gap-1.5 mt-4 mb-8">{project.data.stack.map((t) => <li class="chip">{t}</li>)}</ul>
+    <div class="prose-basic"><Content /></div>
   </article>
 </Base>

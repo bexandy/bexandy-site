@@ -7,10 +7,11 @@ const dev = tools.filter((t) => t.data.category === 'dev');
 const ia = tools.filter((t) => t.data.category === 'ia');
 ---
 <Base title="Utilidades para desarrollo e IA" side="work">
-  <h1 class="text-3xl font-bold">Utilidades</h1>
+  <div class="eyebrow mb-2">Utilidades</div>
+  <h1 class="display font-bold text-4xl">Utilidades</h1>
   <p class="muted mt-2">Herramientas pequeñas que uso a diario. Todo corre en tu navegador; nada se envía a un servidor.</p>
-  <h2 class="text-xl font-bold mt-8 mb-3">Desarrollo</h2>
+  <h2 class="display font-bold text-2xl mt-8 mb-3">Desarrollo</h2>
   <div class="grid md:grid-cols-2 gap-4">{dev.map((t) => <Card href={`/dev/${t.id}`} title={t.data.title} subtitle={t.data.summary} />)}</div>
-  <h2 class="text-xl font-bold mt-8 mb-3">Inteligencia artificial</h2>
+  <h2 class="display font-bold text-2xl mt-8 mb-3">Inteligencia artificial</h2>
   <div class="grid md:grid-cols-2 gap-4">{ia.map((t) => <Card href={`/dev/${t.id}`} title={t.data.title} subtitle={t.data.summary} />)}</div>
 </Base>

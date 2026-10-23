@@ -1,26 +1,38 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
 import { getCollection } from 'astro:content';
+import heroBaile from '../../assets/img/hero-baile.jpg';
 const videos = (await getCollection('videos', ({ data }) => !data.draft)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
 ---
-<Base title="Salsa" side="dance">
-  <h1 class="text-3xl font-bold">Salsa</h1>
-  <p class="muted mt-2 max-w-2xl">Bailo y enseño salsa. Aquí están las herramientas que construí para practicar y los videos de mis clases.</p>
+<Base title="Salsa" side="dance" overlayNav>
+  <section class="relative min-h-[420px] md:min-h-[520px] flex items-end overflow-hidden">
+    <Image src={heroBaile} alt="Bexandy bailando salsa bajo luces de noche" width={1600} widths={[800, 1200, 1600]} sizes="100vw" loading="eager" fetchpriority="high" class="absolute inset-0 w-full h-full object-cover object-[50%_40%]" />
+    <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(90deg, rgba(15,13,11,.9) 0%, rgba(15,13,11,.6) 45%, rgba(15,13,11,.1) 100%), linear-gradient(0deg, var(--bg) 0%, rgba(15,13,11,0) 50%)"></div>
+    <div class="relative z-10 w-full max-w-6xl mx-auto px-4 pb-12 pt-28 text-[#f4efe6]">
+      <div class="eyebrow mb-3">Baile</div>
+      <h1 class="display font-bold text-5xl md:text-6xl leading-[.95]">Salsa</h1>
+      <p class="mt-4 max-w-xl" style="color: #a79f90">Bailo y enseño salsa On1 y On2 en Santiago. Aquí están las herramientas que construí para practicar y los videos de mis clases.</p>
+    </div>
+  </section>
 
-  <div class="grid md:grid-cols-2 gap-4 mt-8">
-    <Card href="/salsa/player" title="Reproductor de práctica" subtitle="Separa los instrumentos de una canción, cambia la velocidad sin alterar el tono y marca los conteos 1-2-3 5-6-7." side="dance" tags={['stems', 'velocidad', 'conteos', 'metrónomo']} />
-    <Card href="/salsa/clases" title="Clases en video" subtitle="Grabaciones de mis clases, organizadas por nivel y figura, con capítulos." side="dance" tags={['On1', 'On2', 'shines']} />
+  <div class="max-w-6xl mx-auto px-4 py-10">
+    <div class="grid md:grid-cols-2 gap-4">
+      <Card href="/salsa/player" title="Reproductor de práctica" subtitle="Separa los instrumentos de una canción, cambia la velocidad sin alterar el tono y marca los conteos 1-2-3 5-6-7." side="dance" tags={['stems', 'velocidad', 'conteos', 'metrónomo']} eyebrow="Herramienta" />
+      <Card href="/salsa/clases" title="Clases en video" subtitle="Grabaciones de mis clases, organizadas por nivel y figura, con capítulos." side="dance" tags={['On1', 'On2', 'shines']} eyebrow="Videos" />
+    </div>
+
+    {videos.length > 0 && (
+      <section class="mt-12">
+        <div class="eyebrow mb-2">Recientes</div>
+        <h2 class="display font-bold text-2xl mb-4">Últimas clases</h2>
+        <ul class="grid md:grid-cols-3 gap-4">
+          {videos.map((v) => (
+            <li><Card href={`/salsa/clases/${v.id}`} title={v.data.title} subtitle={`${v.data.level} · ${v.data.style}`} side="dance" tags={v.data.figures} /></li>
+          ))}
+        </ul>
+      </section>
+    )}
   </div>
-
-  {videos.length > 0 && (
-    <section class="mt-10">
-      <h2 class="text-xl font-bold mb-3">Últimas clases</h2>
-      <ul class="grid md:grid-cols-3 gap-4">
-        {videos.map((v) => (
-          <li><Card href={`/salsa/clases/${v.id}`} title={v.data.title} subtitle={`${v.data.level} · ${v.data.style}`} side="dance" tags={v.data.figures} /></li>
-        ))}
-      </ul>
-    </section>
-  )}
 </Base>

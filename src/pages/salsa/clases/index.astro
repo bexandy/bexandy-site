@@ -7,7 +7,8 @@ const levels = [...new Set(videos.map((v) => v.data.level))];
 const figures = [...new Set(videos.flatMap((v) => v.data.figures))].sort();
 ---
 <Base title="Clases de salsa en video" side="dance">
-  <h1 class="text-3xl font-bold">Clases en video</h1>
+  <div class="eyebrow mb-2">Baile</div>
+  <h1 class="display font-bold text-4xl">Clases en video</h1>
   <p class="muted mt-2">Filtra por nivel o figura. Cada video tiene capítulos para saltar a la parte que te interesa.</p>
 
   <div class="flex flex-wrap gap-2 mt-6 text-sm" id="filters">

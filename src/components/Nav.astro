@@ -1,5 +1,7 @@
 ---
 import { site } from '../site';
+interface Props { overlay?: boolean }
+const { overlay = false } = Astro.props;
 const path = Astro.url.pathname;
 const links = [
   { href: '/cv', label: 'CV' },
@@ -9,24 +11,22 @@ const links = [
 ];
 const active = (href: string) => path === href || path.startsWith(href + '/');
 ---
-<header class="no-print border-b" style="border-color: var(--border)">
-  <nav class="max-w-5xl mx-auto px-4 h-14 flex items-center gap-4">
-    <a href="/" class="font-bold tracking-tight">{site.shortName}</a>
+<header class:list={['no-print z-20', overlay ? 'absolute inset-x-0 top-0' : 'border-b']} style={overlay ? '' : 'border-color: var(--border)'}>
+  <nav class="max-w-6xl mx-auto px-4 h-16 flex items-center gap-4">
+    <a href="/" class="display font-bold tracking-wide uppercase text-lg">{site.shortName}</a>
     <ul class="flex gap-1 ml-auto text-sm">
       {links.map((l) => (
         <li>
           <a
             href={l.href}
-            class:list={[
-              'px-3 py-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10',
-              active(l.href) && 'bg-black/5 dark:bg-white/10 font-medium',
-            ]}
+            class:list={['px-3 py-1.5 rounded-md hover:bg-white/10', active(l.href) && 'font-bold']}
+            style={active(l.href) ? 'color: var(--amber)' : ''}
             aria-current={active(l.href) ? 'page' : undefined}
           >{l.label}</a>
         </li>
       ))}
     </ul>
-    <button id="theme-toggle" class="ml-2 p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10" aria-label="Cambiar tema" title="Cambiar tema">
+    <button id="theme-toggle" class="ml-1 p-2 rounded-md hover:bg-white/10" aria-label="Cambiar tema" title="Cambiar tema">
       <span class="dark:hidden">🌙</span><span class="hidden dark:inline">☀️</span>
     </button>
   </nav>

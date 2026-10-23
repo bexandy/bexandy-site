@@ -1,16 +1,25 @@
 ---
-interface Props { href?: string; title: string; subtitle?: string; tags?: string[]; side?: 'work' | 'dance' }
-const { href, title, subtitle, tags = [], side } = Astro.props;
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+interface Props { href?: string; title: string; subtitle?: string; tags?: string[]; side?: 'work' | 'dance'; cover?: ImageMetadata; eyebrow?: string }
+const { href, title, subtitle, tags = [], cover, eyebrow } = Astro.props;
 const Tag = href ? 'a' : 'div';
-const accent = side === 'dance' ? 'var(--color-dance)' : 'var(--color-work)';
 ---
-<Tag href={href} class="card block p-5 hover:shadow-md transition-shadow" style={`border-left: 4px solid ${accent}`}>
-  <h3 class="font-semibold text-lg">{title}</h3>
-  {subtitle && <p class="muted text-sm mt-1">{subtitle}</p>}
-  <slot />
-  {tags.length > 0 && (
-    <ul class="flex flex-wrap gap-1.5 mt-3">
-      {tags.map((t) => <li class="text-xs px-2 py-0.5 rounded-full" style="background: var(--border)">{t}</li>)}
-    </ul>
+<Tag href={href} class="card block overflow-hidden hover:border-amber transition-colors">
+  {cover && (
+    <div class="aspect-[16/10] overflow-hidden">
+      <Image src={cover} alt="" width={640} widths={[400, 640, 900]} sizes="(min-width: 768px) 33vw, 100vw" class="w-full h-full object-cover object-[50%_25%] saturate-[.85]" loading="lazy" />
+    </div>
   )}
+  <div class="p-4">
+    {eyebrow && <div class="eyebrow mb-1">{eyebrow}</div>}
+    <h3 class="display font-bold text-lg leading-tight">{title}</h3>
+    {subtitle && <p class="muted text-sm mt-1">{subtitle}</p>}
+    <slot />
+    {tags.length > 0 && (
+      <ul class="flex flex-wrap gap-1.5 mt-3">
+        {tags.map((t) => <li class="chip">{t}</li>)}
+      </ul>
+    )}
+  </div>
 </Tag>

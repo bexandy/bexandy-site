@@ -1,34 +1,80 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import Card from '../components/Card.astro';
 import { site } from '../site';
+import { img } from '../lib/images';
+import { getCollection } from 'astro:content';
+import heroTrabajo from '../assets/img/hero-trabajo.jpg';
+import heroBaile from '../assets/img/hero-baile.jpg';
+
+const featured = (await getCollection('projects', ({ data }) => data.featured && !data.draft && data.side === 'work'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+const counts = [1, 2, 3, 4, 5, 6, 7, 8];
 ---
-<Base title={site.name} side="neutral">
-  <section class="py-10">
-    <p class="muted text-sm uppercase tracking-widest">Hola, soy</p>
-    <h1 class="text-4xl md:text-5xl font-bold tracking-tight mt-2">{site.name}</h1>
-    <p class="mt-4 text-lg max-w-2xl muted">
-      Desarrollador de software de día y bailarín de salsa de noche. Aquí vive mi trabajo y lo que hago
-      cuando no estoy frente a un teclado.
-    </p>
+<Base title={site.name} overlayNav>
+  <!-- Hero -->
+  <section class="relative min-h-[600px] md:min-h-[680px] flex items-end overflow-hidden">
+    <Image src={heroTrabajo} alt="Bexandy frente a dos monitores con código, al atardecer" width={1600} widths={[800, 1200, 1600]} sizes="100vw" loading="eager" fetchpriority="high" class="absolute inset-0 w-full h-full object-cover object-[72%_28%]" />
+    <div class="absolute inset-0 pointer-events-none" style="background: linear-gradient(90deg, rgba(15,13,11,.95) 0%, rgba(15,13,11,.75) 40%, rgba(15,13,11,.15) 100%), linear-gradient(0deg, var(--bg) 0%, rgba(15,13,11,0) 45%)"></div>
+    <div class="relative z-10 w-full max-w-6xl mx-auto px-4 pb-14 pt-32 text-[#f4efe6]">
+      <div class="eyebrow mb-3">Santiago de Chile · Backend · Salsa</div>
+      <h1 class="display font-bold text-5xl md:text-7xl leading-[.95] max-w-3xl" style="text-wrap: balance">Código de día, clave de noche.</h1>
+      <p class="mt-5 max-w-xl text-lg" style="color: #a79f90">Senior Backend Developer en Symfony para banca y empresas de seguridad. Bailarín e instructor de salsa. Este sitio junta las dos cosas.</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="/portafolio" class="btn solid">Ver portafolio</a>
+        <a href="/salsa/player" class="btn">Practicar salsa</a>
+      </div>
+    </div>
   </section>
 
-  <section class="grid md:grid-cols-2 gap-6 mt-6">
-    <a href="/portafolio" class="card p-8 hover:shadow-lg transition-shadow" style="border-top: 6px solid var(--color-work)">
-      <h2 class="text-2xl font-bold">Trabajo</h2>
-      <p class="muted mt-2">CV, portafolio de proyectos y utilidades para desarrollo e inteligencia artificial.</p>
-      <ul class="mt-4 flex flex-wrap gap-2 text-sm">
-        <li class="underline">Currículum</li>
-        <li class="underline">Portafolio</li>
-        <li class="underline">Utilidades dev e IA</li>
-      </ul>
-    </a>
-    <a href="/salsa" class="card p-8 hover:shadow-lg transition-shadow" style="border-top: 6px solid var(--color-dance)">
-      <h2 class="text-2xl font-bold">Baile</h2>
-      <p class="muted mt-2">Reproductor para practicar salsa (separa instrumentos, cambia la velocidad y marca los conteos) y videos de mis clases.</p>
-      <ul class="mt-4 flex flex-wrap gap-2 text-sm">
-        <li class="underline">Reproductor de práctica</li>
-        <li class="underline">Clases en video</li>
-      </ul>
-    </a>
+  <!-- Baile -->
+  <section class="grid md:grid-cols-2 min-h-[460px]" style="background: var(--bg2)">
+    <div class="flex flex-col justify-center px-4 md:px-8 py-10 md:py-14 max-w-xl md:ml-auto w-full">
+      <div class="eyebrow mb-3">Reproductor de práctica</div>
+      <h2 class="display font-medium text-3xl md:text-5xl leading-[1]">Separa la percusión, baja la velocidad, encuentra el 1.</h2>
+      <p class="muted mt-4 max-w-md">Carga una canción y el navegador hace el resto: instrumentos por pista, tempo sin cambiar el tono y el conteo 1-2-3 5-6-7 en pantalla. Nada sale de tu equipo.</p>
+      <ol class="mt-5 flex gap-1.5 display font-bold" aria-label="Conteo de salsa">
+        {counts.map((n) => (
+          <li class="w-9 h-9 grid place-items-center rounded-md border text-sm" style={n === 1 || n === 5 ? 'background: var(--amber); color: var(--amber-ink); border-color: var(--amber)' : `border-color: var(--border); color: var(--muted); opacity: ${n === 4 || n === 8 ? .4 : 1}`}>{n}</li>
+        ))}
+      </ol>
+      <div class="mt-6 flex gap-3">
+        <a href="/salsa/player" class="btn solid">Abrir el reproductor</a>
+        <a href="/salsa/clases" class="btn">Clases en video</a>
+      </div>
+    </div>
+    <figure class="photo-fade to-left m-0 order-first md:order-none h-72 md:h-[560px]">
+      <Image src={heroBaile} alt="Bexandy bailando salsa bajo luces de noche" width={1000} widths={[600, 1000]} sizes="(min-width: 768px) 50vw, 100vw" class="object-[50%_30%]" loading="lazy" />
+    </figure>
+  </section>
+
+  <!-- Sistemas en producción -->
+  <section class="max-w-6xl mx-auto px-4 py-14">
+    <div class="flex items-end justify-between gap-4 flex-wrap mb-6">
+      <div>
+        <div class="eyebrow mb-2">Trabajo</div>
+        <h2 class="display font-bold text-3xl md:text-4xl">Sistemas en producción</h2>
+      </div>
+      <a href="/cv" class="btn">Ver currículum</a>
+    </div>
+    <div class="grid md:grid-cols-3 gap-4">
+      {featured.map((p) => (
+        <Card href={`/portafolio/${p.id}`} title={p.data.title} subtitle={p.data.summary} tags={p.data.stack.slice(0, 4)} cover={img(p.data.cover)} eyebrow={`${p.data.date.getFullYear()} · Agencia Sur`} />
+      ))}
+    </div>
+  </section>
+
+  <!-- Utilidades -->
+  <section class="max-w-6xl mx-auto px-4 pb-16">
+    <div class="card p-6 md:p-8 flex flex-wrap items-center gap-6 justify-between">
+      <div>
+        <div class="eyebrow mb-2">Utilidades dev e IA</div>
+        <h2 class="display font-bold text-2xl">Herramientas pequeñas que uso a diario</h2>
+        <p class="muted mt-1 max-w-lg">Formateador JSON, Base64 y JWT, estimador de tokens y costo por modelo. Todo corre en tu navegador.</p>
+      </div>
+      <a href="/dev" class="btn solid">Abrir utilidades</a>
+    </div>
   </section>
 </Base>

@@ -14,7 +14,7 @@ const { Content } = await render(tool);
 const c = tool.data.component;
 ---
 <Base title={tool.data.title} description={tool.data.summary} side="work">
-  <h1 class="text-3xl font-bold">{tool.data.title}</h1>
+  <h1 class="display font-bold text-4xl">{tool.data.title}</h1>
   <p class="muted mt-1 mb-6">{tool.data.summary}</p>
   {c === 'JsonFormatter' && <JsonFormatter client:visible />}
   {c === 'TokenEstimator' && <TokenEstimator client:visible />}
