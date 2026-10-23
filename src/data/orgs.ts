@@ -17,6 +17,8 @@ export interface Org {
   lightChip?: boolean;
   /** logo circular (foto de perfil) */
   round?: boolean;
+  /** logo apaisado: recuadro ancho */
+  wide?: boolean;
 }
 
 /** Empresa donde trabajo. */
@@ -29,6 +31,7 @@ export const employer: Org = {
   city: 'Providencia',
   logo: agenciasur,
   lightChip: true,
+  wide: true,
 };
 
 /** Academias donde soy alumno. */
