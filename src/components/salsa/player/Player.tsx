@@ -305,6 +305,7 @@ export default function Player() {
                   <div className="flex gap-2 items-center">
                     <button className="card px-2 py-1" onClick={() => { setDownbeat((d) => (d + 7) % 8); setUserSetDownbeat(true); }} title="Flecha izquierda">◀ 1 pulso</button>
                     <button className="card px-2 py-1" onClick={() => { setDownbeat((d) => (d + 1) % 8); setUserSetDownbeat(true); }} title="Flecha derecha">1 pulso ▶</button>
+                    <button className="card px-2 py-1" onClick={() => { setDownbeat((d) => (d + 4) % 8); setUserSetDownbeat(true); }} title="Si el conteo va al revés (el 1 suena donde pisas el 5)">1 ⇄ 5</button>
                     <select className="card px-2 py-1 ml-auto" value={style} onChange={(e) => setStyle(e.target.value as 'On1' | 'On2')}>
                       <option>On1</option><option>On2</option>
                     </select>

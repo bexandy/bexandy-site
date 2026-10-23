@@ -99,3 +99,55 @@ export function estimateDownbeat(beats: number[], sources: PhaseSource[]): Phase
   const confidence = Math.max(0, Math.min(1, margin / (Math.abs(sorted[0]) + 1e-6) * 2));
   return { downbeatIndex: best, clave: perOffset[best].clave, confidence, scores: perOffset.map((p) => p.score) };
 }
+
+/**
+ * Desempate 1 vs 5: la clave fija el inicio de compás (módulo 4) pero no en cuál de los dos compases empieza la frase.
+ * Mide la novedad tímbrica alrededor de cada pulso (cuánto cambia el espectro medio de los 4 pulsos previos a los 4 siguientes)
+ * y la acumula por posición dentro del ciclo de 8: los cambios de sección y de acorde caen con más frecuencia en el 1.
+ */
+export function phraseNovelty(x: Float32Array, sampleRate: number, beats: number[]): Float32Array {
+  const bands = 8, win = 2048;
+  const nb = beats.length;
+  const feat = new Float32Array(nb * bands);
+  // energía log por banda (escala aproximadamente mel) promediada en cada pulso
+  const edges = [0, 100, 200, 400, 800, 1600, 3200, 6400, 12000].map((f) => Math.min(win / 2, Math.round((f / sampleRate) * win)));
+  const re = new Float32Array(win), im = new Float32Array(win);
+  for (let i = 0; i < nb; i++) {
+    const s0 = Math.round(beats[i] * sampleRate), s1 = Math.round((beats[i + 1] ?? beats[i] + 0.3) * sampleRate);
+    let frames = 0;
+    for (let s = s0; s + win <= Math.min(s1, x.length); s += win, frames++) {
+      for (let k = 0; k < win; k++) { re[k] = x[s + k]; im[k] = 0; }
+      fftInPlace(re, im);
+      for (let b = 0; b < bands; b++) { let e = 0; for (let k = edges[b]; k < edges[b + 1]; k++) e += re[k] * re[k] + im[k] * im[k]; feat[i * bands + b] += Math.log1p(e); }
+    }
+    if (frames) for (let b = 0; b < bands; b++) feat[i * bands + b] /= frames;
+  }
+  const nov = new Float32Array(nb);
+  for (let i = 4; i + 4 <= nb; i++) {
+    let d = 0;
+    for (let b = 0; b < bands; b++) {
+      let prev = 0, next = 0;
+      for (let k = 1; k <= 4; k++) { prev += feat[(i - k) * bands + b]; next += feat[(i + k - 1) * bands + b]; }
+      d += Math.abs(next - prev) / 4;
+    }
+    nov[i] = d;
+  }
+  return nov;
+}
+
+/** Suma la novedad por posición del ciclo de 8 para cada desplazamiento candidato; devuelve puntuaciones normalizadas. */
+export function phraseScores(novelty: Float32Array): number[] {
+  const acc = new Array(8).fill(0), cnt = new Array(8).fill(0);
+  for (let i = 0; i < novelty.length; i++) { acc[i % 8] += novelty[i]; cnt[i % 8]++; }
+  const mean = acc.map((a, k) => (cnt[k] ? a / cnt[k] : 0));
+  const max = Math.max(...mean) || 1;
+  // desplazamiento o => la posición "1" es el pulso con índice ≡ o (mod 8)
+  return mean.map((m) => m / max);
+}
+
+// FFT local (misma que fft.ts) para no crear dependencia circular
+function fftInPlace(re: Float32Array, im: Float32Array) {
+  const n = re.length;
+  for (let i = 1, j = 0; i < n; i++) { let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit; if (i < j) { [re[i], re[j]] = [re[j], re[i]]; [im[i], im[j]] = [im[j], im[i]]; } }
+  for (let len = 2; len <= n; len <<= 1) { const ang = (-2 * Math.PI) / len, wr = Math.cos(ang), wi = Math.sin(ang); for (let i = 0; i < n; i += len) { let cr = 1, ci = 0; for (let k = 0; k < len / 2; k++) { const a = i + k, b = i + k + len / 2; const tr = re[b] * cr - im[b] * ci, ti = re[b] * ci + im[b] * cr; re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti; const ncr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = ncr; } } }
+}

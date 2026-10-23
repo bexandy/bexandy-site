@@ -1,5 +1,5 @@
 import { fft, hann } from './fft';
-import { estimateDownbeat, CLAVE_TEMPLATES, type ClaveName } from './clavePhase';
+import { estimateDownbeat, phraseNovelty, phraseScores, CLAVE_TEMPLATES, type ClaveName } from './clavePhase';
 
 export interface BeatAnalysis {
   bpm: number;
@@ -125,13 +125,14 @@ export function guessDownbeat(env: Float32Array, fps: number, beats: number[]) {
     return m;
   };
   const w = [1, 0, 0.3, 0, 0.5, 0, 0.3, 0];
-  const scores = new Array(8).fill(0);
+  const scores: number[] = new Array(8).fill(0);
   for (let off = 0; off < 8; off++) {
     for (let i = 0; i < beats.length; i++) scores[off] += w[(i - off + 800) % 8] * at(beats[i]);
   }
   let best = 0, second = 0, bestOff = 0;
   scores.forEach((s, off) => { if (s > best) { second = best; best = s; bestOff = off; } else if (s > second) second = s; });
-  return { downbeatIndex: bestOff, confidence: best > 0 ? Math.max(0, Math.min(1, (best - second) / best * 8)) : 0 };
+  const mx = best || 1;
+  return { downbeatIndex: bestOff, confidence: best > 0 ? Math.max(0, Math.min(1, (best - second) / best * 8)) : 0, scores: scores.map((v: number) => v / mx) };
 }
 
 export function analyze(buffer: AudioBuffer): BeatAnalysis {
@@ -139,12 +140,18 @@ export function analyze(buffer: AudioBuffer): BeatAnalysis {
   const { env, fps } = onsetEnvelope(x, buffer.sampleRate);
   const { bpm, periodFrames } = estimateTempo(env, fps);
   const beats = trackBeats(env, fps, periodFrames);
-  // "1": plantillas de clave sobre la envolvente de la mezcla; si no hay margen, heurística de acentos
+  // "1": clave/acentos fijan el inicio de compás (módulo 4); la frase musical solo decide entre el candidato y su opuesto (+4)
   const clave = estimateDownbeat(beats, [{ envelope: env, fps, templates: CLAVE_TEMPLATES, weight: 1 }]);
   const energy = guessDownbeat(env, fps, beats);
   const useClave = clave.confidence >= 0.15;
-  const downbeatIndex = useClave ? clave.downbeatIndex : energy.downbeatIndex;
-  const confidence = useClave ? clave.confidence : energy.confidence * 0.5;
+  const base = useClave ? clave.downbeatIndex : energy.downbeatIndex;
+  const phrase = phraseScores(phraseNovelty(x, buffer.sampleRate, beats));
+  const alt = (base + 4) % 8;
+  // solo se cambia de compás si la novedad de frase es claramente mayor en el opuesto
+  const downbeatIndex = phrase[alt] > phrase[base] * 1.15 ? alt : base;
+  const baseConf = useClave ? clave.confidence : energy.confidence * 0.5;
+  const phraseMargin = Math.abs(phrase[alt] - phrase[base]) / (Math.max(phrase[alt], phrase[base]) || 1);
+  const confidence = Math.max(0, Math.min(1, 0.5 * baseConf + 0.5 * phraseMargin));
   // bpm real: mediana de intervalos
   const ivs = beats.slice(1).map((b, i) => b - beats[i]).sort((a, b) => a - b);
   const med = ivs.length ? ivs[Math.floor(ivs.length / 2)] : 60 / bpm;
