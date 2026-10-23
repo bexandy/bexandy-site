@@ -3,7 +3,7 @@ import CountBar from './CountBar';
 import RhythmMode from './RhythmMode';
 import StemMixer from './StemMixer';
 import { analyze, onsetEnvelope, type BeatAnalysis } from './analysis/beatTracker';
-import { estimateDownbeat, vocalPhraseScores, harmonicChangeScores, fuseDownbeat, guessEnergyScores, CLAVE_TEMPLATES, BASS_TEMPLATE } from './analysis/clavePhase';
+import { estimateDownbeat, vocalPhraseScores, harmonicChangeScores, fuseDownbeat, barAccentScores, CLAVE_TEMPLATES, BASS_TEMPLATE } from './analysis/clavePhase';
 import { scheduleClick } from './audio/click';
 import { mixToWav, asAudioBufferLike, STEM_LABELS } from './audio/mix';
 import { exportStem, stemFileName, saveBlob, shareFiles, zipBlobs, type ExportFormat } from './audio/export';
@@ -187,8 +187,8 @@ export default function Player() {
     const phase = estimateDownbeat(a.beats, sources);
     // 2) 1 vs 5 con frases de la voz y armonía del piano/metales; todo fusionado en una puntuación por desplazamiento
     const signals: { scores: number[]; weight: number }[] = [
-      { scores: phase.scores, weight: 0.8 },
-      { scores: guessEnergyScores(a.envelope, a.fps, a.beats), weight: 0.6 },
+      { scores: phase.scores, weight: 0.5 },
+      { scores: barAccentScores(a.envelope, a.fps, a.beats), weight: 1.2 },
     ];
     if (stems.vocals) signals.push({ scores: vocalPhraseScores(stems.vocals.channelData[0], stems.vocals.sampleRate, a.beats), weight: 1.2 });
     if (stems.other) signals.push({ scores: harmonicChangeScores(stems.other.channelData[0], stems.other.sampleRate, a.beats), weight: 0.5 });

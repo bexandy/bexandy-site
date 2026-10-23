@@ -261,12 +261,35 @@ export function fuseDownbeat(signals: { scores: number[]; weight: number }[]): {
   return { downbeatIndex: best, confidence, total };
 }
 
-/** Acentos de energía por posición: plantilla 1 fuerte, 5 medio, 3 y 7 leves. Devuelve puntuaciones por desplazamiento. */
+/** Acentos de energía por posición (perfil real de salsa: 2 y 6 fuertes por el slap, 4 y 8 por los tonos abiertos, 1 débil). */
 export function guessEnergyScores(env: Float32Array, fps: number, beats: number[]): number[] {
   const at = (t: number) => { const i = Math.round(t * fps); let m = 0; for (let j = Math.max(0, i - 2); j <= Math.min(env.length - 1, i + 2); j++) m = Math.max(m, env[j]); return m; };
-  const w = [1, 0, 0.3, 0, 0.5, 0, 0.3, 0];
+  const w = [0.3, 1, 0.4, 0.8, 0.3, 1, 0.4, 0.8];
   const scores = new Array(8).fill(0);
   for (let off = 0; off < 8; off++) for (let i = 0; i < beats.length; i++) scores[off] += w[(i - off + 800) % 8] * at(beats[i]);
   const mx = Math.max(...scores) || 1;
   return scores.map((v) => v / mx);
+}
+
+/**
+ * Perfil de acentos del ciclo de 8 tiempos a resolución de semicorchea (32 posiciones desde el 1), medido sobre la rejilla
+ * de pulsos del propio detector con anotaciones del Salsa dataset. Los pulsos son fuertes; las corcheas ("y") de 3, 5 y 7
+ * son fuertes y las de 2, 4, 6 y 8 débiles. Primera versión, ajustada con una sola canción: se refinará con más etiquetas.
+ */
+export const CYCLE_ACCENT_TEMPLATE = [
+  0.86, 0.01, 0.63, 0.02, 0.84, 0.02, 0.47, 0.02, 0.77, 0.01, 0.98, 0.02, 0.94, 0.02, 0.35, 0.02,
+  0.89, 0.01, 0.96, 0.01, 0.75, 0.02, 0.53, 0.02, 0.87, 0.01, 0.93, 0.01, 1.0, 0.01, 0.4, 0.02,
+];
+
+/** Correlación del perfil de semicorcheas del ciclo con la plantilla de acentos; devuelve una puntuación por desplazamiento. */
+export function barAccentScores(env: Float32Array, fps: number, beats: number[]): number[] {
+  if (beats.length < 16) return new Array(8).fill(0);
+  const t = Float32Array.from(CYCLE_ACCENT_TEMPLATE);
+  let mean = 0; for (let k = 0; k < 32; k++) mean += t[k]; mean /= 32;
+  let norm = 0; for (let k = 0; k < 32; k++) { t[k] -= mean; norm += t[k] * t[k]; } norm = Math.sqrt(norm) || 1;
+  for (let k = 0; k < 32; k++) t[k] /= norm;
+  const scores: number[] = [];
+  for (let off = 0; off < 8; off++) scores.push(dot(cycleProfile(env, fps, beats, off), t));
+  const mn = Math.min(...scores);
+  return scores.map((s) => s - mn);
 }

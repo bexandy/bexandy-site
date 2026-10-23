@@ -1,5 +1,5 @@
 import { fft, hann } from './fft';
-import { estimateDownbeat, phraseNovelty, phraseScores, harmonicChangeScores, fuseDownbeat, CLAVE_TEMPLATES, type ClaveName } from './clavePhase';
+import { estimateDownbeat, phraseNovelty, phraseScores, harmonicChangeScores, fuseDownbeat, barAccentScores, CLAVE_TEMPLATES, type ClaveName } from './clavePhase';
 
 export interface BeatAnalysis {
   bpm: number;
@@ -114,8 +114,8 @@ export function trackBeats(env: Float32Array, fps: number, periodFrames: number,
 }
 
 /**
- * Heurística para el "1": de las 8 posiciones posibles del compás, la que tiene más energía
- * acumulada en los pulsos 1 y 5 (y algo en 3 y 7). Es débil en salsa; se usa solo como punto de partida.
+ * Heurística de acentos para el compás. En salsa el tiempo 1 es el más débil: la energía está en el 2 (slap de conga),
+ * el 4 (tonos abiertos) y, en menor medida, el 3. Perfil medido sobre anotaciones del Salsa dataset.
  */
 export function guessDownbeat(env: Float32Array, fps: number, beats: number[]) {
   const at = (t: number) => {
@@ -124,7 +124,7 @@ export function guessDownbeat(env: Float32Array, fps: number, beats: number[]) {
     for (let j = Math.max(0, i - 2); j <= Math.min(env.length - 1, i + 2); j++) m = Math.max(m, env[j]);
     return m;
   };
-  const w = [1, 0, 0.3, 0, 0.5, 0, 0.3, 0];
+  const w = [0.3, 1, 0.4, 0.8, 0.3, 1, 0.4, 0.8];
   const scores: number[] = new Array(8).fill(0);
   for (let off = 0; off < 8; off++) {
     for (let i = 0; i < beats.length; i++) scores[off] += w[(i - off + 800) % 8] * at(beats[i]);
@@ -145,9 +145,11 @@ export function analyze(buffer: AudioBuffer): BeatAnalysis {
   const energy = guessDownbeat(env, fps, beats);
   const phrase = phraseScores(phraseNovelty(x, buffer.sampleRate, beats));
   const harmony = harmonicChangeScores(x, buffer.sampleRate, beats);
+  const bar = barAccentScores(env, fps, beats);
   const fused = fuseDownbeat([
-    { scores: clave.scores, weight: 0.8 },
-    { scores: energy.scores, weight: 1.0 },
+    { scores: clave.scores, weight: 0.5 },
+    { scores: bar, weight: 1.2 },
+    { scores: energy.scores, weight: 0.3 },
     { scores: phrase, weight: 0.4 },
     { scores: harmony, weight: 0.4 },
   ]);
