@@ -1,0 +1,48 @@
+# slug|ruta relativa a la carpeta de origen|tema|pie|prompt (nombre de archivo original)
+escritorio-codigo|Generate/Cinematic medium shot of @Bexandy seated at a sleek glass desk in a.jpg|trabajo|Escritorio de vidrio, dos monitores y luz de atardecer|Cinematic medium shot of Bexandy seated at a sleek glass desk in a
+oficina-camisa-blanca|Generate/b3c245ea13464ad5b113fa5a708c2f43.jpg|trabajo|Oficina abierta, camisa blanca|
+monitores-brazos-cruzados|imagenes/1859ec8bf1c848b08eac5ac562276d0e.jpg|trabajo|Entre monitores, brazos cruzados|
+monitores-gafas-traje|imagenes/676c0ca20f0c47d39ae86fd98b503a43.jpg|trabajo|Código en pantalla, gafas y traje|
+laptop-camiseta|imagenes/8953babbf32e4159a4692f3992b1caf8.jpg|trabajo|Trabajo remoto con laptop|
+oficina-ventana-ciudad|imagenes/a12f7e9e3b324a1ab0856404cd055960.jpg|trabajo|Oficina con la ciudad al fondo|
+arquitecto-cafe|imagenes/Candid lifestyle portrait of @Bexandy  senior software architect.jpg|trabajo|Arquitecto de software en un café|Candid lifestyle portrait of Bexandy  senior software architect
+setup-gamer|imagenes/Medium shot of a Venezuelan man @Bexandy  .jpg|trabajo|Puesto de trabajo con teclado retroiluminado|Medium shot of a Venezuelan man Bexandy
+retrato-estudio-negro|Generate/93c529e3c5b0462bbab53ff0253249e7.jpg|estudio|Retrato de estudio sobre fondo negro|
+sillon-cuero-bn|Generate/Three-quarter portrait of @Bexandy centered in a minimalist studio.jpg|estudio|Sillón de cuero, blanco y negro|Three-quarter portrait of Bexandy centered in a minimalist studio
+ventana-bn|imagenes/012f97d141d8418f9b309406bd6e79fc.jpg|estudio|Traje junto a la ventana, blanco y negro|
+traje-claro-concreto|imagenes/2874b08464494cb5b371c13d577f5325 (1).jpg|estudio|Traje claro contra muro de concreto|2874b08464494cb5b371c13d577f5325
+blazer-gris-retrato|imagenes/9158e538798b46a3ae8e4a5b069089d3.jpg|estudio|Blazer gris, mano en la barbilla|
+traje-gris-sentado|imagenes/ca818b82e2fc437badd23a762df16f38 (1).jpg|estudio|Traje gris, sentado en estudio|ca818b82e2fc437badd23a762df16f38
+porche-atardecer|imagenes/d7106987bcf344e48bc4f007e41cfaa1 (1).jpg|estudio|Traje claro en un porche al atardecer|d7106987bcf344e48bc4f007e41cfaa1
+taburete-traje-negro|imagenes/Gemini_Generated_Image_94b0u794b0u794b0.png|estudio|Traje negro en taburete|
+santiago-crepusculo|Generate/Change the background of @image1 to a cinematic twilight view of the.jpg|santiago|Costanera Center al crepúsculo|Change the background of la foto original to a cinematic twilight view of the
+santiago-tobalaba|Generate/Change the background of @image1 to a modern street in Santiago de.jpg|santiago|Metro Tobalaba y la torre Costanera|Change the background of la foto original to a modern street in Santiago de
+santiago-nieve|Generate/d4ed0b13a16943a2a1e0974748f3d5f7.jpg|santiago|Santiago con la cordillera nevada|
+santiago-calle-bus|imagenes/Gemini_Generated_Image_acqpmmacqpmmacqp.png|santiago|Calle de Santiago, camisa celeste|
+santiago-cordillera|imagenes/Outdoor professional portrait of @Bexandy .jpg|santiago|Mirando a la cordillera|Outdoor professional portrait of Bexandy
+cafe-risa|Generate/Candid street-style photograph of @Bexandy captured mid-laugh at an.jpg|calle|Risa en un café de barrio|Candid street-style photograph of Bexandy captured mid-laugh at an
+paris-cruce|Generate/Full-body shot of @Bexandy captured mid-stride.jpg|calle|Cruce de calle, estilo editorial|Full-body shot of Bexandy captured mid-stride
+adoquines|Generate/Place the man from @image1 standing on a cobblestone street in a.jpg|calle|Calle empedrada|Place the man from la foto original standing on a cobblestone street in a
+cafe-otono|imagenes/6921e8be187c4d5ba2604188676b170e.jpg|calle|Café de otoño con taza en mano|
+chaqueta-jeans-noche|imagenes/fa743930b15a49258a803745471d7fb8 (1).jpg|calle|Chaqueta de jeans, noche urbana|fa743930b15a49258a803745471d7fb8
+moto-montana|Generate/0dca94ee61b04e958351631b7f354062.jpg|viajes|Moto en la cordillera|
+moto-desierto|Generate/A grand.jpg|viajes|Moto en el desierto rojo|A grand
+volante|Generate/Cinematic interior shot of @Bexandy in the driver's seat of a sleek.jpg|viajes|Al volante, luces de ciudad|Cinematic interior shot of Bexandy in the driver's seat of a sleek
+moto-neon|Generate/Cinematic wide shot of @Bexandy perched on a matte-black.jpg|viajes|Moto bajo neones|Cinematic wide shot of Bexandy perched on a matte-black
+ruta-66|Generate/Low-angle wide shot of @Bexandy perched atop a classic 1965 (1).jpg|viajes|Clásica en la Ruta 66|Low-angle wide shot of Bexandy perched atop a classic 1965
+desierto-aventura|Generate/Wide-angle cinematic shot of @Bexandy standing triumphantly beside a.jpg|viajes|Dunas y moto de aventura|Wide-angle cinematic shot of Bexandy standing triumphantly beside a
+beisbol-venezuela|Generate/a00de5c9c2884bdfa5a42cf0bd2b4e93.jpg|venezuela|Uniforme de Venezuela en el estadio|
+roraima-4x4|Generate/688d4fa0e1a54e909096bb6b7df7b502.jpg|venezuela|Tepuy y camioneta|
+roraima-traje|Generate/db05e47e16f64f56bba086a653f340c9.jpg|venezuela|Carretera hacia el tepuy|
+caballo-flamencos|Generate/da5048b6a4e54f91835dfe04a2f30595.jpg|venezuela|Caballo blanco y corocoras|
+vinotinto-nasa|imagenes/a2b61ed70b4e4ba9889d62d1d01408ac (1).jpg|venezuela|Chaqueta con el escudo de la Vinotinto|a2b61ed70b4e4ba9889d62d1d01408ac
+tango|Generate/666abb4467b941a3850af295c77e56a4.jpg|baile|Baile de salón con vestido rojo|
+salsa-luces|Generate/Dynamic medium shot of @Bexandy captured in the midst of a fluid.jpg|baile|Salsa bajo las luces|Dynamic medium shot of Bexandy captured in the midst of a fluid
+billar|Generate/Cinematic mid-shot of @Bexandy leaning casually against the edge of a.jpg|noche|Mesa de billar en un lounge|Cinematic mid-shot of Bexandy leaning casually against the edge of a
+bar-lujo|Generate/Place the man from @image1 in a moody.jpg|noche|Bar de lujo, chaqueta de cuero|Place the man from la foto original in a moody
+santiago-neon|Generate/Transform the background of @image1 into an upscale luxury bar in.jpg|noche|Neón de Santiago de Chile|Transform the background of la foto original into an upscale luxury bar in
+link-convencion|Generate/At the Convention - @Bexandy.jpg|fantasia|Cosplay de Link en una convención|At the Convention - Bexandy
+retro-80s|Generate/1c63a4da-6398-4d59-856a-fa0ee4faa78b.png|fantasia|Retrato retro años 80|
+retro-neon|Generate/ec914f5c-7510-4c77-ac97-1f6491a18f19.png|fantasia|Chaqueta ochentera y neón|
+silla-scifi|imagenes/20f263076ae14c41a190e5712b40458e.jpg|fantasia|Silla de mando futurista|
+minotauro|imagenes/23ed427da0534ec690e3a6bf3e964b2a (1).jpg|fantasia|Minotauro de fantasía|23ed427da0534ec690e3a6bf3e964b2a

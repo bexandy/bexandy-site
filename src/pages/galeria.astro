@@ -1,0 +1,86 @@
+---
+import { Image, getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { gallery, themes } from '../data/gallery';
+const counts = Object.fromEntries(Object.keys(themes).map((t) => [t, gallery.filter((g) => g.theme === t).length]));
+const large = await Promise.all(gallery.map((g) => getImage({ src: g.image, width: 1400, format: 'webp' })));
+const payload = gallery.map((g, i) => ({ slug: g.slug, theme: g.theme, caption: g.caption, prompt: g.prompt, large: large[i].src }));
+---
+<Base title="Galería" description="Retratos generados con inteligencia artificial a partir de mis fotos: trabajo, Santiago, viajes, Venezuela, baile y fantasía.">
+  <div class="eyebrow mb-2">Proyecto de IA</div>
+  <h1 class="display font-bold text-4xl">Mi doble digital</h1>
+  <p class="muted mt-2 max-w-2xl">Entrené un modelo de imagen con 27 fotos mías y le pedí escenas que nunca viví: oficinas al atardecer, carreteras, tepuyes, neones. Todo lo que ves aquí es generado con IA; mi cara es real, el resto no. <a href="/portafolio/doble-digital" class="underline decoration-[var(--amber)]">Cómo lo hice</a>.</p>
+
+  <div class="flex flex-wrap gap-2 mt-6 no-print" id="filters" role="group" aria-label="Filtrar por tema">
+    <button class="chip font-bold" data-theme="" aria-pressed="true">Todas · {gallery.length}</button>
+    {Object.entries(themes).map(([k, label]) => <button class="chip" data-theme={k} aria-pressed="false">{label} · {counts[k]}</button>)}
+  </div>
+
+  <div class="mt-6 columns-2 md:columns-3 lg:columns-4 gap-3 [column-fill:_balance]" id="grid">
+    {gallery.map((g, i) => (
+      <figure class="mb-3 break-inside-avoid" data-theme={g.theme} data-i={i}>
+        <button class="block w-full rounded-xl overflow-hidden card hover:border-amber transition-colors text-left" data-open={i} aria-label={`Ampliar: ${g.caption}`}>
+          <Image src={g.image} alt={g.caption} width={520} widths={[320, 520, 800]} sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw" class="w-full h-auto" loading={i < 8 ? 'eager' : 'lazy'} />
+        </button>
+        <figcaption class="text-xs muted mt-1 px-1">{g.caption}</figcaption>
+      </figure>
+    ))}
+  </div>
+
+  <dialog id="lb" class="backdrop:bg-black/90 bg-transparent p-0 m-auto max-w-[96vw] max-h-[96vh] outline-none">
+    <div class="relative flex flex-col items-center gap-3">
+      <img id="lb-img" alt="" class="max-h-[80vh] max-w-[96vw] rounded-xl object-contain" />
+      <div class="text-center max-w-2xl px-2">
+        <p id="lb-cap" class="text-[#f4efe6] font-bold"></p>
+        <p id="lb-prompt" class="text-xs mt-1" style="color:#a79f90"></p>
+      </div>
+      <div class="flex gap-2">
+        <button id="lb-prev" class="btn" aria-label="Anterior">◀</button>
+        <button id="lb-close" class="btn solid">Cerrar</button>
+        <button id="lb-next" class="btn" aria-label="Siguiente">▶</button>
+      </div>
+    </div>
+  </dialog>
+
+  <p class="text-xs muted mt-10 max-w-2xl">Imágenes generadas con Artflow, Gemini y Firefly a partir de un modelo entrenado con mis fotografías. No representan lugares ni situaciones reales. Si quieres saber cómo se hizo, está contado en el <a href="/portafolio/doble-digital" class="underline">portafolio</a>.</p>
+
+  <script is:inline set:html={`window.__gallery = ${JSON.stringify(payload)};`} />
+  <script>
+    const grid = document.getElementById('grid')!;
+    const figs = [...grid.querySelectorAll<HTMLElement>('figure')];
+    const imgs = figs.map((f) => f.querySelector('img')!);
+    const data = (window as any).__gallery as { caption: string; prompt: string; theme: string; large: string }[];
+    // filtros
+    const buttons = document.querySelectorAll<HTMLButtonElement>('#filters button');
+    let current = '';
+    const applyFilter = (t: string) => {
+      current = t;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.theme ?? '') === t)));
+      buttons.forEach((b) => b.classList.toggle('font-bold', (b.dataset.theme ?? '') === t));
+      figs.forEach((f) => { f.hidden = !!t && f.dataset.theme !== t; });
+      try { localStorage.setItem('galeria-tema', t); } catch {}
+    };
+    buttons.forEach((b) => b.addEventListener('click', () => applyFilter(b.dataset.theme ?? '')));
+    const fromHash = location.hash.replace('#', '');
+    if (fromHash && data.some((d) => d.theme === fromHash)) applyFilter(fromHash);
+    // visor
+    const lb = document.getElementById('lb') as HTMLDialogElement;
+    const lbImg = document.getElementById('lb-img') as HTMLImageElement;
+    const cap = document.getElementById('lb-cap')!, pr = document.getElementById('lb-prompt')!;
+    let idx = 0;
+    const visible = () => figs.map((f, i) => (f.hidden ? -1 : i)).filter((i) => i >= 0);
+    const show = (i: number) => {
+      idx = i;
+      lbImg.src = data[i].large; lbImg.alt = data[i].caption;
+      cap.textContent = data[i].caption; pr.textContent = data[i].prompt ? `Prompt: ${data[i].prompt}` : '';
+      if (!lb.open) lb.showModal();
+    };
+    const step = (d: number) => { const v = visible(); const p = v.indexOf(idx); show(v[(p + d + v.length) % v.length]); };
+    grid.querySelectorAll<HTMLButtonElement>('button[data-open]').forEach((b) => b.addEventListener('click', () => show(Number(b.dataset.open))));
+    document.getElementById('lb-prev')!.addEventListener('click', () => step(-1));
+    document.getElementById('lb-next')!.addEventListener('click', () => step(1));
+    document.getElementById('lb-close')!.addEventListener('click', () => lb.close());
+    lb.addEventListener('click', (e) => { if (e.target === lb) lb.close(); });
+    window.addEventListener('keydown', (e) => { if (!lb.open) return; if (e.key === 'ArrowLeft') step(-1); if (e.key === 'ArrowRight') step(1); });
+  </script>
+</Base>

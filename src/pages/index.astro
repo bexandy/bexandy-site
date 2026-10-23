@@ -7,6 +7,7 @@ import { img } from '../lib/images';
 import { getCollection } from 'astro:content';
 import heroTrabajo from '../assets/img/hero-trabajo.jpg';
 import heroBaile from '../assets/img/hero-baile.jpg';
+import { gallery } from '../lib/galleryPick';
 
 const featured = (await getCollection('projects', ({ data }) => data.featured && !data.draft && data.side === 'work'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -62,6 +63,25 @@ const counts = [1, 2, 3, 4, 5, 6, 7, 8];
     <div class="grid md:grid-cols-3 gap-4">
       {featured.map((p) => (
         <Card href={`/portafolio/${p.id}`} title={p.data.title} subtitle={p.data.summary} tags={p.data.stack.slice(0, 4)} cover={img(p.data.cover)} eyebrow={`${p.data.date.getFullYear()} · Agencia Sur`} />
+      ))}
+    </div>
+  </section>
+
+  <!-- Galería -->
+  <section class="max-w-6xl mx-auto px-4 pb-14">
+    <div class="flex items-end justify-between gap-4 flex-wrap mb-4">
+      <div>
+        <div class="eyebrow mb-2">Proyecto de IA</div>
+        <h2 class="display font-bold text-3xl">Mi doble digital</h2>
+        <p class="muted mt-1 max-w-xl">Un modelo entrenado con mis fotos y 47 escenas que nunca viví.</p>
+      </div>
+      <a href="/galeria" class="btn">Ver la galería</a>
+    </div>
+    <div class="grid grid-cols-3 md:grid-cols-6 gap-2">
+      {gallery.map((g) => (
+        <a href={`/galeria#${g.theme}`} class="block rounded-lg overflow-hidden card hover:border-amber transition-colors aspect-[3/4]">
+          <Image src={g.image} alt={g.caption} width={300} class="w-full h-full object-cover" loading="lazy" />
+        </a>
       ))}
     </div>
   </section>
