@@ -44,8 +44,38 @@ function fMeasure(det, ref, tol) {
   const p = det.length ? tp / det.length : 0, r = ref.length ? tp / ref.length : 0;
   return { f: p + r ? (2 * p * r) / (p + r) : 0, p, r };
 }
-// tolerar octava/medio tempo: comparar también contra la referencia a doble densidad
-const beatF = fMeasure(detBeats, annBeats, tol);
-const downF = fMeasure(detDown, annDown, tol);
+// Alineación: el audio del usuario puede ser otra masterización (recorte inicial y velocidad distintos).
+// Se busca el desplazamiento y el estiramiento lineal de las anotaciones que maximizan las coincidencias.
+function align(det, ref) {
+  let best = { f: -1, offset: 0, stretch: 1 };
+  for (let st = 0.994; st <= 1.0061; st += 0.0005) {
+    for (let off = -0.25; off <= 0.2501; off += 0.005) {
+      const r2 = ref.map((t) => t * st + off);
+      const { f } = fMeasure(det, r2, tol);
+      // entre soluciones equivalentes (desplazadas pulsos enteros), preferir el desplazamiento más pequeño
+      if (f > best.f + 0.005 || (Math.abs(f - best.f) <= 0.005 && Math.abs(off) < Math.abs(best.offset))) best = { f, offset: off, stretch: st };
+    }
+  }
+  // refinamiento fino del desplazamiento
+  for (let off = best.offset - 0.01; off <= best.offset + 0.0101; off += 0.001) {
+    const { f } = fMeasure(det, ref.map((t) => t * best.stretch + off), tol);
+    if (f > best.f) best = { ...best, f, offset: off };
+  }
+  return best;
+}
+const al = align(detBeats, annBeats);
+const annBeatsA = annBeats.map((t) => t * al.stretch + al.offset);
+const annDownA = annDown.map((t) => t * al.stretch + al.offset);
+const beatF = fMeasure(detBeats, annBeatsA, tol);
+const downF = fMeasure(detDown, annDownA, tol);
+// ¿en qué posición del compás anotado caen nuestros "1"? (para saber si el compás se acertó)
+const posHist = { 1: 0, 2: 0, 3: 0, 4: 0 };
+const annA = ann.map((a) => ({ t: a.t * al.stretch + al.offset, pos: a.pos }));
+for (let i = 0; i < detBeats.length; i++) {
+  if (countOf(i) !== 1) continue;
+  let best = annA[0]; for (const a of annA) if (Math.abs(a.t - detBeats[i]) < Math.abs(best.t - detBeats[i])) best = a;
+  if (Math.abs(best.t - detBeats[i]) <= tol) posHist[best.pos]++;
+}
+const sinAlinear = fMeasure(detBeats, annBeats, tol).f;
 const annBpm = 60 / ((annBeats.at(-1) - annBeats[0]) / (annBeats.length - 1));
-console.log(JSON.stringify({ audio, bpmDetectado: +res.bpm.toFixed(1), bpmAnotado: +annBpm.toFixed(1), clave: res.clave, confianzaDel1: +res.downbeatConfidence.toFixed(2), pulsos: { f: +beatF.f.toFixed(3), precision: +beatF.p.toFixed(3), recall: +beatF.r.toFixed(3) }, inicioDeCompas: { f: +downF.f.toFixed(3) }, tiempoMs: ms }, null, 1));
+console.log(JSON.stringify({ audio, bpmDetectado: +res.bpm.toFixed(1), bpmAnotado: +annBpm.toFixed(1), alineacion: { desplazamientoMs: Math.round(al.offset * 1000), estiramiento: +al.stretch.toFixed(4), fSinAlinear: +sinAlinear.toFixed(3) }, clave: res.clave, confianzaDel1: +res.downbeatConfidence.toFixed(2), pulsos: { f: +beatF.f.toFixed(3), precision: +beatF.p.toFixed(3), recall: +beatF.r.toFixed(3) }, inicioDeCompas: { f: +downF.f.toFixed(3) }, posicionAnotadaDeNuestros1: posHist, tiempoMs: ms }, null, 1));
