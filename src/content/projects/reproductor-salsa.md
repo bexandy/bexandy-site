@@ -9,7 +9,7 @@ links: { live: /salsa/player }
 cover: cover-player
 featured: true
 ---
-Herramienta para bailarines y profesores. Todo el procesamiento ocurre en el navegador del usuario; ninguna canción se sube a un servidor.
+Herramienta para bailarines que quieren practicar por su cuenta. Todo el procesamiento ocurre en el navegador del usuario; ninguna canción se sube a un servidor.
 
 ## Estado
 - v1: carga local, velocidad con tono conservado, rejilla de conteos con tempo automático y "1" marcado a mano, metrónomo con acento en 1 y 5.

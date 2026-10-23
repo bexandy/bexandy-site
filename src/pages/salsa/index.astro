@@ -15,14 +15,14 @@ const videos = (await getCollection('videos', ({ data }) => !data.draft)).sort((
     <div class="relative z-10 w-full max-w-6xl mx-auto px-4 pb-12 pt-28 text-[#f4efe6]">
       <div class="eyebrow mb-3">Baile</div>
       <h1 class="display font-bold text-5xl md:text-6xl leading-[.95]">Salsa</h1>
-      <p class="mt-4 max-w-xl" style="color: #a79f90">Bailo y enseño salsa On1 y On2 en Santiago. Aquí están las herramientas que construí para practicar y los videos de mis clases.</p>
+      <p class="mt-4 max-w-xl" style="color: #a79f90">Bailo salsa On1 y On2 como alumno en Santiago. Aquí están las herramientas que construí para practicar y los videos de las clases y sociales a los que voy.</p>
     </div>
   </section>
 
   <div class="max-w-6xl mx-auto px-4 py-10">
     <div class="grid md:grid-cols-2 gap-4">
       <Card href="/salsa/player" title="Reproductor de práctica" subtitle="Separa los instrumentos de una canción, cambia la velocidad sin alterar el tono y marca los conteos 1-2-3 5-6-7." side="dance" tags={['stems', 'velocidad', 'conteos', 'metrónomo']} eyebrow="Herramienta" />
-      <Card href="/salsa/clases" title="Clases en video" subtitle="Grabaciones de mis clases, organizadas por nivel y figura, con capítulos." side="dance" tags={['On1', 'On2', 'shines']} eyebrow="Videos" />
+      <Card href="/salsa/clases" title="Clases en video" subtitle="Grabaciones de las clases y sociales a los que voy, agrupadas por academia." side="dance" tags={['On1', 'On2', 'shines']} eyebrow="Videos" />
     </div>
 
     <section class="mt-12">

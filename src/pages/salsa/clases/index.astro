@@ -12,7 +12,7 @@ const fmt = (d: Date) => d.toLocaleDateString('es-CL', { year: 'numeric', month:
 <Base title="Clases de salsa en video" side="dance">
   <div class="eyebrow mb-2">Baile</div>
   <h1 class="display font-bold text-4xl">Clases en video</h1>
-  <p class="muted mt-2 max-w-xl">Grabaciones de mis clases y prácticas, agrupadas por la academia donde se hicieron y ordenadas por los "me gusta" que recibieron en TikTok.</p>
+  <p class="muted mt-2 max-w-xl">Grabaciones de las clases y prácticas a las que asisto como alumno, agrupadas por la academia donde se hicieron y ordenadas por los "me gusta" que recibieron en TikTok.</p>
 
   <nav class="flex flex-wrap gap-2 mt-6 text-sm no-print" aria-label="Academias">
     {groups.map((g) => <a href={`#${g.key}`} class="chip hover:border-amber">{g.name} · {g.items.length}</a>)}
