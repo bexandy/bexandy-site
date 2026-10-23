@@ -26,3 +26,6 @@ pnpm-debug.log*
 # wrangler
 .wrangler/
 .dev.vars
+
+# binarios de ONNX Runtime copiados en el build
+public/ort/

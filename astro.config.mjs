@@ -12,6 +12,8 @@ export default defineConfig({
   integrations: [react(), mdx(), sitemap()],
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    worker: { format: 'es' },
+    optimizeDeps: { exclude: ['onnxruntime-web'] }
   }
 });

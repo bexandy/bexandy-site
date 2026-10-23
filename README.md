@@ -29,8 +29,8 @@ npx wrangler deploy  # publica dist/ en Cloudflare (requiere login o CLOUDFLARE_
 | Despliegue | `wrangler.jsonc`, `.github/workflows/deploy.yml` |
 
 ## Reproductor de salsa (estado)
-- v1 (actual): carga local, velocidad 50–120 % con tono conservado, tempo y pulsos automáticos, "1" marcado con la barra espaciadora o flechas, metrónomo con acento en 1 y 5, bucle A–B, modo ritmo con clave 2-3 / 3-2.
-- v1.1: separación de instrumentos con Demucs (ONNX Runtime Web + WebGPU) en un Web Worker.
+- v1: carga local, velocidad 50–120 % con tono conservado, tempo y pulsos automáticos, "1" marcado con la barra espaciadora o flechas, metrónomo con acento en 1 y 5, bucle A–B, modo ritmo con clave 2-3 / 3-2.
+- v1.1 (actual): separación de instrumentos con HT-Demucs (código de demucs-js vendorizado en `src/lib/demucs/`, ONNX Runtime Web, WebGPU o WebAssembly multihilo) en un Web Worker; mezclador por pista con solo/mute/volumen y descarga WAV; reanálisis del tempo con la pista de percusión. El modelo (174 MB) se sirve desde R2 (`cdn.bexandyrodriguez.com/models/htdemucs.onnx`) y se cachea en el navegador. Los binarios de ONNX se copian a `public/ort/` en `prebuild` (no se versionan). Las páginas aisladas (COOP/COEP) exigen que `/_astro/*` y `/ort/*` lleven COEP: ver `public/_headers`.
 - v1.2: detección automática de la fase del compás con plantillas de clave.
 
 ## Scripts para videos

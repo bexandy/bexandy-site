@@ -14,7 +14,8 @@ import Player from '../../components/salsa/player/Player';
     <ul>
       <li><strong>Velocidad</strong>: usa el motor de audio del navegador conservando el tono. Rango de 50 % a 120 %.</li>
       <li><strong>Conteos</strong>: el tempo se estima automáticamente sobre la energía de la canción. El "1" rara vez se detecta solo en salsa, así que puedes marcarlo tocando el botón o la barra espaciadora en el 1, y ajustar la fase.</li>
-      <li><strong>Instrumentos</strong>: la separación en pistas (percusión, bajo, voz, otros) corre con Demucs en tu GPU vía WebGPU. Está en desarrollo; por ahora el reproductor trabaja con la mezcla completa.</li>
+      <li><strong>Instrumentos</strong>: la separación en pistas (percusión, bajo, voz, otros) corre con <a href="https://github.com/facebookresearch/demucs" class="underline">Demucs</a> (HT-Demucs) en tu navegador mediante ONNX Runtime y WebGPU; sin WebGPU usa WebAssembly, más lento. El modelo pesa 166 MB y se descarga una sola vez.</li>
+      <li><strong>Licencias</strong>: el port a JavaScript es <a href="https://github.com/bakkot/demucs-js" class="underline">demucs-js</a> (MIT). Los pesos del modelo derivan de los publicados por Meta y están disponibles solo para uso personal y de investigación, que es el de este sitio.</li>
     </ul>
   </section>
 </Base>
