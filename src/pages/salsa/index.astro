@@ -4,6 +4,8 @@ import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
 import { getCollection } from 'astro:content';
 import heroBaile from '../../assets/img/hero-baile.jpg';
+import OrgCard from '../../components/OrgCard.astro';
+import { academies } from '../../data/orgs';
 const videos = (await getCollection('videos', ({ data }) => !data.draft)).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
 ---
 <Base title="Salsa" side="dance" overlayNav>
@@ -22,6 +24,13 @@ const videos = (await getCollection('videos', ({ data }) => !data.draft)).sort((
       <Card href="/salsa/player" title="Reproductor de práctica" subtitle="Separa los instrumentos de una canción, cambia la velocidad sin alterar el tono y marca los conteos 1-2-3 5-6-7." side="dance" tags={['stems', 'velocidad', 'conteos', 'metrónomo']} eyebrow="Herramienta" />
       <Card href="/salsa/clases" title="Clases en video" subtitle="Grabaciones de mis clases, organizadas por nivel y figura, con capítulos." side="dance" tags={['On1', 'On2', 'shines']} eyebrow="Videos" />
     </div>
+
+    <section class="mt-12">
+      <div class="eyebrow mb-2">Academias</div>
+      <h2 class="display font-bold text-2xl mb-1">Dónde aprendo</h2>
+      <p class="muted mb-4 max-w-xl">Soy alumno en tres escuelas de Santiago. Si quieres empezar a bailar, cualquiera de ellas es un buen punto de partida.</p>
+      <div class="grid md:grid-cols-3 gap-4">{academies.map((a) => <OrgCard org={a} />)}</div>
+    </section>
 
     {videos.length > 0 && (
       <section class="mt-12">

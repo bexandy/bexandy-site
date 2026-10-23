@@ -3,6 +3,8 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import cv from '../data/cv.json';
 import retrato from '../assets/img/retrato.jpg';
+import OrgCard from '../components/OrgCard.astro';
+import { employer, academies } from '../data/orgs';
 const fmt = (d?: string) => (d ? new Date(d).toLocaleDateString('es-CL', { year: 'numeric', month: 'short', timeZone: 'UTC' }) : 'hoy');
 ---
 <Base title="Currículum" side="work" description={`Currículum de ${cv.basics.name}: ${cv.basics.label}`}>
@@ -25,7 +27,7 @@ const fmt = (d?: string) => (d ? new Date(d).toLocaleDateString('es-CL', { year:
         <section class="relative">
           <span class="absolute -left-[26px] top-2 w-[9px] h-[9px] rounded-full" style="background: var(--amber)"></span>
           <div class="flex flex-wrap justify-between gap-2">
-            <h3 class="font-bold">{w.position} · {w.name}</h3>
+            <h3 class="font-bold">{w.position} · {w.name.startsWith('Agencia Sur') ? <a href={employer.url} class="underline decoration-[var(--amber)]">{w.name}</a> : w.name}</h3>
             <span class="muted text-sm tabular-nums">{fmt(w.startDate)} – {fmt((w as { endDate?: string }).endDate)}</span>
           </div>
           <p class="text-sm mt-1">{w.summary}</p>
@@ -62,6 +64,13 @@ const fmt = (d?: string) => (d ? new Date(d).toLocaleDateString('es-CL', { year:
     {cv.education.map((e) => (
       <p class="text-sm"><strong>{e.studyType} en {e.area}</strong>, {e.institution} ({fmt(e.startDate)} – {fmt(e.endDate)})</p>
     ))}
+
+    <h2 class="display font-bold text-2xl mt-10 mb-3">Empresa</h2>
+    <OrgCard org={employer} compact />
+
+    <h2 class="display font-bold text-2xl mt-10 mb-3">Formación en baile</h2>
+    <p class="text-sm muted mb-3">Academias de salsa donde soy alumno.</p>
+    <div class="grid gap-3">{academies.map((a) => <OrgCard org={a} compact />)}</div>
 
     <h2 class="display font-bold text-2xl mt-10 mb-3">Idiomas</h2>
     <p class="text-sm">{cv.languages.map((l) => `${l.language}: ${l.fluency}`).join(' · ')}</p>
