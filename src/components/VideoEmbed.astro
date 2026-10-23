@@ -1,15 +1,37 @@
 ---
-/** Embebe un video de YouTube o TikTok sin cookies de terceros hasta que el visitante interactúa. */
-interface Props { youtubeId?: string; tiktokId?: string; title: string }
-const { youtubeId, tiktokId, title } = Astro.props;
+/** Video de YouTube o TikTok con carga bajo demanda: muestra el póster y crea el iframe solo al pulsar. */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+interface Props { youtubeId?: string; tiktokId?: string; title: string; poster?: ImageMetadata }
+const { youtubeId, tiktokId, title, poster } = Astro.props;
+const src = youtubeId ? `https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&enablejsapi=1` : tiktokId ? `https://www.tiktok.com/embed/v2/${tiktokId}` : '';
+const external = youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : `https://www.tiktok.com/@bexandy.rodriguez/video/${tiktokId}`;
+const vertical = !youtubeId;
 ---
-{youtubeId && (
-  <div class="aspect-video rounded-xl overflow-hidden card">
-    <iframe id="yt" class="w-full h-full" src={`https://www.youtube-nocookie.com/embed/${youtubeId}?enablejsapi=1`} title={title} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-  </div>
-)}
-{tiktokId && !youtubeId && (
-  <div class="mx-auto rounded-xl overflow-hidden card" style="max-width: 340px; aspect-ratio: 9 / 16;">
-    <iframe class="w-full h-full" src={`https://www.tiktok.com/embed/v2/${tiktokId}`} title={title} loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
-  </div>
-)}
+<div class:list={['video-embed relative mx-auto rounded-xl overflow-hidden card', vertical ? 'max-w-[340px] aspect-[9/16]' : 'aspect-video']} data-src={src} data-title={title}>
+  {poster ? <Image src={poster} alt="" width={540} class="absolute inset-0 w-full h-full object-cover" loading="eager" /> : <div class="absolute inset-0" style="background: var(--bg2)"></div>}
+  <button type="button" class="play absolute inset-0 grid place-items-center text-[#f4efe6]" aria-label={`Reproducir: ${title}`} style="background: linear-gradient(0deg, rgba(15,13,11,.75) 0%, rgba(15,13,11,.1) 60%)">
+    <span class="w-16 h-16 rounded-full grid place-items-center text-2xl" style="background: var(--amber); color: var(--amber-ink)">▶</span>
+    <span class="absolute bottom-3 left-0 right-0 text-xs px-3">Pulsa para cargar el video{vertical ? ' de TikTok' : ''}</span>
+  </button>
+  <p class="fallback hidden absolute inset-x-0 bottom-0 p-3 text-xs text-center" style="background: rgba(15,13,11,.85); color: #f4efe6">
+    Si el video no carga (TikTok limita las reproducciones embebidas), <a href={external} class="underline" style="color: var(--amber)">ábrelo en {youtubeId ? 'YouTube' : 'TikTok'}</a>.
+  </p>
+</div>
+<script>
+  document.querySelectorAll<HTMLElement>('.video-embed').forEach((box) => {
+    const btn = box.querySelector<HTMLButtonElement>('button.play')!;
+    btn.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = box.dataset.src!;
+      iframe.title = box.dataset.title!;
+      iframe.className = 'absolute inset-0 w-full h-full';
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture; clipboard-write';
+      iframe.allowFullscreen = true;
+      box.appendChild(iframe);
+      btn.remove();
+      // Si TikTok responde con su pantalla de protección, el visitante tiene el enlace directo.
+      setTimeout(() => box.querySelector('.fallback')?.classList.remove('hidden'), 4000);
+    });
+  });
+</script>

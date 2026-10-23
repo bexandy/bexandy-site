@@ -2,6 +2,8 @@
 import Base from '../../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 import { academies } from '../../../data/orgs';
+import { Image } from 'astro:assets';
+import { poster } from '../../../lib/videoPosters';
 const videos = (await getCollection('videos', ({ data }) => !data.draft)).sort((a, b) => (b.data.featured ? 1 : 0) - (a.data.featured ? 1 : 0) || b.data.likes - a.data.likes || b.data.date.valueOf() - a.data.date.valueOf());
 const groups = [
   ...academies.map((a) => ({ key: a.id, name: a.name, org: a })),
@@ -27,11 +29,14 @@ const fmt = (d: Date) => d.toLocaleDateString('es-CL', { year: 'numeric', month:
       <ul class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {g.items.map((v) => (
           <li>
-            <a href={`/salsa/clases/${v.id}`} class="card block p-4 h-full hover:border-amber transition-colors">
+            <a href={`/salsa/clases/${v.id}`} class="card block h-full hover:border-amber transition-colors overflow-hidden">
+              {poster(v.data.poster) && <div class="aspect-[4/5] overflow-hidden"><Image src={poster(v.data.poster)!} alt="" width={400} class="w-full h-full object-cover" loading="lazy" /></div>}
+              <div class="p-4">
               {v.data.featured && <div class="eyebrow mb-1">Destacado</div>}
               <h3 class="display font-bold leading-tight">{v.data.title}</h3>
               <p class="muted text-sm mt-1">{fmt(v.data.date)} · {v.data.style}{v.data.likes ? ` · ♥ ${v.data.likes}` : ''}</p>
               {v.data.figures.length > 0 && <ul class="flex flex-wrap gap-1 mt-2">{v.data.figures.slice(0, 4).map((f) => <li class="chip">{f}</li>)}</ul>}
+              </div>
             </a>
           </li>
         ))}

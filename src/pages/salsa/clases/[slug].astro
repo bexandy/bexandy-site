@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
 import VideoEmbed from '../../../components/VideoEmbed.astro';
 import { academies } from '../../../data/orgs';
+import { poster } from '../../../lib/videoPosters';
 export async function getStaticPaths() {
   const videos = await getCollection('videos', ({ data }) => !data.draft);
   return videos.map((v) => ({ params: { slug: v.id }, props: { video: v } }));
@@ -20,7 +21,7 @@ const academy = academies.find((a) => a.id === d.academy);
     {academy && <p class="text-sm mt-1">Grabado en <a href={academy.url ?? `https://www.instagram.com/${academy.instagram}/`} class="underline decoration-[var(--amber)]">{academy.name}</a></p>}
     {d.tiktokId && <p class="text-sm mt-1"><a href={`https://www.tiktok.com/@bexandy.rodriguez/video/${d.tiktokId}`} class="underline decoration-[var(--amber)]">Ver en TikTok</a></p>}
 
-    <div class="mt-6"><VideoEmbed youtubeId={d.youtubeId} tiktokId={d.tiktokId} title={d.title} /></div>
+    <div class="mt-6"><VideoEmbed youtubeId={d.youtubeId} tiktokId={d.tiktokId} title={d.title} poster={poster(d.poster)} /></div>
 
     {d.chapters.length > 0 && (
       <section class="mt-6">

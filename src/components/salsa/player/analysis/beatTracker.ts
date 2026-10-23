@@ -1,4 +1,5 @@
 import { fft, hann } from './fft';
+import { estimateDownbeat, CLAVE_TEMPLATES, type ClaveName } from './clavePhase';
 
 export interface BeatAnalysis {
   bpm: number;
@@ -8,6 +9,8 @@ export interface BeatAnalysis {
   downbeatIndex: number;
   /** 0..1, qué tan clara fue la elección automática del "1" */
   downbeatConfidence: number;
+  /** clave detectada por plantillas, si la hubo */
+  clave: ClaveName | null;
   /** envolvente de onsets (para depurar / dibujar) */
   envelope: Float32Array;
   fps: number;
@@ -136,9 +139,14 @@ export function analyze(buffer: AudioBuffer): BeatAnalysis {
   const { env, fps } = onsetEnvelope(x, buffer.sampleRate);
   const { bpm, periodFrames } = estimateTempo(env, fps);
   const beats = trackBeats(env, fps, periodFrames);
-  const { downbeatIndex, confidence } = guessDownbeat(env, fps, beats);
+  // "1": plantillas de clave sobre la envolvente de la mezcla; si no hay margen, heurística de acentos
+  const clave = estimateDownbeat(beats, [{ envelope: env, fps, templates: CLAVE_TEMPLATES, weight: 1 }]);
+  const energy = guessDownbeat(env, fps, beats);
+  const useClave = clave.confidence >= 0.15;
+  const downbeatIndex = useClave ? clave.downbeatIndex : energy.downbeatIndex;
+  const confidence = useClave ? clave.confidence : energy.confidence * 0.5;
   // bpm real: mediana de intervalos
   const ivs = beats.slice(1).map((b, i) => b - beats[i]).sort((a, b) => a - b);
   const med = ivs.length ? ivs[Math.floor(ivs.length / 2)] : 60 / bpm;
-  return { bpm: 60 / med, beats, downbeatIndex, downbeatConfidence: confidence, envelope: env, fps };
+  return { bpm: 60 / med, beats, downbeatIndex, downbeatConfidence: confidence, clave: useClave ? clave.clave : null, envelope: env, fps };
 }

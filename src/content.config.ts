@@ -38,6 +38,8 @@ const videos = defineCollection({
     title: z.string(),
     youtubeId: z.string().optional(),
     tiktokId: z.string().optional(),
+    /** imagen en src/assets/videos (sin extensión) */
+    poster: z.string().optional(),
     date: z.coerce.date(),
     level: z.enum(['básico', 'intermedio', 'avanzado']).default('intermedio'),
     style: z.enum(['On1', 'On2', 'cubana', 'bachata', 'shines', 'otro']).default('On1'),

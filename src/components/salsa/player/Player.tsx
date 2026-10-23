@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import CountBar from './CountBar';
 import RhythmMode from './RhythmMode';
 import StemMixer from './StemMixer';
-import { analyze, type BeatAnalysis } from './analysis/beatTracker';
+import { analyze, onsetEnvelope, type BeatAnalysis } from './analysis/beatTracker';
+import { estimateDownbeat, CLAVE_TEMPLATES, BASS_TEMPLATE } from './analysis/clavePhase';
 import { scheduleClick } from './audio/click';
 import { mixToWav, asAudioBufferLike, STEM_LABELS } from './audio/mix';
 import type { RawAudio } from '../../../lib/demucs/wav-utils';
@@ -30,6 +31,8 @@ export default function Player() {
   const [time, setTime] = useState(0);
   const [loop, setLoop] = useState<{ a: number | null; b: number | null }>({ a: null, b: null });
   const [webgpu, setWebgpu] = useState<boolean | null>(null);
+  const [userSetDownbeat, setUserSetDownbeat] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
 
   // separación de instrumentos
   const [stems, setStems] = useState<Record<string, RawAudio> | null>(null);
@@ -45,14 +48,15 @@ export default function Player() {
   const pendingSeek = useRef<{ t: number; play: boolean } | null>(null);
   const sepStart = useRef(0);
 
-  useEffect(() => { setWebgpu('gpu' in navigator); }, []);
+  const [mobile, setMobile] = useState(false);
+  useEffect(() => { setWebgpu('gpu' in navigator); const nav = navigator as Navigator & { userAgentData?: { mobile?: boolean }; deviceMemory?: number }; setMobile(!!nav.userAgentData?.mobile || /Android|iPhone|iPad/i.test(navigator.userAgent) || (nav.deviceMemory ?? 8) < 4); }, []);
   useEffect(() => () => { workerRef.current?.terminate(); }, []);
 
   async function onFile(f: File) {
     if (url) URL.revokeObjectURL(url);
     workerRef.current?.terminate(); workerRef.current = null;
     setFile(f); setAnalysis(null); setCount(null); setLoop({ a: null, b: null }); setStems(null); setSolo(null);
-    setGains({ drums: 1, bass: 1, other: 1, vocals: 1 }); setSep({ status: 'idle' });
+    setGains({ drums: 1, bass: 1, other: 1, vocals: 1 }); setSep({ status: 'idle' }); setUserSetDownbeat(false);
     const u = URL.createObjectURL(f);
     setUrl(u);
     setAnalyzing(true);
@@ -64,7 +68,7 @@ export default function Player() {
       await new Promise((res) => setTimeout(res, 30));
       const a = analyze(buf);
       const saved = localStorage.getItem(storageKey(f));
-      if (saved) { const s = JSON.parse(saved) as SavedGrid; setDownbeat(s.downbeatIndex); setStyle(s.style); }
+      if (saved) { const s = JSON.parse(saved) as SavedGrid; setDownbeat(s.downbeatIndex); setStyle(s.style); setUserSetDownbeat(true); }
       else setDownbeat(a.downbeatIndex);
       setAnalysis(a);
     } finally {
@@ -150,8 +154,15 @@ export default function Player() {
   function refineWithDrums() {
     if (!stems?.drums) return;
     const a = analyze(asAudioBufferLike(stems.drums));
-    setAnalysis(a);
-    if (a.downbeatConfidence > (analysis?.downbeatConfidence ?? 0)) setDownbeat(a.downbeatIndex);
+    const sources = [{ envelope: a.envelope, fps: a.fps, templates: CLAVE_TEMPLATES, weight: 1 }];
+    if (stems.bass) {
+      const b = onsetEnvelope(stems.bass.channelData[0], stems.bass.sampleRate);
+      sources.push({ envelope: b.env, fps: b.fps, templates: { bass: BASS_TEMPLATE } as any, weight: 0.6 });
+    }
+    const phase = estimateDownbeat(a.beats, sources);
+    const merged: BeatAnalysis = { ...a, downbeatIndex: phase.confidence >= 0.15 ? phase.downbeatIndex : a.downbeatIndex, downbeatConfidence: Math.max(phase.confidence, a.downbeatConfidence), clave: phase.confidence >= 0.15 ? phase.clave : a.clave };
+    setAnalysis(merged);
+    if (!userSetDownbeat || merged.downbeatConfidence > 0.5) { setDownbeat(merged.downbeatIndex); setUserSetDownbeat(false); }
     scheduledUpTo.current = -1;
   }
 
@@ -196,14 +207,15 @@ export default function Player() {
     let best = 0;
     for (let i = 1; i < beats.length; i++) if (Math.abs(beats[i] - t) < Math.abs(beats[best] - t)) best = i;
     setDownbeat(((best % 8) + 8) % 8);
+    setUserSetDownbeat(true);
   }
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement) return;
       if (e.code === 'Space') { e.preventDefault(); markOne(); }
-      if (e.key === 'ArrowLeft') setDownbeat((d) => (d + 7) % 8);
-      if (e.key === 'ArrowRight') setDownbeat((d) => (d + 1) % 8);
+      if (e.key === 'ArrowLeft') { setDownbeat((d) => (d + 7) % 8); setUserSetDownbeat(true); }
+      if (e.key === 'ArrowRight') { setDownbeat((d) => (d + 1) % 8); setUserSetDownbeat(true); }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -232,9 +244,15 @@ export default function Player() {
 
       {tab === 'song' && (
         <div className="flex flex-col gap-5">
-          <label className="card p-6 text-center cursor-pointer border-dashed">
-            <input type="file" accept="audio/*" className="hidden" onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
-            {file ? <span><strong>{file.name}</strong> · {(file.size / 1e6).toFixed(1)} MB. Haz clic para cambiar.</span> : <span>Arrastra o elige una canción (MP3, WAV, M4A)</span>}
+          <label
+            className="card p-6 text-center cursor-pointer border-dashed block"
+            style={dragOver ? { borderColor: 'var(--amber)' } : {}}
+            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files?.[0]; if (f) onFile(f); }}
+          >
+            <input type="file" accept="audio/*,video/*,.mp3,.m4a,.wav,.ogg,.flac,.aac,.mp4,.mov,.webm" className="hidden" onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
+            {file ? <span><strong>{file.name}</strong> · {(file.size / 1e6).toFixed(1)} MB. Haz clic o suelta otro archivo para cambiar.</span> : <span>Arrastra o elige una canción o un video (MP3, M4A, WAV, MP4). En el móvil puedes tomarlo de tu galería o de Archivos.</span>}
           </label>
 
           {url && (
@@ -258,11 +276,11 @@ export default function Player() {
                 </div>
 
                 <div className="card p-4 flex flex-col gap-2">
-                  <h3 className="font-semibold">El “1” · confianza {confidenceLabel}</h3>
+                  <h3 className="font-semibold">El “1” · confianza {confidenceLabel}{analysis.clave ? ` · clave ${analysis.clave}` : ''}</h3>
                   <button className="card px-3 py-2 font-bold" onClick={markOne} title="Barra espaciadora">Marcar el 1 ahora (espacio)</button>
                   <div className="flex gap-2 items-center">
-                    <button className="card px-2 py-1" onClick={() => setDownbeat((d) => (d + 7) % 8)} title="Flecha izquierda">◀ 1 pulso</button>
-                    <button className="card px-2 py-1" onClick={() => setDownbeat((d) => (d + 1) % 8)} title="Flecha derecha">1 pulso ▶</button>
+                    <button className="card px-2 py-1" onClick={() => { setDownbeat((d) => (d + 7) % 8); setUserSetDownbeat(true); }} title="Flecha izquierda">◀ 1 pulso</button>
+                    <button className="card px-2 py-1" onClick={() => { setDownbeat((d) => (d + 1) % 8); setUserSetDownbeat(true); }} title="Flecha derecha">1 pulso ▶</button>
                     <select className="card px-2 py-1 ml-auto" value={style} onChange={(e) => setStyle(e.target.value as 'On1' | 'On2')}>
                       <option>On1</option><option>On2</option>
                     </select>
@@ -294,6 +312,7 @@ export default function Player() {
                     Separa percusión, bajo, voz y el resto con Demucs, dentro de tu navegador.
                     {webgpu ? ` Tu navegador tiene WebGPU: unos ${estimate} min para esta canción.` : ` Tu navegador no expone WebGPU: usará WebAssembly, unos ${estimate} min para esta canción.`}
                     {' '}La primera vez descarga el modelo ({MODEL_MB} MB) y lo guarda en el navegador.
+                    {mobile && <strong> En teléfonos y tabletas puede quedarse sin memoria o tardar más de 15 minutos: hazlo con wifi y, si falla, usa un computador.</strong>}
                   </p>
                 )}
                 {(sep.status === 'downloading' || sep.status === 'loading' || sep.status === 'separating') && (
