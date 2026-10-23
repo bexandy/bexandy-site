@@ -1,5 +1,5 @@
 import { fft, hann } from './fft';
-import { estimateDownbeat, phraseNovelty, phraseScores, CLAVE_TEMPLATES, type ClaveName } from './clavePhase';
+import { estimateDownbeat, phraseNovelty, phraseScores, harmonicChangeScores, fuseDownbeat, CLAVE_TEMPLATES, type ClaveName } from './clavePhase';
 
 export interface BeatAnalysis {
   bpm: number;
@@ -140,18 +140,20 @@ export function analyze(buffer: AudioBuffer): BeatAnalysis {
   const { env, fps } = onsetEnvelope(x, buffer.sampleRate);
   const { bpm, periodFrames } = estimateTempo(env, fps);
   const beats = trackBeats(env, fps, periodFrames);
-  // "1": clave/acentos fijan el inicio de compás (módulo 4); la frase musical solo decide entre el candidato y su opuesto (+4)
+  // "1": fusión de señales. Clave y acentos discriminan el compás; novedad tímbrica y armonía deciden entre 1 y 5.
   const clave = estimateDownbeat(beats, [{ envelope: env, fps, templates: CLAVE_TEMPLATES, weight: 1 }]);
   const energy = guessDownbeat(env, fps, beats);
-  const useClave = clave.confidence >= 0.15;
-  const base = useClave ? clave.downbeatIndex : energy.downbeatIndex;
   const phrase = phraseScores(phraseNovelty(x, buffer.sampleRate, beats));
-  const alt = (base + 4) % 8;
-  // solo se cambia de compás si la novedad de frase es claramente mayor en el opuesto
-  const downbeatIndex = phrase[alt] > phrase[base] * 1.15 ? alt : base;
-  const baseConf = useClave ? clave.confidence : energy.confidence * 0.5;
-  const phraseMargin = Math.abs(phrase[alt] - phrase[base]) / (Math.max(phrase[alt], phrase[base]) || 1);
-  const confidence = Math.max(0, Math.min(1, 0.5 * baseConf + 0.5 * phraseMargin));
+  const harmony = harmonicChangeScores(x, buffer.sampleRate, beats);
+  const fused = fuseDownbeat([
+    { scores: clave.scores, weight: 0.8 },
+    { scores: energy.scores, weight: 1.0 },
+    { scores: phrase, weight: 0.4 },
+    { scores: harmony, weight: 0.4 },
+  ]);
+  const downbeatIndex = fused.downbeatIndex;
+  const confidence = fused.confidence;
+  const useClave = clave.confidence >= 0.15;
   // bpm real: mediana de intervalos
   const ivs = beats.slice(1).map((b, i) => b - beats[i]).sort((a, b) => a - b);
   const med = ivs.length ? ivs[Math.floor(ivs.length / 2)] : 60 / bpm;

@@ -151,3 +151,122 @@ function fftInPlace(re: Float32Array, im: Float32Array) {
   for (let i = 1, j = 0; i < n; i++) { let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit; if (i < j) { [re[i], re[j]] = [re[j], re[i]]; [im[i], im[j]] = [im[j], im[i]]; } }
   for (let len = 2; len <= n; len <<= 1) { const ang = (-2 * Math.PI) / len, wr = Math.cos(ang), wi = Math.sin(ang); for (let i = 0; i < n; i += len) { let cr = 1, ci = 0; for (let k = 0; k < len / 2; k++) { const a = i + k, b = i + k + len / 2; const tr = re[b] * cr - im[b] * ci, ti = re[b] * ci + im[b] * cr; re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti; const ncr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = ncr; } } }
 }
+
+/** Índice del pulso más cercano a un instante. */
+function nearestBeat(beats: number[], t: number): number {
+  let lo = 0, hi = beats.length - 1;
+  while (lo < hi) { const m = (lo + hi) >> 1; if (beats[m] < t) lo = m + 1; else hi = m; }
+  if (lo > 0 && Math.abs(beats[lo - 1] - t) < Math.abs(beats[lo] - t)) return lo - 1;
+  return lo;
+}
+
+/**
+ * Inicios de frase en la pista de voz: subidas de energía tras un silencio de al menos `gap` segundos.
+ * Devuelve, por posición del ciclo de 8 (desplazamiento candidato), la fuerza acumulada de los inicios que caen en ese pulso.
+ */
+export function vocalPhraseScores(vocals: Float32Array, sampleRate: number, beats: number[], gap = 0.5): number[] {
+  const hop = Math.round(sampleRate * 0.02); // 20 ms
+  const n = Math.floor(vocals.length / hop);
+  const rms = new Float32Array(n);
+  let max = 1e-9;
+  for (let i = 0; i < n; i++) { let s = 0; const o = i * hop; for (let k = 0; k < hop; k++) s += vocals[o + k] * vocals[o + k]; rms[i] = Math.sqrt(s / hop); if (rms[i] > max) max = rms[i]; }
+  const thr = max * 0.12;
+  const gapFrames = Math.round(gap / 0.02);
+  const acc = new Array(8).fill(0);
+  let silent = gapFrames; // empezar como si viniera de silencio
+  for (let i = 0; i < n; i++) {
+    if (rms[i] < thr) { silent++; continue; }
+    if (silent >= gapFrames) {
+      // fuerza = pico de los 200 ms siguientes, normalizado
+      let peak = 0; for (let k = i; k < Math.min(n, i + 10); k++) peak = Math.max(peak, rms[k]);
+      const bi = nearestBeat(beats, i * 0.02);
+      // tolerancia: solo cuenta si cae cerca de un pulso (≤ 25 % del intervalo)
+      const iv = (beats[bi + 1] ?? beats[bi] + 0.3) - (beats[bi - 1] ?? beats[bi] - 0.3);
+      if (Math.abs(beats[bi] - i * 0.02) <= iv * 0.125) acc[bi % 8] += peak / max;
+    }
+    silent = 0;
+  }
+  const mx = Math.max(...acc) || 1;
+  return acc.map((v) => v / mx);
+}
+
+/** Croma de 12 clases por pulso (magnitud espectral agrupada por nota), para medir cambios de acorde. */
+function beatChroma(x: Float32Array, sampleRate: number, beats: number[]): Float32Array {
+  const win = 4096, nb = beats.length;
+  const chroma = new Float32Array(nb * 12);
+  const re = new Float32Array(win), im = new Float32Array(win);
+  const binClass = new Int8Array(win / 2).fill(-1);
+  for (let k = 1; k < win / 2; k++) { const f = (k * sampleRate) / win; if (f >= 65 && f <= 4200) binClass[k] = ((Math.round(12 * Math.log2(f / 440)) % 12) + 12 + 9) % 12; }
+  for (let i = 0; i < nb; i++) {
+    const s0 = Math.round(beats[i] * sampleRate), s1 = Math.round((beats[i + 1] ?? beats[i] + 0.3) * sampleRate);
+    for (let s = s0; s + win <= Math.min(s1 + win / 2, x.length); s += win / 2) {
+      for (let k = 0; k < win; k++) { re[k] = x[s + k] * (0.5 - 0.5 * Math.cos((2 * Math.PI * k) / win)); im[k] = 0; }
+      fftInPlace(re, im);
+      for (let k = 1; k < win / 2; k++) { const c = binClass[k]; if (c >= 0) chroma[i * 12 + c] += Math.sqrt(re[k] * re[k] + im[k] * im[k]); }
+    }
+    let norm = 0; for (let c = 0; c < 12; c++) norm += chroma[i * 12 + c] ** 2; norm = Math.sqrt(norm) || 1;
+    for (let c = 0; c < 12; c++) chroma[i * 12 + c] /= norm;
+  }
+  return chroma;
+}
+
+/**
+ * Cambios de armonía: distancia coseno entre el croma medio de los 2 pulsos anteriores y los 2 siguientes a cada pulso,
+ * acumulada por posición del ciclo. Los cambios de acorde caen con más frecuencia en el 1 que en el 5.
+ */
+export function harmonicChangeScores(x: Float32Array, sampleRate: number, beats: number[]): number[] {
+  const nb = beats.length;
+  if (nb < 12) return new Array(8).fill(0);
+  const ch = beatChroma(x, sampleRate, beats);
+  const acc = new Array(8).fill(0), cnt = new Array(8).fill(0);
+  const mean = (a: number, b: number) => { const v = new Float32Array(12); for (let i = a; i < b; i++) for (let c = 0; c < 12; c++) v[c] += ch[i * 12 + c]; return v; };
+  for (let i = 2; i + 2 <= nb; i++) {
+    const p = mean(i - 2, i), q = mean(i, i + 2);
+    let dot = 0, np = 0, nq = 0; for (let c = 0; c < 12; c++) { dot += p[c] * q[c]; np += p[c] * p[c]; nq += q[c] * q[c]; }
+    const d = 1 - dot / (Math.sqrt(np * nq) || 1);
+    acc[i % 8] += d; cnt[i % 8]++;
+  }
+  const m = acc.map((a, k) => (cnt[k] ? a / cnt[k] : 0));
+  const mx = Math.max(...m) || 1;
+  return m.map((v) => v / mx);
+}
+
+/**
+ * Decide entre un candidato de "1" y su opuesto (+4) combinando señales de frase.
+ * Cada señal es un vector de 8 puntuaciones normalizadas; devuelve el índice elegido y el margen (0..1).
+ */
+export function pickPhraseStart(base: number, signals: { scores: number[]; weight: number }[]): { downbeatIndex: number; margin: number } {
+  const alt = (base + 4) % 8;
+  let a = 0, b = 0, w = 0;
+  for (const s of signals) { if (!s.scores.length) continue; a += s.scores[base] * s.weight; b += s.scores[alt] * s.weight; w += s.weight; }
+  if (!w) return { downbeatIndex: base, margin: 0 };
+  const margin = Math.abs(a - b) / (Math.max(a, b) || 1);
+  return { downbeatIndex: b > a * 1.1 ? alt : base, margin };
+}
+
+/**
+ * Fusión de todas las señales en una puntuación por desplazamiento (0..7). Cada señal se normaliza a máximo 1 y se pondera.
+ * Las señales simétricas (clave, bajo) solo discriminan el compás; las de frase (voz, armonía, novedad) deciden entre 1 y 5.
+ */
+export function fuseDownbeat(signals: { scores: number[]; weight: number }[]): { downbeatIndex: number; confidence: number; total: number[] } {
+  const total = new Array(8).fill(0);
+  for (const s of signals) {
+    if (!s.scores || s.scores.length !== 8) continue;
+    const mx = Math.max(...s.scores.map((v) => Math.abs(v))) || 1;
+    for (let o = 0; o < 8; o++) total[o] += (s.scores[o] / mx) * s.weight;
+  }
+  let best = 0; for (let o = 1; o < 8; o++) if (total[o] > total[best]) best = o;
+  const sorted = [...total].sort((a, b) => b - a);
+  const confidence = Math.max(0, Math.min(1, ((sorted[0] - sorted[1]) / (Math.abs(sorted[0]) || 1)) * 3));
+  return { downbeatIndex: best, confidence, total };
+}
+
+/** Acentos de energía por posición: plantilla 1 fuerte, 5 medio, 3 y 7 leves. Devuelve puntuaciones por desplazamiento. */
+export function guessEnergyScores(env: Float32Array, fps: number, beats: number[]): number[] {
+  const at = (t: number) => { const i = Math.round(t * fps); let m = 0; for (let j = Math.max(0, i - 2); j <= Math.min(env.length - 1, i + 2); j++) m = Math.max(m, env[j]); return m; };
+  const w = [1, 0, 0.3, 0, 0.5, 0, 0.3, 0];
+  const scores = new Array(8).fill(0);
+  for (let off = 0; off < 8; off++) for (let i = 0; i < beats.length; i++) scores[off] += w[(i - off + 800) % 8] * at(beats[i]);
+  const mx = Math.max(...scores) || 1;
+  return scores.map((v) => v / mx);
+}
