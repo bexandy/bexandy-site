@@ -6,10 +6,22 @@
     "email": "bexandy@gmail.com",
     "url": "https://bexandyrodriguez.com",
     "summary": "Ingeniero Electrónico en Computación con más de 15 años de experiencia en desarrollo de software, arquitectura web e infraestructura de redes. Especializado en backend con PHP (Symfony, Laravel), y con experiencia en Python, Node.js, Angular y Java. He construido e integrado sistemas críticos para el sector bancario y corporativo cubriendo todo el ciclo de vida del software, con foco en soluciones escalables, robustas y de alto rendimiento.",
-    "location": { "city": "Santiago", "region": "Región Metropolitana", "countryCode": "CL" },
+    "location": {
+      "city": "Santiago",
+      "region": "Región Metropolitana",
+      "countryCode": "CL"
+    },
     "profiles": [
-      { "network": "LinkedIn", "username": "bexandyrodriguez", "url": "https://www.linkedin.com/in/bexandyrodriguez/" },
-      { "network": "GitHub", "username": "bexandy", "url": "https://github.com/bexandy" }
+      {
+        "network": "LinkedIn",
+        "username": "bexandyrodriguez",
+        "url": "https://www.linkedin.com/in/bexandyrodriguez/"
+      },
+      {
+        "network": "GitHub",
+        "username": "bexandy",
+        "url": "https://github.com/bexandy"
+      }
     ]
   },
   "work": [
@@ -18,10 +30,11 @@
       "location": "Santiago, Chile",
       "position": "Desarrollador Web / Senior Backend Developer",
       "startDate": "2019-05-01",
-      "summary": "Diseño, desarrollo y mantenimiento evolutivo de soluciones críticas para la banca con Symfony 5.x/6.x, PHP y bases de datos relacionales.",
+      "summary": "Diseño, desarrollo y mantenimiento evolutivo de sistemas críticos para la banca y el sector corporativo con Symfony (5.x a 7.4), API Platform, PostgreSQL/MySQL y Docker. Principal contribuidor del código en los tres sistemas.",
       "highlights": [
-        "Sistema de Requerimientos Corporativo de BancoEstado: gestión interna de solicitudes y mejora de la eficiencia operativa de las áreas usuarias.",
-        "Sistema de Compras de BancoEstado Express: estabilidad, seguridad en las transacciones y escalabilidad de la plataforma.",
+        "Guard Hub (2026): API en Symfony 7.4 + API Platform + PostgreSQL para gestión de guardias de seguridad (tenants, turnos y facturación, trabajadores y pagos, casos), BFF para el portal web en Vue 3 y PWA de guardias; despliegue en AWS con Terraform.",
+        "Sistema de Requerimientos Corporativos de BancoEstado (sistemaderequerimientos.cl): gestión interna de solicitudes entre áreas, en Symfony sobre Docker; autor de la mayor parte del código.",
+        "Sistema de Compras de BancoEstado Express (comprasbex.cl): plataforma de compras con foco en seguridad transaccional y escalabilidad, en Symfony + Twig.",
         "Buenas prácticas de arquitectura, POO y estándares de seguridad exigidos por la industria financiera."
       ]
     },
@@ -64,27 +77,112 @@
       "startDate": "2005-01-01",
       "endDate": "2007-01-01",
       "summary": "Módulos para el Sistema de Información del Sector Eléctrico (SISE) con Java Server Pages y PostgreSQL.",
-      "highlights": ["Optimización de consultas para el análisis de datos del sector eléctrico."]
+      "highlights": [
+        "Optimización de consultas para el análisis de datos del sector eléctrico."
+      ]
     }
   ],
   "education": [
-    { "institution": "Universidad Yacambú (Venezuela)", "area": "Electrónica en Computación", "studyType": "Ingeniería", "startDate": "2001-05-01", "endDate": "2005-05-01" }
+    {
+      "institution": "Universidad Yacambú (Venezuela)",
+      "area": "Electrónica en Computación",
+      "studyType": "Ingeniería",
+      "startDate": "2001-05-01",
+      "endDate": "2005-05-01"
+    }
   ],
   "skills": [
-    { "name": "Backend", "keywords": ["PHP", "Symfony 5/6", "Laravel", "Zend Framework", "Java EE / JSP", "Python", "Node.js"] },
-    { "name": "Frontend", "keywords": ["Angular", "TypeScript", "WordPress (Codex, REST API, temas y plugins)"] },
-    { "name": "Datos", "keywords": ["MySQL", "PostgreSQL", "SQL", "modelado relacional"] },
-    { "name": "Infraestructura", "keywords": ["Linux", "Docker", "redes y cableado estructurado", "servidores físicos y virtuales", "DevOps"] },
-    { "name": "Prácticas", "keywords": ["POO", "MVC", "arquitectura de software", "SDLC completo", "seguridad para banca"] }
+    {
+      "name": "Backend",
+      "keywords": [
+        "PHP 8",
+        "Symfony 5–7.4",
+        "API Platform",
+        "Laravel",
+        "Zend Framework",
+        "Java EE / JSP",
+        "Python",
+        "Node.js"
+      ]
+    },
+    {
+      "name": "Frontend",
+      "keywords": [
+        "Vue 3",
+        "Angular",
+        "TypeScript",
+        "Twig",
+        "WordPress (Codex, REST API, temas y plugins)"
+      ]
+    },
+    {
+      "name": "Datos",
+      "keywords": [
+        "PostgreSQL",
+        "MySQL",
+        "SQL",
+        "modelado relacional"
+      ]
+    },
+    {
+      "name": "Infraestructura",
+      "keywords": [
+        "Docker y Docker Compose",
+        "AWS",
+        "Terraform",
+        "Linux",
+        "redes y cableado estructurado",
+        "GitHub Actions"
+      ]
+    },
+    {
+      "name": "Prácticas",
+      "keywords": [
+        "POO",
+        "MVC",
+        "arquitectura de software",
+        "autenticación JWT",
+        "SDLC completo",
+        "seguridad para banca"
+      ]
+    }
   ],
   "languages": [
-    { "language": "Español", "fluency": "nativo" },
-    { "language": "Inglés", "fluency": "escrito intermedio, oral básico" }
+    {
+      "language": "Español",
+      "fluency": "nativo"
+    },
+    {
+      "language": "Inglés",
+      "fluency": "escrito intermedio, oral básico"
+    }
   ],
   "projects": [
-    { "name": "Sistema de Requerimientos Corporativo (BancoEstado)", "url": "https://sistemaderequerimientos.cl/" },
-    { "name": "Sistema de Compras (BancoEstado Express)", "url": "https://comprasbex.cl/" },
-    { "name": "Portal Solar", "url": "https://portalsolar.com/" }
+    {
+      "name": "Guard Hub · gestión de guardias (API, portal web y PWA)",
+      "url": "https://guard-hub-web.agenciasur.cl/dashboard",
+      "description": "Symfony 7.4, API Platform, PostgreSQL, Vue 3, AWS/Terraform · 2026"
+    },
+    {
+      "name": "Sistema de Requerimientos Corporativos · BancoEstado",
+      "url": "https://sistemaderequerimientos.cl/",
+      "description": "Symfony, Docker · desde 2019"
+    },
+    {
+      "name": "Sistema de Compras · BancoEstado Express",
+      "url": "https://comprasbex.cl/",
+      "description": "Symfony, Twig · desde 2023"
+    }
   ],
-  "interests": [{ "name": "Salsa (On1 y On2), bailarín e instructor" }, { "name": "Música afrocubana" }, { "name": "Audio y procesamiento de señales en el navegador" }]
+  "interests": [
+    {
+      "name": "Salsa (On1 y On2), bailarín e instructor"
+    },
+    {
+      "name": "Música afrocubana"
+    },
+    {
+      "name": "Audio y procesamiento de señales en el navegador"
+    }
+  ]
 }

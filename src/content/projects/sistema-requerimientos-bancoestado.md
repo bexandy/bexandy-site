@@ -1,14 +1,15 @@
 ---
-title: Sistema de Requerimientos Corporativo · BancoEstado
-summary: Plataforma interna de gestión de solicitudes para las áreas del banco, en Symfony.
-date: 2021-01-01
+title: Sistema de Requerimientos Corporativos · BancoEstado
+summary: Plataforma interna de gestión de solicitudes entre áreas del banco, en Symfony.
+date: 2019-06-01
 side: work
-role: Senior Backend Developer (Agencia Sur)
-stack: [PHP, Symfony 5/6, MySQL, Docker]
+role: Senior Backend Developer, principal contribuidor (Agencia Sur)
+stack: [PHP, Symfony, MySQL, Docker]
 links: { live: https://sistemaderequerimientos.cl/ }
+cover: santiago
 featured: true
 ---
 Sistema crítico para la gestión interna de requerimientos entre áreas de BancoEstado. Mejoró la eficiencia operativa de las áreas usuarias y cumple los estándares de seguridad exigidos por la industria financiera.
 
 ## Mi rol
-Diseño, desarrollo y mantenimiento evolutivo del backend; arquitectura y buenas prácticas de POO.
+Desarrollo y mantenimiento evolutivo del backend desde 2019; autor de la mayor parte del código del proyecto. Entorno de desarrollo en Docker. Código privado de Agencia Sur.

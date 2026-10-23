@@ -12,6 +12,7 @@ const projects = defineCollection({
     role: z.string().optional(),
     stack: z.array(z.string()).default([]),
     links: z.object({ live: z.string().optional(), repo: z.string().optional() }).default({}),
+    /** nombre de imagen en src/assets/img (sin extensión) */
     cover: z.string().optional(),
     featured: z.boolean().default(false),
     draft: z.boolean().default(false),
