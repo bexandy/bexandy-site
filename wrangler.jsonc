@@ -2,6 +2,10 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "bexandy-site",
   "compatibility_date": "2026-10-01",
+  "routes": [
+    { "pattern": "bexandyrodriguez.com", "custom_domain": true },
+    { "pattern": "www.bexandyrodriguez.com", "custom_domain": true }
+  ],
   // Sitio estático puro: sin código de Worker, solo assets. Los requests estáticos no consumen cuota.
   "assets": {
     "directory": "./dist",

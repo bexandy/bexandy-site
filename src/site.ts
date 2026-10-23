@@ -2,7 +2,7 @@ export const site = {
   name: 'Bexandy Rodríguez',
   shortName: 'Bexandy',
   // Cambia esto por tu dominio real cuando lo registres (Fase 0).
-  url: 'https://example.com',
+  url: 'https://bexandyrodriguez.com',
   description:
     'Ingeniero y desarrollador backend (PHP/Symfony) y bailarín de salsa. CV, portafolio, utilidades para desarrollo e IA, y herramientas para practicar salsa.',
   locale: 'es',
