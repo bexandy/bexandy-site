@@ -1,6 +1,8 @@
 ---
 import Base from '../../../layouts/Base.astro';
 import { getCollection, render } from 'astro:content';
+import VideoEmbed from '../../../components/VideoEmbed.astro';
+import { academies } from '../../../data/orgs';
 export async function getStaticPaths() {
   const videos = await getCollection('videos', ({ data }) => !data.draft);
   return videos.map((v) => ({ params: { slug: v.id }, props: { video: v } }));
@@ -9,30 +11,23 @@ const { video } = Astro.props;
 const { Content } = await render(video);
 const d = video.data;
 const mmss = (t: number) => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
+const academy = academies.find((a) => a.id === d.academy);
 ---
 <Base title={d.title} side="dance" description={`Clase de salsa ${d.level} (${d.style}): ${d.figures.join(', ')}`}>
   <article class="max-w-3xl mx-auto">
     <h1 class="display font-bold text-4xl">{d.title}</h1>
-    <p class="muted mt-1">{d.level} · {d.style}{d.song && ` · ${d.song}`}{d.bpm && ` · ${d.bpm} bpm`} · {d.date.toLocaleDateString('es-CL')}</p>
+    <p class="muted mt-1">{d.level} · {d.style}{d.song && ` · ${d.song}`}{d.bpm && ` · ${d.bpm} bpm`} · {d.date.toLocaleDateString('es-CL', { timeZone: 'UTC' })}{d.likes ? ` · ♥ ${d.likes}` : ''}</p>
+    {academy && <p class="text-sm mt-1">Grabado en <a href={academy.url ?? `https://www.instagram.com/${academy.instagram}/`} class="underline decoration-[var(--amber)]">{academy.name}</a></p>}
+    {d.tiktokId && <p class="text-sm mt-1"><a href={`https://www.tiktok.com/@bexandy.rodriguez/video/${d.tiktokId}`} class="underline decoration-[var(--amber)]">Ver en TikTok</a></p>}
 
-    <div class="aspect-video mt-6 rounded-xl overflow-hidden card">
-      <iframe
-        id="yt"
-        class="w-full h-full"
-        src={`https://www.youtube-nocookie.com/embed/${d.youtubeId}?enablejsapi=1`}
-        title={d.title}
-        loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
-    </div>
+    <div class="mt-6"><VideoEmbed youtubeId={d.youtubeId} tiktokId={d.tiktokId} title={d.title} /></div>
 
     {d.chapters.length > 0 && (
       <section class="mt-6">
         <h2 class="display font-bold text-xl mb-2">Capítulos</h2>
         <ol class="grid sm:grid-cols-2 gap-1 text-sm">
           {d.chapters.map((c) => (
-            <li><a href={`https://www.youtube.com/watch?v=${d.youtubeId}&t=${c.t}s`} data-t={c.t} class="chapter underline">{mmss(c.t)} · {c.label}</a></li>
+            <li><a href={`https://www.youtube.com/watch?v=${d.youtubeId ?? ''}&t=${c.t}s`} data-t={c.t} class="chapter underline">{mmss(c.t)} · {c.label}</a></li>
           ))}
         </ol>
       </section>

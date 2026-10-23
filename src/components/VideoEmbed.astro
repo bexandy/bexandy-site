@@ -1,0 +1,15 @@
+---
+/** Embebe un video de YouTube o TikTok sin cookies de terceros hasta que el visitante interactúa. */
+interface Props { youtubeId?: string; tiktokId?: string; title: string }
+const { youtubeId, tiktokId, title } = Astro.props;
+---
+{youtubeId && (
+  <div class="aspect-video rounded-xl overflow-hidden card">
+    <iframe id="yt" class="w-full h-full" src={`https://www.youtube-nocookie.com/embed/${youtubeId}?enablejsapi=1`} title={title} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+)}
+{tiktokId && !youtubeId && (
+  <div class="mx-auto rounded-xl overflow-hidden card" style="max-width: 340px; aspect-ratio: 9 / 16;">
+    <iframe class="w-full h-full" src={`https://www.tiktok.com/embed/v2/${tiktokId}`} title={title} loading="lazy" allow="encrypted-media; picture-in-picture" allowfullscreen></iframe>
+  </div>
+)}

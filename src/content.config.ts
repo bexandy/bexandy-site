@@ -36,10 +36,15 @@ const videos = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/videos' }),
   schema: z.object({
     title: z.string(),
-    youtubeId: z.string(),
+    youtubeId: z.string().optional(),
+    tiktokId: z.string().optional(),
     date: z.coerce.date(),
-    level: z.enum(['básico', 'intermedio', 'avanzado']),
-    style: z.enum(['On1', 'On2', 'cubana', 'shines', 'otro']).default('On1'),
+    level: z.enum(['básico', 'intermedio', 'avanzado']).default('intermedio'),
+    style: z.enum(['On1', 'On2', 'cubana', 'bachata', 'shines', 'otro']).default('On1'),
+    /** academia donde se grabó */
+    academy: z.enum(['mambomadness', 'lacasadelmambo', 'rumbadecalle', 'otro']).default('otro'),
+    likes: z.number().default(0),
+    featured: z.boolean().default(false),
     figures: z.array(z.string()).default([]),
     song: z.string().optional(),
     bpm: z.number().optional(),

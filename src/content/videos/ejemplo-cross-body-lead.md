@@ -7,6 +7,7 @@ style: On1
 figures: [cross body lead, básico, giro derecha]
 song: Ejemplo
 bpm: 180
+draft: true
 chapters:
   - { t: 0, label: Calentamiento y paso básico }
   - { t: 95, label: Cross body lead }
