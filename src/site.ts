@@ -10,6 +10,6 @@ export const site = {
     github: 'https://github.com/bexandy',
     linkedin: 'https://www.linkedin.com/in/bexandyrodriguez/',
     youtube: 'https://www.youtube.com/',
-    instagram: 'https://www.instagram.com/',
+    instagram: 'https://www.instagram.com/bexandy/',
   },
 };
