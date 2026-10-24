@@ -33,7 +33,7 @@
       "summary": "Diseño, desarrollo y mantenimiento evolutivo de sistemas críticos para la banca y el sector corporativo con Symfony (5.x a 7.4), API Platform, PostgreSQL/MySQL y Docker. Principal contribuidor del código en los tres sistemas.",
       "highlights": [
         "Guard Hub (2026): API en Symfony 7.4 + API Platform + PostgreSQL para gestión de guardias de seguridad (tenants, turnos y facturación, trabajadores y pagos, casos), BFF para el portal web en Vue 3 y PWA de guardias; despliegue en AWS con Terraform.",
-        "Sistema de Requerimientos Corporativos de BancoEstado (sistemaderequerimientos.cl): gestión interna de solicitudes entre áreas, en Symfony sobre Docker; autor de la mayor parte del código.",
+        "Sistema de Requerimientos Corporativos de BancoEstado (sistemaderequerimientos.cl): gestión interna de solicitudes entre áreas, en Symfony sobre Docker.",
         "Sistema de Compras de BancoEstado Express (comprasbex.cl): plataforma de compras con foco en seguridad transaccional y escalabilidad, en Symfony + Twig.",
         "Buenas prácticas de arquitectura, POO y estándares de seguridad exigidos por la industria financiera."
       ]

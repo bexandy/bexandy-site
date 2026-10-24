@@ -12,4 +12,4 @@ featured: true
 Sistema crítico para la gestión interna de requerimientos entre áreas de BancoEstado. Mejoró la eficiencia operativa de las áreas usuarias y cumple los estándares de seguridad exigidos por la industria financiera.
 
 ## Mi rol
-Desarrollo y mantenimiento evolutivo del backend desde 2019; autor de la mayor parte del código del proyecto. Entorno de desarrollo en Docker. Código privado de Agencia Sur.
+Desarrollo y mantenimiento evolutivo del backend desde 2019. Entorno de desarrollo en Docker. Código privado de Agencia Sur.
