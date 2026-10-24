@@ -48,12 +48,6 @@ const raw: Omit<GalleryItem, 'image'>[] = [
   "prompt": ""
  },
  {
-  "slug": "sonrisa-en-la-oficina",
-  "theme": "trabajo",
-  "caption": "Sonrisa en la oficina",
-  "prompt": ""
- },
- {
   "slug": "monitores-brazos-cruzados",
   "theme": "trabajo",
   "caption": "Entre monitores, brazos cruzados",
@@ -78,12 +72,6 @@ const raw: Omit<GalleryItem, 'image'>[] = [
   "prompt": "2874b08464494cb5b371c13d577f5325"
  },
  {
-  "slug": "camisa-blanca-en-la-oficina",
-  "theme": "trabajo",
-  "caption": "Camisa blanca en la oficina",
-  "prompt": ""
- },
- {
   "slug": "retrato-de-estudio-media-sonrisa",
   "theme": "estudio",
   "caption": "Retrato de estudio, media sonrisa",
@@ -105,12 +93,6 @@ const raw: Omit<GalleryItem, 'image'>[] = [
   "slug": "traje-y-moto-en-la-montana",
   "theme": "viajes",
   "caption": "Traje y moto en la montaña",
-  "prompt": ""
- },
- {
-  "slug": "oficina-manos-en-la-cintura",
-  "theme": "trabajo",
-  "caption": "Oficina, manos en la cintura",
   "prompt": ""
  },
  {
@@ -156,27 +138,9 @@ const raw: Omit<GalleryItem, 'image'>[] = [
   "prompt": ""
  },
  {
-  "slug": "retrato-de-estudio-fondo-oscuro",
-  "theme": "estudio",
-  "caption": "Retrato de estudio, fondo oscuro",
-  "prompt": "8a76de51e9dc4c8884a85fc634446e88"
- },
- {
-  "slug": "retrato-de-estudio-luz-lateral",
-  "theme": "estudio",
-  "caption": "Retrato de estudio, luz lateral",
-  "prompt": ""
- },
- {
   "slug": "blazer-gris-retrato",
   "theme": "estudio",
   "caption": "Blazer gris, mano en la barbilla",
-  "prompt": ""
- },
- {
-  "slug": "retrato-estudio-negro",
-  "theme": "estudio",
-  "caption": "Retrato de estudio sobre fondo negro",
   "prompt": ""
  },
  {
@@ -312,12 +276,6 @@ const raw: Omit<GalleryItem, 'image'>[] = [
   "prompt": ""
  },
  {
-  "slug": "monitores-con-codigo-apaisado",
-  "theme": "trabajo",
-  "caption": "Monitores con código, apaisado",
-  "prompt": ""
- },
- {
   "slug": "chaqueta-de-ante",
   "theme": "estudio",
   "caption": "Chaqueta de ante",
@@ -378,12 +336,6 @@ const raw: Omit<GalleryItem, 'image'>[] = [
   "prompt": ""
  },
  {
-  "slug": "retrato-de-estudio-fondo-gris",
-  "theme": "estudio",
-  "caption": "Retrato de estudio, fondo gris",
-  "prompt": ""
- },
- {
   "slug": "moto-entre-palmeras",
   "theme": "viajes",
   "caption": "Moto entre palmeras",
@@ -399,12 +351,6 @@ const raw: Omit<GalleryItem, 'image'>[] = [
   "slug": "oficina-ventana-ciudad",
   "theme": "trabajo",
   "caption": "Oficina con la ciudad al fondo",
-  "prompt": ""
- },
- {
-  "slug": "chaqueta-con-el-escudo-de-la-vinotinto",
-  "theme": "venezuela",
-  "caption": "Chaqueta con el escudo de la Vinotinto",
   "prompt": ""
  },
  {
@@ -426,27 +372,9 @@ const raw: Omit<GalleryItem, 'image'>[] = [
   "prompt": ""
  },
  {
-  "slug": "retrato-de-perfil-fondo-negro",
-  "theme": "estudio",
-  "caption": "Retrato de perfil, fondo negro",
-  "prompt": ""
- },
- {
   "slug": "blazer-gris-apaisado",
   "theme": "estudio",
   "caption": "Blazer gris, apaisado",
-  "prompt": ""
- },
- {
-  "slug": "retrato-de-estudio-chaqueta-con-cierre",
-  "theme": "estudio",
-  "caption": "Retrato de estudio, chaqueta con cierre",
-  "prompt": ""
- },
- {
-  "slug": "traje-entre-monitores",
-  "theme": "trabajo",
-  "caption": "Traje entre monitores",
   "prompt": ""
  },
  {
