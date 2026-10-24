@@ -1,48 +1,90 @@
 # slug|ruta relativa a la carpeta de origen|tema|pie|prompt (nombre de archivo original)
-escritorio-codigo|Generate/Cinematic medium shot of @Bexandy seated at a sleek glass desk in a.jpg|trabajo|Escritorio de vidrio, dos monitores y luz de atardecer|Cinematic medium shot of Bexandy seated at a sleek glass desk in a
-oficina-camisa-blanca|Generate/b3c245ea13464ad5b113fa5a708c2f43.jpg|trabajo|Oficina abierta, camisa blanca|
-monitores-brazos-cruzados|imagenes/1859ec8bf1c848b08eac5ac562276d0e.jpg|trabajo|Entre monitores, brazos cruzados|
-monitores-gafas-traje|imagenes/676c0ca20f0c47d39ae86fd98b503a43.jpg|trabajo|Código en pantalla, gafas y traje|
-laptop-camiseta|imagenes/8953babbf32e4159a4692f3992b1caf8.jpg|trabajo|Trabajo remoto con laptop|
-oficina-ventana-ciudad|imagenes/a12f7e9e3b324a1ab0856404cd055960.jpg|trabajo|Oficina con la ciudad al fondo|
-arquitecto-cafe|imagenes/Candid lifestyle portrait of @Bexandy  senior software architect.jpg|trabajo|Arquitecto de software en un café|Candid lifestyle portrait of Bexandy  senior software architect
-setup-gamer|imagenes/Medium shot of a Venezuelan man @Bexandy  .jpg|trabajo|Puesto de trabajo con teclado retroiluminado|Medium shot of a Venezuelan man Bexandy
-retrato-estudio-negro|Generate/93c529e3c5b0462bbab53ff0253249e7.jpg|estudio|Retrato de estudio sobre fondo negro|
-sillon-cuero-bn|Generate/Three-quarter portrait of @Bexandy centered in a minimalist studio.jpg|estudio|Sillón de cuero, blanco y negro|Three-quarter portrait of Bexandy centered in a minimalist studio
-ventana-bn|imagenes/012f97d141d8418f9b309406bd6e79fc.jpg|estudio|Traje junto a la ventana, blanco y negro|
-traje-claro-concreto|imagenes/2874b08464494cb5b371c13d577f5325 (1).jpg|estudio|Traje claro contra muro de concreto|2874b08464494cb5b371c13d577f5325
-blazer-gris-retrato|imagenes/9158e538798b46a3ae8e4a5b069089d3.jpg|estudio|Blazer gris, mano en la barbilla|
-traje-gris-sentado|imagenes/ca818b82e2fc437badd23a762df16f38 (1).jpg|estudio|Traje gris, sentado en estudio|ca818b82e2fc437badd23a762df16f38
-porche-atardecer|imagenes/d7106987bcf344e48bc4f007e41cfaa1 (1).jpg|estudio|Traje claro en un porche al atardecer|d7106987bcf344e48bc4f007e41cfaa1
-taburete-traje-negro|imagenes/Gemini_Generated_Image_94b0u794b0u794b0.png|estudio|Traje negro en taburete|
-santiago-crepusculo|Generate/Change the background of @image1 to a cinematic twilight view of the.jpg|santiago|Costanera Center al crepúsculo|Change the background of la foto original to a cinematic twilight view of the
-santiago-tobalaba|Generate/Change the background of @image1 to a modern street in Santiago de.jpg|santiago|Metro Tobalaba y la torre Costanera|Change the background of la foto original to a modern street in Santiago de
-santiago-nieve|Generate/d4ed0b13a16943a2a1e0974748f3d5f7.jpg|santiago|Santiago con la cordillera nevada|
-santiago-calle-bus|imagenes/Gemini_Generated_Image_acqpmmacqpmmacqp.png|santiago|Calle de Santiago, camisa celeste|
-santiago-cordillera|imagenes/Outdoor professional portrait of @Bexandy .jpg|santiago|Mirando a la cordillera|Outdoor professional portrait of Bexandy
-cafe-risa|Generate/Candid street-style photograph of @Bexandy captured mid-laugh at an.jpg|calle|Risa en un café de barrio|Candid street-style photograph of Bexandy captured mid-laugh at an
-paris-cruce|Generate/Full-body shot of @Bexandy captured mid-stride.jpg|calle|Cruce de calle, estilo editorial|Full-body shot of Bexandy captured mid-stride
-adoquines|Generate/Place the man from @image1 standing on a cobblestone street in a.jpg|calle|Calle empedrada|Place the man from la foto original standing on a cobblestone street in a
-cafe-otono|imagenes/6921e8be187c4d5ba2604188676b170e.jpg|calle|Café de otoño con taza en mano|
-chaqueta-jeans-noche|imagenes/fa743930b15a49258a803745471d7fb8 (1).jpg|calle|Chaqueta de jeans, noche urbana|fa743930b15a49258a803745471d7fb8
-moto-montana|Generate/0dca94ee61b04e958351631b7f354062.jpg|viajes|Moto en la cordillera|
-moto-desierto|Generate/A grand.jpg|viajes|Moto en el desierto rojo|A grand
-volante|Generate/Cinematic interior shot of @Bexandy in the driver's seat of a sleek.jpg|viajes|Al volante, luces de ciudad|Cinematic interior shot of Bexandy in the driver's seat of a sleek
-moto-neon|Generate/Cinematic wide shot of @Bexandy perched on a matte-black.jpg|viajes|Moto bajo neones|Cinematic wide shot of Bexandy perched on a matte-black
-ruta-66|Generate/Low-angle wide shot of @Bexandy perched atop a classic 1965 (1).jpg|viajes|Clásica en la Ruta 66|Low-angle wide shot of Bexandy perched atop a classic 1965
-desierto-aventura|Generate/Wide-angle cinematic shot of @Bexandy standing triumphantly beside a.jpg|viajes|Dunas y moto de aventura|Wide-angle cinematic shot of Bexandy standing triumphantly beside a
-beisbol-venezuela|Generate/a00de5c9c2884bdfa5a42cf0bd2b4e93.jpg|venezuela|Uniforme de Venezuela en el estadio|
-roraima-4x4|Generate/688d4fa0e1a54e909096bb6b7df7b502.jpg|venezuela|Tepuy y camioneta|
-roraima-traje|Generate/db05e47e16f64f56bba086a653f340c9.jpg|venezuela|Carretera hacia el tepuy|
-caballo-flamencos|Generate/da5048b6a4e54f91835dfe04a2f30595.jpg|venezuela|Caballo blanco y corocoras|
-vinotinto-nasa|imagenes/a2b61ed70b4e4ba9889d62d1d01408ac (1).jpg|venezuela|Chaqueta con el escudo de la Vinotinto|a2b61ed70b4e4ba9889d62d1d01408ac
-tango|Generate/666abb4467b941a3850af295c77e56a4.jpg|baile|Baile de salón con vestido rojo|
-salsa-luces|Generate/Dynamic medium shot of @Bexandy captured in the midst of a fluid.jpg|baile|Salsa bajo las luces|Dynamic medium shot of Bexandy captured in the midst of a fluid
-billar|Generate/Cinematic mid-shot of @Bexandy leaning casually against the edge of a.jpg|noche|Mesa de billar en un lounge|Cinematic mid-shot of Bexandy leaning casually against the edge of a
-bar-lujo|Generate/Place the man from @image1 in a moody.jpg|noche|Bar de lujo, chaqueta de cuero|Place the man from la foto original in a moody
-santiago-neon|Generate/Transform the background of @image1 into an upscale luxury bar in.jpg|noche|Neón de Santiago de Chile|Transform the background of la foto original into an upscale luxury bar in
-link-convencion|Generate/At the Convention - @Bexandy.jpg|fantasia|Cosplay de Link en una convención|At the Convention - Bexandy
-retro-80s|Generate/1c63a4da-6398-4d59-856a-fa0ee4faa78b.png|fantasia|Retrato retro años 80|
-retro-neon|Generate/ec914f5c-7510-4c77-ac97-1f6491a18f19.png|fantasia|Chaqueta ochentera y neón|
-silla-scifi|imagenes/20f263076ae14c41a190e5712b40458e.jpg|fantasia|Silla de mando futurista|
-minotauro|imagenes/23ed427da0534ec690e3a6bf3e964b2a (1).jpg|fantasia|Minotauro de fantasía|23ed427da0534ec690e3a6bf3e964b2a
+ventana-bn|Generate/site/012f97d141d8418f9b309406bd6e79fc.jpg|estudio|Traje junto a la ventana, blanco y negro|
+retrato-de-estudio-sobre-fondo-negro|Generate/site/01cbaa220da1411996369be9bbece5cf.jpg|estudio|Retrato de estudio sobre fondo negro|
+oficina-monitor-con-codigo-a-la-espalda|Generate/site/0536fc643f524051be9c2ea71adb8d79.jpg|trabajo|Oficina, monitor con código a la espalda|
+oficina-abierta-camisa-blanca|Generate/site/0c03e9453c974ad8b3f072c95a902a32.jpg|trabajo|Oficina abierta, camisa blanca|
+moto-montana|Generate/site/0dca94ee61b04e958351631b7f354062.jpg|viajes|Moto en la cordillera|
+sonrisa-en-la-oficina|Generate/site/0f3738568f2b40babc70b2df713afa7d.jpg|trabajo|Sonrisa en la oficina|
+monitores-brazos-cruzados|Generate/site/1859ec8bf1c848b08eac5ac562276d0e.jpg|trabajo|Entre monitores, brazos cruzados|
+retro-80s|Generate/site/1c63a4da-6398-4d59-856a-fa0ee4faa78b.png|fantasia|Retrato retro años 80|
+retrato-de-estudio-chaqueta-negra|Generate/site/20330d25b324444c8dccd163f56ac51d.jpg|estudio|Retrato de estudio, chaqueta negra|
+traje-claro-concreto|Generate/site/2874b08464494cb5b371c13d577f5325 (1).jpg|estudio|Traje claro contra muro de concreto|2874b08464494cb5b371c13d577f5325
+camisa-blanca-en-la-oficina|Generate/site/2cf1067d678042baa9675cc903018031.jpg|trabajo|Camisa blanca en la oficina|
+retrato-de-estudio-media-sonrisa|Generate/site/47a85ae2ed55448fac406daecc165a56.jpg|estudio|Retrato de estudio, media sonrisa|
+cafe-en-la-calle-con-laptop|Generate/site/4b5b8820e60a4fc7a7284de02cac9731.jpg|calle|Café en la calle con laptop|
+oficina-luminosa|Generate/site/54a3491a40f5431f84f391368ea103d2.jpg|trabajo|Oficina luminosa|
+traje-y-moto-en-la-montana|Generate/site/54f28700c21046b2870371822c0eb8d2.jpg|viajes|Traje y moto en la montaña|
+oficina-manos-en-la-cintura|Generate/site/640e67c6e6f042dbabb94331bad189f5.jpg|trabajo|Oficina, manos en la cintura|
+codigo-en-pantalla-gafas-y-traje|Generate/site/676c0ca20f0c47d39ae86fd98b503a43 (1).jpg|trabajo|Código en pantalla, gafas y traje|676c0ca20f0c47d39ae86fd98b503a43
+roraima-4x4|Generate/site/688d4fa0e1a54e909096bb6b7df7b502.jpg|venezuela|Tepuy y camioneta|
+cafe-otono|Generate/site/6921e8be187c4d5ba2604188676b170e.jpg|calle|Café de otoño con taza en mano|
+chaqueta-de-cuero-contra-concreto|Generate/site/6c6fd6e3c59d45539f5f2e4e03419491.jpg|estudio|Chaqueta de cuero contra concreto|
+ajustando-el-blazer|Generate/site/6f50a33421d54437b1fc9706331e35ff.jpg|estudio|Ajustando el blazer|
+sueter-azul-en-la-oficina|Generate/site/7816ee5e09f14270b1be82484410453b.jpg|trabajo|Suéter azul en la oficina|
+traje-y-corbata-oficina-al-fondo|Generate/site/7ef14bbcd45f4bafa54400ed2e22969c.jpg|trabajo|Traje y corbata, oficina al fondo|
+retrato-de-estudio-fondo-oscuro|Generate/site/8a76de51e9dc4c8884a85fc634446e88 (1).jpg|estudio|Retrato de estudio, fondo oscuro|8a76de51e9dc4c8884a85fc634446e88
+retrato-de-estudio-luz-lateral|Generate/site/8c58bdf5c2b74013990e36981e0ba5af.jpg|estudio|Retrato de estudio, luz lateral|
+blazer-gris-retrato|Generate/site/9158e538798b46a3ae8e4a5b069089d3.jpg|estudio|Blazer gris, mano en la barbilla|
+retrato-estudio-negro|Generate/site/93c529e3c5b0462bbab53ff0253249e7.jpg|estudio|Retrato de estudio sobre fondo negro|
+ejecutivo-con-la-ciudad-de-noche|Generate/site/A crisp professional photograph of the same corporate man in a dark.jpg|noche|Ejecutivo con la ciudad de noche|A crisp professional photograph of the same corporate man in a dark
+moto-desierto|Generate/site/A grand.jpg|viajes|Moto en el desierto rojo|A grand
+vidrio-cordillera-y-camisa-de-jeans|Generate/site/A medium-shot portrait capturing  @Bexandy  posing casually at a.jpg|santiago|Vidrio, cordillera y camisa de jeans|A medium-shot portrait capturing  Bexandy  posing casually at a
+arquitecto-cafe|Generate/site/Candid lifestyle portrait of @Bexandy  senior software architect.jpg|trabajo|Arquitecto de software en un café|Candid lifestyle portrait of Bexandy  senior software architect
+cafe-risa|Generate/site/Candid street-style photograph of @Bexandy captured mid-laugh at an.jpg|calle|Risa en un café de barrio|Candid street-style photograph of Bexandy captured mid-laugh at an
+santiago-crepusculo|Generate/site/Change the background of @image1 to a cinematic twilight view of the.jpg|santiago|Costanera Center al crepúsculo|Change the background of la foto original to a cinematic twilight view of the
+santiago-tobalaba|Generate/site/Change the background of @image1 to a modern street in Santiago de.jpg|santiago|Metro Tobalaba y la torre Costanera|Change the background of la foto original to a modern street in Santiago de
+escritorio-codigo|Generate/site/Cinematic medium shot of @Bexandy seated at a sleek glass desk in a.jpg|trabajo|Escritorio de vidrio, dos monitores y luz de atardecer|Cinematic medium shot of Bexandy seated at a sleek glass desk in a
+billar|Generate/site/Cinematic mid-shot of @Bexandy leaning casually against the edge of a.jpg|noche|Mesa de billar en un lounge|Cinematic mid-shot of Bexandy leaning casually against the edge of a
+moto-deportiva-frente-al-mar|Generate/site/Cinematic wide shot of @Bexandy leaning confidently against a modern.jpg|viajes|Moto deportiva frente al mar|Cinematic wide shot of Bexandy leaning confidently against a modern
+moto-neon|Generate/site/Cinematic wide shot of @Bexandy perched on a matte-black.jpg|viajes|Moto bajo neones|Cinematic wide shot of Bexandy perched on a matte-black
+salsa-luces|Generate/site/Dynamic medium shot of @Bexandy captured in the midst of a fluid.jpg|baile|Salsa bajo las luces|Dynamic medium shot of Bexandy captured in the midst of a fluid
+caminando-por-el-desierto|Generate/site/Firefly 20260330113617.png|viajes|Caminando por el desierto|
+camisa-blanca-entre-edificios|Generate/site/Gemini_Generated_Image_1sninc1sninc1sni.png|calle|Camisa blanca entre edificios|
+teclado-retroiluminado-sudadera-gris|Generate/site/Gemini_Generated_Image_6bgadd6bgadd6bga.png|trabajo|Teclado retroiluminado, sudadera gris|
+traje-gris-de-pie|Generate/site/Gemini_Generated_Image_7t7h6t7t7h6t7t7h.png|estudio|Traje gris, de pie|
+traje-claro-en-un-porche-al-atardecer|Generate/site/Gemini_Generated_Image_92qp7692qp7692qp.png|estudio|Traje claro en un porche al atardecer|
+taburete-traje-negro|Generate/site/Gemini_Generated_Image_94b0u794b0u794b0.png|estudio|Traje negro en taburete|
+santiago-calle-bus|Generate/site/Gemini_Generated_Image_acqpmmacqpmmacqp.png|santiago|Calle de Santiago, camisa celeste|
+ajustando-las-mangas-del-traje|Generate/site/Gemini_Generated_Image_fg9vj3fg9vj3fg9v.png|estudio|Ajustando las mangas del traje|
+porche-de-madera-traje-claro|Generate/site/Gemini_Generated_Image_k02ptmk02ptmk02p.png|estudio|Porche de madera, traje claro|
+traje-gris-ajustando-la-chaqueta|Generate/site/Gemini_Generated_Image_oukak4oukak4ouka.png|estudio|Traje gris, ajustando la chaqueta|
+monitores-con-codigo-apaisado|Generate/site/Gemini_Generated_Image_sflbu7sflbu7sflb.png|trabajo|Monitores con código, apaisado|
+chaqueta-de-ante|Generate/site/Medium shot of @Bexandy standing in a relaxed posture with both hands.jpg|estudio|Chaqueta de ante|Medium shot of Bexandy standing in a relaxed posture with both hands
+setup-gamer|Generate/site/Medium shot of a Venezuelan man @Bexandy  .jpg|trabajo|Puesto de trabajo con teclado retroiluminado|Medium shot of a Venezuelan man Bexandy
+santiago-cordillera|Generate/site/Outdoor professional portrait of @Bexandy .jpg|santiago|Mirando a la cordillera|Outdoor professional portrait of Bexandy
+adoquines|Generate/site/Place the man from @image1 standing on a cobblestone street in a.jpg|calle|Calle empedrada|Place the man from la foto original standing on a cobblestone street in a
+retrato-corporativo-en-la-oficina|Generate/site/Professional corporate headshot of @Bexandy  senior software engineer.jpg|trabajo|Retrato corporativo en la oficina|Professional corporate headshot of Bexandy  senior software engineer
+clasica-en-la-ruta-66|Generate/site/Reimagine the main subject firmly seated on the motorcycle seat and we.jpg|viajes|Clásica en la Ruta 66|Reimagine the main subject firmly seated on the motorcycle seat and we
+sillon-cuero-bn|Generate/site/Three-quarter portrait of @Bexandy centered in a minimalist studio.jpg|estudio|Sillón de cuero, blanco y negro|Three-quarter portrait of Bexandy centered in a minimalist studio
+santiago-neon|Generate/site/Transform the background of @image1 into an upscale luxury bar in.jpg|noche|Neón de Santiago de Chile|Transform the background of la foto original into an upscale luxury bar in
+retrato-de-estudio-sueter-con-cierre|Generate/site/Welcome To Artflow.ai - @Bexandy (1).jpg|estudio|Retrato de estudio, suéter con cierre|
+retrato-de-estudio-mirada-al-frente|Generate/site/Welcome To Artflow.ai - @Bexandy (2).jpg|estudio|Retrato de estudio, mirada al frente|
+retrato-de-estudio-fondo-gris|Generate/site/Welcome To Artflow.ai - @Bexandy.jpg|estudio|Retrato de estudio, fondo gris|
+moto-entre-palmeras|Generate/site/Wide angle cinematic shot of @Bexandy perched casually on a vintage.jpg|viajes|Moto entre palmeras|Wide angle cinematic shot of Bexandy perched casually on a vintage
+desierto-aventura|Generate/site/Wide-angle cinematic shot of @Bexandy standing triumphantly beside a.jpg|viajes|Dunas y moto de aventura|Wide-angle cinematic shot of Bexandy standing triumphantly beside a
+oficina-ventana-ciudad|Generate/site/a12f7e9e3b324a1ab0856404cd055960.jpg|trabajo|Oficina con la ciudad al fondo|
+chaqueta-con-el-escudo-de-la-vinotinto|Generate/site/a2b61ed70b4e4ba9889d62d1d01408ac.jpg|venezuela|Chaqueta con el escudo de la Vinotinto|
+muro-con-grafiti|Generate/site/a6dfe8051a684fbda574a47f67e0b5ef.jpg|calle|Muro con grafiti|
+moto-y-chaqueta-de-cuero-en-la-montana|Generate/site/b23967a73f2a41cab598a0180b294970.jpg|viajes|Moto y chaqueta de cuero en la montaña|
+oficina-camisa-blanca|Generate/site/b3c245ea13464ad5b113fa5a708c2f43.jpg|trabajo|Oficina abierta, camisa blanca|
+retrato-de-perfil-fondo-negro|Generate/site/be407928aee7443bb51a67fbc6b426d3.jpg|estudio|Retrato de perfil, fondo negro|
+blazer-gris-apaisado|Generate/site/befc77fcfdd34b9d8d0e7aca2ea90907.jpg|estudio|Blazer gris, apaisado|
+retrato-de-estudio-chaqueta-con-cierre|Generate/site/c728f5d445d14ee7bc5db57d21f6a311.jpg|estudio|Retrato de estudio, chaqueta con cierre|
+traje-entre-monitores|Generate/site/c82e4481b81c466ca46d671cbe329c97.jpg|trabajo|Traje entre monitores|
+traje-gris-sentado-en-estudio|Generate/site/ca818b82e2fc437badd23a762df16f38.jpg|estudio|Traje gris, sentado en estudio|
+sudadera-gris-y-teclado|Generate/site/cf4765a9f05f4341ab8c4d562380c5d6.jpg|trabajo|Sudadera gris y teclado|
+entre-rascacielos|Generate/site/d0306ab7c9b14df6aeb51dc83223fda3.jpg|calle|Entre rascacielos|
+santiago-nieve|Generate/site/d4ed0b13a16943a2a1e0974748f3d5f7.jpg|santiago|Santiago con la cordillera nevada|
+traje-claro-en-un-porche-al-atardecer-2|Generate/site/d7106987bcf344e48bc4f007e41cfaa1.jpg|estudio|Traje claro en un porche al atardecer|
+sillon-de-cuero-en-la-biblioteca|Generate/site/d7932172f92948a48c9081be7e42c698.jpg|estudio|Sillón de cuero en la biblioteca|
+roraima-traje|Generate/site/db05e47e16f64f56bba086a653f340c9.jpg|venezuela|Carretera hacia el tepuy|
+laptop-de-noche|Generate/site/e392a31b6b284048aa71edc9dcfa59c6.jpg|trabajo|Laptop de noche|
+retro-neon|Generate/site/ec914f5c-7510-4c77-ac97-1f6491a18f19.png|fantasia|Chaqueta ochentera y neón|
+moto-en-carretera-nevada|Generate/site/ecdd8ddfc15148998c78b6edb9e832e8.jpg|viajes|Moto en carretera nevada|
+blazer-en-la-oficina|Generate/site/f049db800633442a9cf0a85e0f0034af.jpg|trabajo|Blazer en la oficina|
+camisa-clara-en-la-oficina|Generate/site/f2020670b98f417b8d7ab8f6bd71226f.jpg|trabajo|Camisa clara en la oficina|
+chaqueta-de-jeans-noche-urbana|Generate/site/fa743930b15a49258a803745471d7fb8.jpg|calle|Chaqueta de jeans, noche urbana|
+sala-de-control-con-la-chaqueta-de-la-vi|Generate/site/image_1b8039c8.png|venezuela|Sala de control con la chaqueta de la Vinotinto|
+cafe-de-otono-sueter-claro|Generate/site/image_75a24c63.png|calle|Café de otoño, suéter claro|
+con-el-equipo-en-la-oficina|Generate/site/image_f530b499.png|trabajo|Con el equipo en la oficina|
+retrato-de-perfil|Generate/site/perfil..png|estudio|Retrato de perfil|

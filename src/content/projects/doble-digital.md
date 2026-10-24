@@ -1,6 +1,6 @@
 ---
 title: Mi doble digital
-summary: Un modelo de imagen entrenado con mis fotos y una galería de 47 escenas generadas con IA.
+summary: Un modelo de imagen entrenado con mis fotos y una galería de 89 escenas generadas con IA.
 date: 2026-03-30
 side: work
 role: Dataset, entrenamiento, dirección de arte y curaduría
@@ -15,7 +15,7 @@ Quería retratos profesionales sin sesión de fotos y, de paso, entender cómo s
 1. **Dataset**: 27 fotos propias con distintas luces, ángulos y ropa, sin otras personas en cuadro.
 2. **Entrenamiento**: un modelo de identidad en Artflow a partir de ese dataset; pruebas de consistencia del rostro con prompts neutros.
 3. **Generación**: unas 200 imágenes con prompts en inglés escritos a mano (escena, encuadre, lente, luz). Algunas variaciones con Gemini y Firefly cambiando solo el fondo.
-4. **Curaduría**: una imagen por escena, descartando duplicados y las que no encajan con un sitio profesional; 47 finales en 9 temas.
+4. **Curaduría**: una imagen por escena, descartando duplicados y las que no encajan con un sitio profesional; 89 finales en 9 temas, elegidas a mano.
 5. **Publicación**: recorte de la marca de agua con ImageMagick, optimización a WebP responsivo en el build de Astro, visor y filtros sin dependencias.
 
 ## Qué aprendí

@@ -7,7 +7,10 @@ grep -v '^#' "$DIR/gallery.txt" | while IFS='|' read -r slug rel theme cap promp
   in="$SRC/$rel"; out="$OUT/$slug.jpg"
   [ -f "$in" ] || { echo "falta: $in" >&2; continue; }
   h=$(identify -format "%h" "$in[0]"); w=$(identify -format "%w" "$in[0]")
-  keep=$(python3 -c "print(int($h*(1-5.5/100)))")
-  convert "$in[0]" -gravity North -crop "${w}x${keep}+0+0" +repage -resize "x1400>" -strip -quality 84 "$out"
+  case "${in,,}" in
+    *.jpg|*.jpeg) keep=$(python3 -c "print(int($h*(1-5.5/100)))");;  # JPG de Artflow: recortar la marca de agua
+    *) keep=$h;;                                                        # PNG (Gemini, Firefly): sin marca
+  esac
+  convert "$in[0]" -gravity North -crop "${w}x${keep}+0+0" +repage -resize "1400x1400>" -strip -quality 84 "$out"
   echo "✓ $slug $(identify -format '%wx%h' "$out")"
 done
