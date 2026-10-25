@@ -6,6 +6,8 @@ export const site = {
   description:
     'Ingeniero y desarrollador backend (PHP/Symfony) y bailarín de salsa. CV, portafolio, utilidades para desarrollo e IA, y herramientas para practicar salsa.',
   locale: 'es',
+  /** Verificación de propiedad en Google Search Console (etiqueta HTML) */
+  googleSiteVerification: 'FbhXm00v2Tzxsuf9pulxzAzrHunFztn-urbUIvoig9Y',
   social: {
     github: 'https://github.com/bexandy',
     linkedin: 'https://www.linkedin.com/in/bexandyrodriguez/',
