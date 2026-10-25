@@ -1,7 +1,33 @@
 {
   "_doc": "Etiquetas del 1 del bailarín (Bexandy) por prueba de oído. downbeatIndex = índice del pulso (módulo 8) de analyze() de la mezcla donde cae el 1. Añadir una fila por canción etiquetada.",
   "labels": [
-    { "song": "Shine · Croma Latina feat. Jimmy Bosch", "file": "~/Música/Shine_Croma_Latina_Feat _  Jimmy_Bosch.mp3", "downbeatIndex": 0, "date": "2026-10-25", "note": "A/B: índice 0 frente a 4; la señal de voz apuntaba al 5" },
-    { "song": "Qué Bueno Baila Usted · Oscar D'León", "file": "~/Música/05- Oscar D'León- Que Bueno Baila Usted- Llego La Salsa.mp3", "downbeatIndex": 2, "date": "2026-10-25", "note": "A/B: índice 2 frente a 6; compás confirmado con el Salsa dataset" }
+    {
+      "song": "Shine · Croma Latina feat. Jimmy Bosch",
+      "file": "~/Música/Shine_Croma_Latina_Feat _  Jimmy_Bosch.mp3",
+      "downbeatIndex": 0,
+      "date": "2026-10-25",
+      "note": "A/B: índice 0 frente a 4; la señal de voz apuntaba al 5"
+    },
+    {
+      "song": "Qué Bueno Baila Usted · Oscar D'León",
+      "file": "~/Música/05- Oscar D'León- Que Bueno Baila Usted- Llego La Salsa.mp3",
+      "downbeatIndex": 2,
+      "date": "2026-10-25",
+      "note": "A/B: índice 2 frente a 6; compás confirmado con el Salsa dataset"
+    },
+    {
+      "song": "Perdóname · Gilberto Santa Rosa",
+      "file": "~/Música/Gilberto Santa Rosa - Perdóname.mp3",
+      "downbeatIndex": 5,
+      "date": "2026-10-25",
+      "note": "A/B: índice 1 (detector) frente a 5; el bailarín eligió B"
+    },
+    {
+      "song": "Conteo Musical 1 2 3 5 6 7 · Nelson de Castro (lección, SoundCloud)",
+      "file": "~/Música/conteo-musical-nelson-de-castro.mp3",
+      "downbeatIndex": 4,
+      "date": "2026-10-25",
+      "note": "Etiqueta por el conteo hablado (vosk): 135 de 139 números caen en el mismo desplazamiento; el detector dio índice 7"
+    }
   ]
 }
