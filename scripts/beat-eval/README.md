@@ -16,3 +16,6 @@ Las pistas de práctica con voz que cuenta ("uno dos tres, cinco seis siete" o "
 
 ## Tresillo y tempo (v1.4)
 La Peleona (Mambo Madness, ~235 bpm) salía a 157 bpm: la clave y el tumbao generan una periodicidad a 1,5 pulsos (tresillo) que la autocorrelación simple confundía con el pulso. `tempoScores` usa ahora un peine métrico, puntuación del lag más la mitad de las del lag/2 y del lag×2: el pulso real tiene corcheas y compás, el tresillo no tiene nada a la mitad (en La Peleona 0,03 frente a 0,19 normalizado). Las 11 pistas de referencia no cambian (rejilla 10/11).
+
+## Marcas del reproductor (retroalimentación)
+En la tarjeta "El 1" del reproductor, el botón **Guardar marca** descarga `marca-<canción>.json` con el instante en segundos de los primeros 1 según la marca del bailarín (más tempo, estilo, índice y versión del detector). Nada sale del equipo. `node scripts/beat-eval/import-mark.mjs ~/Descargas/marca-*.json` busca el audio por nombre bajo `~/Música` y añade (o sustituye) la etiqueta en `labels.json`; después, `check-labels.mjs` la usa como cualquier otra. Como la etiqueta es un instante y no un índice, sigue valiendo aunque cambie la rejilla.

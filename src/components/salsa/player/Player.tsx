@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import CountBar from './CountBar';
 import RhythmMode from './RhythmMode';
 import StemMixer from './StemMixer';
-import { analyze, onsetEnvelope, type BeatAnalysis } from './analysis/beatTracker';
+import { analyze, onsetEnvelope, type BeatAnalysis, DETECTOR_VERSION } from './analysis/beatTracker';
 import { estimateDownbeat, vocalPhraseScores, harmonicChangeScores, fuseDownbeat, barAccentScores, CLAVE_TEMPLATES, BASS_TEMPLATE } from './analysis/clavePhase';
 import { scheduleClick } from './audio/click';
 import { mixToWav, asAudioBufferLike, STEM_LABELS } from './audio/mix';
@@ -244,6 +244,26 @@ export default function Player() {
     setUserSetDownbeat(true);
   }
 
+  /** Descarga la marca del 1 como JSON con el instante en segundos: sirve de etiqueta para scripts/beat-eval (import-mark.mjs) aunque cambie la rejilla. */
+  function exportMark() {
+    const a = audioRef.current;
+    if (!file || !analysis || !a) return;
+    const ones = beats.filter((_, i) => countOf(i) === 1);
+    const mark = {
+      format: 'bexandy-salsa-mark/1',
+      song: file.name, size: file.size, duration: Number(a.duration.toFixed(3)),
+      detector: DETECTOR_VERSION, bpm: Number(analysis.bpm.toFixed(2)), style, downbeatIndex: downbeat,
+      oneAt: Number((ones[0] ?? beats[0]).toFixed(3)), ones: ones.slice(0, 8).map((t) => Number(t.toFixed(3))),
+      autoDownbeatIndex: analysis.downbeatIndex, autoConfidence: Number(analysis.downbeatConfidence.toFixed(2)),
+      date: new Date().toISOString().slice(0, 10),
+    };
+    const blob = new Blob([JSON.stringify(mark, null, 1)], { type: 'application/json' });
+    const href = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = href; link.download = `marca-${file.name.replace(/\.[^.]+$/, '')}.json`; link.click();
+    setTimeout(() => URL.revokeObjectURL(href), 1000);
+  }
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement) return;
@@ -316,6 +336,7 @@ export default function Player() {
                     <button className="card px-2 py-1" onClick={() => { setDownbeat((d) => (d + 7) % 8); setUserSetDownbeat(true); }} title="Flecha izquierda">◀ 1 pulso</button>
                     <button className="card px-2 py-1" onClick={() => { setDownbeat((d) => (d + 1) % 8); setUserSetDownbeat(true); }} title="Flecha derecha">1 pulso ▶</button>
                     <button className="card px-2 py-1" onClick={() => { setDownbeat((d) => (d + 4) % 8); setUserSetDownbeat(true); }} title="Si el conteo va al revés (el 1 suena donde pisas el 5)">1 ⇄ 5</button>
+                    <button className="card px-2 py-1" onClick={exportMark} title="Descarga un JSON con el instante del 1 para mejorar el detector (scripts/beat-eval)">Guardar marca</button>
                     <select className="card px-2 py-1 ml-auto" value={style} onChange={(e) => setStyle(e.target.value as 'On1' | 'On2')}>
                       <option>On1</option><option>On2</option>
                     </select>

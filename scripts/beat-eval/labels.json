@@ -5539,6 +5539,31 @@
    ],
    "date": "2026-10-25",
    "note": "Conteo hablado transcrito con vosk (es+en) sobre la pista de voz separada con Demucs: 167 números"
+  },
+  {
+   "song": "La Peleona · Mambo Madness",
+   "file": "~/Música/La_Peleona_Mambo_Madness.mpeg",
+   "date": "2026-10-25",
+   "note": "marca hecha en producción (detector 1.4, On2, índice 4 guardado en localStorage); instantes calculados fuera de línea con la misma rejilla a 44,1 kHz. Sustituir por la marca exportada con 'Guardar marca' cuando exista.",
+   "bpmRef": 234.9,
+   "counts": [
+    [
+     2.09,
+     1
+    ],
+    [
+     4.156,
+     1
+    ],
+    [
+     6.246,
+     1
+    ],
+    [
+     8.359,
+     1
+    ]
+   ]
   }
  ]
 }

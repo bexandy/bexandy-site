@@ -1,6 +1,9 @@
 import { fft, hann } from './fft';
 import { estimateDownbeat, phraseNovelty, phraseScores, harmonicChangeScores, fuseDownbeat, barAccentScores, CLAVE_TEMPLATES, type ClaveName } from './clavePhase';
 
+/** Versión del detector; se guarda en las marcas exportadas para saber con qué rejilla se hicieron. */
+export const DETECTOR_VERSION = '1.4';
+
 export interface BeatAnalysis {
   bpm: number;
   /** tiempos (s) de cada pulso */
