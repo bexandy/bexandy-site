@@ -2,12 +2,14 @@
 import Base from '../../layouts/Base.astro';
 import Player from '../../components/salsa/player/Player';
 ---
-<Base title="Reproductor de práctica de salsa" side="dance" isolated description="Separa instrumentos, ajusta la velocidad y marca los conteos de salsa. Todo en tu navegador.">
+<Base title="Reproductor de práctica de salsa" side="dance" description="Separa instrumentos, ajusta la velocidad y marca los conteos de salsa. Todo en tu navegador.">
   <div class="eyebrow mb-2">Baile · herramienta</div>
   <h1 class="display font-bold text-4xl">Reproductor de práctica</h1>
   <p class="muted mt-2 max-w-2xl">Carga una canción desde tu equipo. Nada se sube a ningún servidor: todo el procesamiento ocurre en tu navegador.</p>
   <div class="mt-6">
-    <Player client:only="react" />
+    <Player client:only="react">
+      <div slot="fallback" class="card min-h-[184px] md:min-h-[136px] animate-pulse" aria-hidden="true" />
+    </Player>
   </div>
   <section class="prose-basic mt-12 max-w-3xl text-sm">
     <h2>Cómo funciona</h2>

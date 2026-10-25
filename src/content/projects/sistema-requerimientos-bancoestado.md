@@ -3,7 +3,7 @@ title: Sistema de Requerimientos Corporativos · BancoEstado
 summary: Plataforma interna de gestión de solicitudes entre áreas del banco, en Symfony.
 date: 2019-06-01
 side: work
-role: Senior Backend Developer, principal contribuidor (Agencia Sur)
+role: Senior Backend Developer (Agencia Sur)
 stack: [PHP, Symfony, MySQL, Docker]
 links: { live: https://sistemaderequerimientos.cl/ }
 cover: cover-requerimientos

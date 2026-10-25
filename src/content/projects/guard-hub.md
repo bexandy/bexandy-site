@@ -3,7 +3,7 @@ title: Guard Hub · gestión de guardias
 summary: "API, portal web y app para empresas de seguridad: turnos, facturación, trabajadores, pagos y casos."
 date: 2026-08-24
 side: work
-role: Senior Backend Developer, principal contribuidor (Agencia Sur)
+role: Senior Backend Developer (Agencia Sur)
 stack: [PHP 8, Symfony 7.4, API Platform, PostgreSQL, Vue 3, PWA, AWS, Terraform, Docker]
 links: { live: https://guard-hub-web.agenciasur.cl/dashboard }
 cover: cover-guard-hub

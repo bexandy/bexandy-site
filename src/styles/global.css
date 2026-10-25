@@ -4,8 +4,8 @@
 
 /* Diseño B · Cinematográfico oscuro: negro cálido, un solo acento ámbar, titulares condensados. */
 @theme {
-  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Bricolage Grotesque", "Arial Narrow", ui-sans-serif, sans-serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), "Arial Narrow", ui-sans-serif, sans-serif;
   --color-amber: var(--amber);
 }
 

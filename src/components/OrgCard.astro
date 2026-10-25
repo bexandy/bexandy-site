@@ -7,7 +7,7 @@ const ig = org.instagram ? `https://www.instagram.com/${org.instagram}/` : undef
 ---
 <article class:list={['card flex gap-4 items-start', compact ? 'p-3' : 'p-4']}>
   <a href={org.url ?? ig} class:list={['shrink-0 grid place-items-center overflow-hidden', org.round ? 'rounded-full' : 'rounded-lg', org.lightChip ? 'bg-white p-2' : 'p-1']} style={`width:${org.wide ? (compact ? 150 : 200) : compact ? 64 : 88}px;height:${compact ? 64 : 88}px`} aria-label={org.name}>
-    <Image src={org.logo} alt={`Logo de ${org.name}`} width={400} class="max-w-full max-h-full object-contain" loading="lazy" />
+    <Image src={org.logo} alt={`Logo de ${org.name}`} width={400} widths={[200, 400]} sizes="200px" class="max-w-full max-h-full object-contain" loading="lazy" />
   </a>
   <div class="min-w-0">
     <h3 class="display font-bold leading-tight">{org.name}</h3>

@@ -4,6 +4,9 @@ import Base from '../layouts/Base.astro';
 import { gallery, themes } from '../data/gallery';
 const counts = Object.fromEntries(Object.keys(themes).map((t) => [t, gallery.filter((g) => g.theme === t).length]));
 const large = await Promise.all(gallery.map((g) => getImage({ src: g.image, width: 1400, format: 'webp' })));
+// Cuatro columnas repartidas en build (ítem i → columna i % 4): el orden del DOM coincide con lo visible y las primeras imágenes pueden ir con prioridad.
+const COLS = 4;
+const cols = Array.from({ length: COLS }, (_, c) => gallery.map((g, i) => ({ g, i })).filter(({ i }) => i % COLS === c));
 const payload = gallery.map((g, i) => ({ slug: g.slug, theme: g.theme, caption: g.caption, prompt: g.prompt, large: large[i].src }));
 ---
 <Base title="Galería" description="Retratos generados con inteligencia artificial a partir de mis fotos: trabajo, Santiago, viajes, Venezuela, baile y fantasía.">
@@ -16,14 +19,18 @@ const payload = gallery.map((g, i) => ({ slug: g.slug, theme: g.theme, caption: 
     {Object.entries(themes).map(([k, label]) => <button class="chip" data-theme={k} aria-pressed="false">{label} · {counts[k]}</button>)}
   </div>
 
-  <div class="mt-6 columns-2 md:columns-3 lg:columns-4 gap-3 [column-fill:_balance]" id="grid">
-    {gallery.map((g, i) => (
-      <figure class="mb-3 break-inside-avoid" data-theme={g.theme} data-i={i}>
-        <button class="block w-full rounded-xl overflow-hidden card hover:border-amber transition-colors text-left" data-open={i} aria-label={`Ampliar: ${g.caption}`}>
-          <Image src={g.image} alt={g.caption} width={520} widths={[320, 520, 800]} sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw" class="w-full h-auto" loading={i < 8 ? 'eager' : 'lazy'} />
-        </button>
-        <figcaption class="text-xs muted mt-1 px-1">{g.caption}</figcaption>
-      </figure>
+  <div class="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3" id="grid">
+    {cols.map((col, c) => (
+      <div class="flex flex-col gap-3">
+        {col.map(({ g, i }, k) => (
+          <figure data-theme={g.theme} data-i={i}>
+            <button class="block w-full rounded-xl overflow-hidden card hover:border-amber transition-colors text-left" data-open={i} aria-label={`Ampliar: ${g.caption}`}>
+              <Image src={g.image} alt={g.caption} width={520} widths={[320, 520, 800]} sizes="(min-width: 1024px) 25vw, 50vw" quality={75} class="w-full h-auto" loading={k < 2 ? 'eager' : 'lazy'} fetchpriority={k === 0 && c < 2 ? 'high' : undefined} />
+            </button>
+            <figcaption class="text-xs muted mt-1 px-1">{g.caption}</figcaption>
+          </figure>
+        ))}
+      </div>
     ))}
   </div>
 
@@ -47,7 +54,8 @@ const payload = gallery.map((g, i) => ({ slug: g.slug, theme: g.theme, caption: 
   <script is:inline set:html={`window.__gallery = ${JSON.stringify(payload)};`} />
   <script>
     const grid = document.getElementById('grid')!;
-    const figs = [...grid.querySelectorAll<HTMLElement>('figure')];
+    // Ordenadas por su índice original: figs[i] corresponde a data[i] aunque el DOM vaya por columnas.
+    const figs = [...grid.querySelectorAll<HTMLElement>('figure')].sort((a, b) => Number(a.dataset.i) - Number(b.dataset.i));
     const imgs = figs.map((f) => f.querySelector('img')!);
     const data = (window as any).__gallery as { caption: string; prompt: string; theme: string; large: string }[];
     // filtros

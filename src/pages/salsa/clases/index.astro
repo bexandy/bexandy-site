@@ -20,17 +20,17 @@ const fmt = (d: Date) => d.toLocaleDateString('es-CL', { year: 'numeric', month:
     {groups.map((g) => <a href={`#${g.key}`} class="chip hover:border-amber">{g.name} · {g.items.length}</a>)}
   </nav>
 
-  {groups.map((g) => (
+  {groups.map((g, gi) => (
     <section id={g.key} class="mt-10 scroll-mt-20">
       <div class="flex items-baseline justify-between gap-3 flex-wrap mb-4">
         <h2 class="display font-bold text-2xl">{g.name}</h2>
         {g.org?.instagram && <a href={`https://www.instagram.com/${g.org.instagram}/`} class="text-sm underline decoration-[var(--amber)]">@{g.org.instagram}</a>}
       </div>
       <ul class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {g.items.map((v) => (
+        {g.items.map((v, k) => (
           <li>
             <a href={`/salsa/clases/${v.id}`} class="card block h-full hover:border-amber transition-colors overflow-hidden">
-              {poster(v.data.poster) && <div class="aspect-[4/5] overflow-hidden"><Image src={poster(v.data.poster)!} alt="" width={400} class="w-full h-full object-cover" loading="lazy" /></div>}
+              {poster(v.data.poster) && <div class="aspect-[4/5] overflow-hidden"><Image src={poster(v.data.poster)!} alt="" width={400} widths={[300, 400, 600]} sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 100vw" class="w-full h-full object-cover" loading={gi === 0 && k < 4 ? 'eager' : 'lazy'} fetchpriority={gi === 0 && k < 2 ? 'high' : undefined} /></div>}
               <div class="p-4">
               {v.data.featured && <div class="eyebrow mb-1">Destacado</div>}
               <h3 class="display font-bold leading-tight">{v.data.title}</h3>

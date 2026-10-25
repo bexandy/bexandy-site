@@ -1,14 +1,14 @@
 ---
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
-interface Props { href?: string; title: string; subtitle?: string; tags?: string[]; side?: 'work' | 'dance'; cover?: ImageMetadata; eyebrow?: string }
-const { href, title, subtitle, tags = [], cover, eyebrow } = Astro.props;
+interface Props { href?: string; title: string; subtitle?: string; tags?: string[]; side?: 'work' | 'dance'; cover?: ImageMetadata; eyebrow?: string; /** Portada visible al cargar: sin lazy y con prioridad alta */ priority?: boolean }
+const { href, title, subtitle, tags = [], cover, eyebrow, priority = false } = Astro.props;
 const Tag = href ? 'a' : 'div';
 ---
 <Tag href={href} class="card block overflow-hidden hover:border-amber transition-colors">
   {cover && (
     <div class="aspect-[16/10] overflow-hidden">
-      <Image src={cover} alt="" width={640} widths={[400, 640, 900]} sizes="(min-width: 768px) 33vw, 100vw" class="w-full h-full object-cover object-top" loading="lazy" />
+      <Image src={cover} alt="" width={640} widths={[400, 640, 900]} sizes="(min-width: 768px) 33vw, 100vw" class="w-full h-full object-cover object-top" loading={priority ? 'eager' : 'lazy'} fetchpriority={priority ? 'high' : undefined} />
     </div>
   )}
   <div class="p-4">

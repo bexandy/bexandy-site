@@ -55,15 +55,5 @@ const videos = defineCollection({
   }),
 });
 
-const posts = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/posts' }),
-  schema: z.object({
-    title: z.string(),
-    summary: z.string(),
-    date: z.coerce.date(),
-    tags: z.array(z.string()).default([]),
-    draft: z.boolean().default(false),
-  }),
-});
 
-export const collections = { projects, tools, videos, posts };
+export const collections = { projects, tools, videos };

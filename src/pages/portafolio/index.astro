@@ -14,8 +14,8 @@ const dance = projects.filter((p) => p.data.side === 'dance');
 
   <h2 class="display font-bold text-2xl mt-10 mb-4">Trabajo</h2>
   <div class="grid md:grid-cols-3 gap-4">
-    {work.map((p) => (
-      <Card href={`/portafolio/${p.id}`} title={p.data.title} subtitle={p.data.summary} tags={p.data.stack.slice(0, 4)} cover={img(p.data.cover)} eyebrow={`${p.data.date.getFullYear()}${p.data.role ? ` · ${p.data.role.split(',')[0]}` : ''}`} />
+    {work.map((p, i) => (
+      <Card priority={i < 3} href={`/portafolio/${p.id}`} title={p.data.title} subtitle={p.data.summary} tags={p.data.stack.slice(0, 4)} cover={img(p.data.cover)} eyebrow={`${p.data.date.getFullYear()}${p.data.role ? ` · ${p.data.role.split(',')[0]}` : ''}`} />
     ))}
   </div>
 
