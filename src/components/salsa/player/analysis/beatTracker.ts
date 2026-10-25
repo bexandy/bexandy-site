@@ -68,14 +68,24 @@ export function onsetEnvelope(x: Float32Array, sampleRate: number) {
   return { env: out, fps };
 }
 
-/** Puntuación de autocorrelación por lag (frames) de un tramo de la envolvente, con preferencia log-gaussiana al tempo de salsa. */
+/**
+ * Puntuación por lag (frames) de un tramo de la envolvente, con preferencia log-gaussiana al tempo de salsa.
+ * Peine métrico: el pulso real tiene periodicidad también a la mitad (corcheas) y al doble (dos pulsos). El tresillo
+ * de la clave y el tumbao crea un lag espurio a 1,5 pulsos (La Peleona: 157 en vez de 235 bpm) que no tiene nada a la mitad.
+ */
 function tempoScores(env: Float32Array, fps: number, minLag: number, maxLag: number, prefBpm: number) {
   const n = env.length;
-  const scores = new Float32Array(maxLag - minLag + 1);
-  for (let lag = minLag; lag <= maxLag; lag++) {
+  const lo = Math.max(1, Math.floor(minLag / 2)), hi = Math.min(n - 1, Math.ceil(maxLag * 2) + 1);
+  const ac = new Float32Array(hi + 1);
+  for (let lag = lo; lag <= hi; lag++) {
     let s = 0;
     for (let i = lag; i < n; i++) s += env[i] * env[i - lag];
-    s /= Math.max(1, n - lag);
+    ac[lag] = s / Math.max(1, n - lag);
+  }
+  const at = (l: number) => { const k = Math.floor(l), a = l - k; return k >= lo && k + 1 <= hi ? ac[k] * (1 - a) + ac[k + 1] * a : 0; };
+  const scores = new Float32Array(maxLag - minLag + 1);
+  for (let lag = minLag; lag <= maxLag; lag++) {
+    const s = at(lag) + 0.5 * (at(lag / 2) + at(2 * lag));
     const bpm = (60 * fps) / lag;
     const wgt = Math.exp(-0.5 * Math.pow(Math.log2(bpm / prefBpm) / 0.6, 2));
     scores[lag - minLag] = s * (0.4 + wgt);
