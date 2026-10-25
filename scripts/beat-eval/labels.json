@@ -1,0 +1,7 @@
+{
+  "_doc": "Etiquetas del 1 del bailarín (Bexandy) por prueba de oído. downbeatIndex = índice del pulso (módulo 8) de analyze() de la mezcla donde cae el 1. Añadir una fila por canción etiquetada.",
+  "labels": [
+    { "song": "Shine · Croma Latina feat. Jimmy Bosch", "file": "~/Música/Shine_Croma_Latina_Feat _  Jimmy_Bosch.mp3", "downbeatIndex": 0, "date": "2026-10-25", "note": "A/B: índice 0 frente a 4; la señal de voz apuntaba al 5" },
+    { "song": "Qué Bueno Baila Usted · Oscar D'León", "file": "~/Música/05- Oscar D'León- Que Bueno Baila Usted- Llego La Salsa.mp3", "downbeatIndex": 2, "date": "2026-10-25", "note": "A/B: índice 2 frente a 6; compás confirmado con el Salsa dataset" }
+  ]
+}

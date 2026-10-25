@@ -7,3 +7,6 @@ node scripts/beat-eval/eval.mjs "~/Música/La Vida Es Un Carnaval.mp3" "Salsa-da
 ```
 
 Reporta F-measure de pulsos e inicio de compás con tolerancia ±70 ms (la del paper), el tempo detectado frente al anotado y la clave estimada. Nota: la carpeta "Half tempo" anota a mitad de tempo (posiciones 1 y 3); compara con la "Regular tempo" cuando exista.
+
+## Etiquetas de oído del 1
+`labels.json` guarda, por canción, el índice del pulso (módulo 8) donde el bailarín siente el 1, obtenido con archivos A/B con metrónomo (`~/Música/pruebas-conteo/`). `node scripts/beat-eval/check-labels.mjs` vuelve a analizar cada canción y muestra cada señal y la fusión frente a la etiqueta. Al añadir canciones, repetir la comprobación antes de tocar los pesos de `fuseDownbeat`.

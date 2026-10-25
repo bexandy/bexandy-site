@@ -190,8 +190,9 @@ export default function Player() {
       { scores: phase.scores, weight: 0.5 },
       { scores: barAccentScores(a.envelope, a.fps, a.beats), weight: 1.2 },
     ];
-    if (stems.vocals) signals.push({ scores: vocalPhraseScores(stems.vocals.channelData[0], stems.vocals.sampleRate, a.beats), weight: 1.2 });
-    if (stems.other) signals.push({ scores: harmonicChangeScores(stems.other.channelData[0], stems.other.sampleRate, a.beats), weight: 0.5 });
+    // Peso moderado: en Shine (etiqueta de oído) las frases de la voz apuntaban al 5, no al 1; el perfil de acentos acertó.
+    if (stems.vocals) signals.push({ scores: vocalPhraseScores(stems.vocals.channelData[0], stems.vocals.sampleRate, a.beats), weight: 0.8 });
+    if (stems.other) signals.push({ scores: harmonicChangeScores(stems.other.channelData[0], stems.other.sampleRate, a.beats), weight: 0.4 });
     const fused = fuseDownbeat(signals);
     const merged: BeatAnalysis = { ...a, downbeatIndex: fused.downbeatIndex, downbeatConfidence: fused.confidence, clave: phase.confidence >= 0.15 ? phase.clave : a.clave };
     setAnalysis(merged);
