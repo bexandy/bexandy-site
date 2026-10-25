@@ -74,3 +74,14 @@ body {
   body { background: #fff; color: #000; }
   .card { border: none; }
 }
+
+/* Conteo del reproductor: el tiempo activo se enciende y da un golpe de escala por pulso. */
+.count-cell { background: var(--card); color: var(--fg); border: 2px solid var(--border); will-change: transform; }
+.count-cell[data-tone="idle"]:is(:nth-child(4), :nth-child(8)) { color: var(--muted); opacity: .6; }
+.count-cell[data-tone="idle-break"] { color: var(--amber); border-color: var(--amber); }
+.count-cell[data-tone="break"] { background: var(--amber); color: var(--amber-ink); border-color: var(--amber); box-shadow: 0 0 0 4px color-mix(in srgb, var(--amber) 35%, transparent), 0 0 28px color-mix(in srgb, var(--amber) 70%, transparent); }
+.count-cell[data-tone="step"] { background: var(--fg); color: var(--bg); border-color: var(--fg); box-shadow: 0 0 0 3px color-mix(in srgb, var(--fg) 25%, transparent), 0 0 18px color-mix(in srgb, var(--fg) 35%, transparent); }
+.count-cell[data-tone="pause"] { border-color: var(--amber); color: var(--amber); box-shadow: 0 0 0 2px color-mix(in srgb, var(--amber) 30%, transparent); }
+.count-cell[data-tone="break"], .count-cell[data-tone="step"], .count-cell[data-tone="pause"] { animation: count-hit .22s cubic-bezier(.2, .9, .3, 1.2) both; }
+@keyframes count-hit { from { transform: scale(1.22); } to { transform: scale(1.06); } }
+@media (prefers-reduced-motion: reduce) { .count-cell { animation: none !important; transform: none !important; } }
