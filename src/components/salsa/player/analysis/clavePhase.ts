@@ -272,13 +272,17 @@ export function guessEnergyScores(env: Float32Array, fps: number, beats: number[
 }
 
 /**
- * Perfil de acentos del ciclo de 8 tiempos a resolución de semicorchea (32 posiciones desde el 1), medido sobre la rejilla
- * de pulsos del propio detector con anotaciones del Salsa dataset. Los pulsos son fuertes; las corcheas ("y") de 3, 5 y 7
- * son fuertes y las de 2, 4, 6 y 8 débiles. Primera versión, ajustada con una sola canción: se refinará con más etiquetas.
+ * Perfil de acentos del ciclo de 8 tiempos a resolución de semicorchea (32 posiciones desde el 1).
+ * Versión 2 (25-10-2026), derivada de 9 pistas etiquetadas (7 con conteo hablado alineado automáticamente y 2 de oído):
+ * los pulsos pesan parecido; las corcheas ("y") pares llevan la energía (tonos abiertos de la conga en el "y" de 4 y de 8,
+ * bajo anticipado en el "y" de 2 y de 6) y las impares poco; las semicorcheas casi nada. La versión anterior se midió sobre
+ * una sola canción (Qué Bueno Baila Usted) y resultó ir corrida un pulso respecto a todas las demás.
+ * Lo que esta plantilla resuelve bien es la paridad (7/9); el compás (0 frente a 2) y el 1 frente al 5 quedan cerca del azar:
+ * la energía de la mezcla no distingue 1 de 5. Ver scripts/beat-eval/labels.json y check-labels.mjs.
  */
 export const CYCLE_ACCENT_TEMPLATE = [
-  0.86, 0.01, 0.63, 0.02, 0.84, 0.02, 0.47, 0.02, 0.77, 0.01, 0.98, 0.02, 0.94, 0.02, 0.35, 0.02,
-  0.89, 0.01, 0.96, 0.01, 0.75, 0.02, 0.53, 0.02, 0.87, 0.01, 0.93, 0.01, 1.0, 0.01, 0.4, 0.02,
+  0.8, 0.02, 0.4, 0.02, 0.8, 0.02, 0.8, 0.02, 0.8, 0.02, 0.4, 0.02, 0.8, 0.02, 1.0, 0.02,
+  0.8, 0.02, 0.4, 0.02, 0.8, 0.02, 0.8, 0.02, 0.8, 0.02, 0.4, 0.02, 0.8, 0.02, 1.0, 0.02,
 ];
 
 /** Correlación del perfil de semicorcheas del ciclo con la plantilla de acentos; devuelve una puntuación por desplazamiento. */
