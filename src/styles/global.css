@@ -68,6 +68,14 @@ body {
 .prose-basic code { background: var(--card); padding: .1em .35em; border-radius: .3em; font-size: .9em; }
 .prose-basic pre { background: var(--card); padding: 1rem; border-radius: .75rem; overflow-x: auto; margin-bottom: 1em; }
 
+/* tablas (syllabus y páginas de prosa) */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; min-width: 0; }
+.table-wrap.table-wide table { min-width: 40rem; }
+.table-wrap table { width: 100%; border-collapse: collapse; font-size: .9rem; line-height: 1.5; }
+.table-wrap th { text-align: left; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.table-wrap th, .table-wrap td { padding: .5rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+.table-wrap.table-wide td:first-child { white-space: nowrap; }
+
 @media print {
   .no-print { display: none !important; }
   :root, .dark { --bg: #fff; --bg2: #fff; --fg: #000; --muted: #444; --card: #fff; --border: #ccc; --amber: #8a5612; }

@@ -20,9 +20,10 @@ const videos = (await getCollection('videos', ({ data }) => !data.draft)).sort((
   </section>
 
   <div class="max-w-6xl mx-auto px-4 py-10">
-    <div class="grid md:grid-cols-2 gap-4">
+    <div class="grid md:grid-cols-3 gap-4">
       <Card href="/salsa/player" title="Reproductor de práctica" subtitle="Separa los instrumentos de una canción, cambia la velocidad sin alterar el tono y marca los conteos 1-2-3 5-6-7." side="dance" tags={['stems', 'velocidad', 'conteos', 'metrónomo']} eyebrow="Herramienta" />
       <Card href="/salsa/clases" title="Clases en video" subtitle="Grabaciones de las clases y sociales a los que voy, agrupadas por academia." side="dance" tags={['On1', 'On2', 'shines']} eyebrow="Videos" />
+      <Card href="/salsa/syllabus" title="Syllabus de mambo" subtitle="Cómo se cuenta el On2, los shines base, las figuras de salón y un plan de seis semanas para pasar de On1 a On2." side="dance" tags={['On2', 'shines', 'NDCA', 'plan']} eyebrow="Guía" />
     </div>
 
     <section class="mt-12">

@@ -1,0 +1,261 @@
+---
+import Base from '../../layouts/Base.astro';
+import Card from '../../components/Card.astro';
+import { getCollection } from 'astro:content';
+
+// Clases del sitio bailadas en On2, en el mismo orden que /salsa/clases (destacadas, "me gusta", fecha).
+// Cuando los videos tengan `figures` llenas se podrá cruzar cada figura con sus clases.
+const videos = (await getCollection('videos', ({ data }) => !data.draft && data.style === 'On2'))
+  .sort((a, b) => (b.data.featured ? 1 : 0) - (a.data.featured ? 1 : 0) || b.data.likes - a.data.likes || b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 6);
+
+const sections = [
+  { id: 'dos-syllabus', label: 'Dos syllabus' },
+  { id: 'conteo', label: 'Cómo se cuenta el On2' },
+  { id: 'nueva-york', label: 'Tradición de Nueva York' },
+  { id: 'ndca', label: 'Salón (NDCA)' },
+  { id: 'plan', label: 'Plan On1 → On2' },
+  { id: 'clases', label: 'Clases relacionadas' },
+  { id: 'fuentes', label: 'Fuentes' },
+];
+
+// Conteo de 8 tiempos: en On2 se quiebra en 2 y 6; en On1 en 1 y 5.
+const counts = [1, 2, 3, 4, 5, 6, 7, 8];
+const on2 = new Set([2, 6]);
+const on1 = new Set([1, 5]);
+
+const shines = [
+  ['1', 'Paso básico', 'Quiebre en 2 y 6', 'Pisar en el sitio, quebrar, volver. Es el marco de todo lo demás.'],
+  ['2', 'Quiebre adelante y atrás, paso lateral', '2 y 6', 'El quiebre puede apuntar a cualquier dirección; el paso lateral une combinaciones.'],
+  ['3', 'Chord step', 'Cruces en 1, 3, 5 y 7', 'Introduce el cruce de pies sobre los tiempos fuertes.'],
+  ['4', 'Suzy Q', 'Cruce, atrás, cruce', 'El paso atrás cae en la punta para que el peso quede sobre la pierna de adelante.'],
+  ['5', 'Cross step', 'Suele caer en 3', 'Un pie cruza por delante del otro.'],
+  ['6', 'Tap', 'Tiempos sin pisada', 'Toque sin cambio de peso; adorna los tiempos de pausa.'],
+  ['7', 'Flare', 'Tiempos sin pisada', 'Un tap lanzado desde la rodilla, lejos del cuerpo, sin cambio de peso.'],
+  ['8', 'Kick', 'Tiempos sin pisada', 'Como el flare, pero vuelve de inmediato.'],
+  ['9', 'Heel twist', '—', 'Reutiliza la mecánica de cadera del Suzy Q: pierna estirada y pie flexionado.'],
+  ['10', 'Swing step', 'Los 8 tiempos; acentos en 5 y 1', 'Sin tiempos retenidos; en 5 y 1 se sube y se abren los brazos.'],
+  ['11', 'Giro a la derecha', 'Abre en 2, atrás en 3', 'Se construye sobre el básico y pivota en el giro.'],
+  ['12', 'Giro a la izquierda', 'Termina en 5', 'Prepara hacia la derecha; es más lento que el giro a la derecha.'],
+];
+
+const ndcaBronze = [
+  ['Preparation', 'Preparación'],
+  ['Basic', 'Básico'],
+  ['Passing Breaks (Progressive Basic)', 'Básico progresivo'],
+  ['Basic Breaks Forward / Backward', 'Quiebres adelante y atrás'],
+  ['Side Breaks', 'Quiebres laterales'],
+  ['Promenade Breaks (5th Position Breaks)', 'Quiebres en quinta posición'],
+  ['Open Break', 'Quiebre abierto'],
+  ['Open Break with Underarm Turn', 'Quiebre abierto con giro bajo el brazo'],
+  ['Cross Over', 'Cruce'],
+  ['Outside Breaks Forward', 'Quiebres por fuera hacia adelante'],
+  ['Outside Breaks Backward', 'Quiebres por fuera hacia atrás'],
+  ['Forward Spot Turn', 'Giro en el sitio hacia adelante'],
+  ['Backward Spot Turn', 'Giro en el sitio hacia atrás'],
+  ['Cross Body Lead', 'Cross body lead (cambio de lado)'],
+  ['Underarm Turn Left', 'Giro bajo el brazo a la izquierda'],
+  ['Cuddle (Parallel / Shadow Breaks)', 'Abrazo: quiebres en paralelo o en sombra'],
+  ['Chase Half Turn', 'Persecución de medio giro'],
+  ['Chase Full Turn', 'Persecución de giro completo'],
+];
+const ndcaSilver = [
+  ['Closed and Open Box Step', 'Paso de caja cerrado y abierto'],
+  ['Cross-Over and Swivel', 'Cruce con giro de pies'],
+  ['Swing Mambo', 'Mambo con swing'],
+  ['Promenade Swivels', 'Giros de pies en promenade'],
+  ['Surprise Break', 'Quiebre sorpresa'],
+  ['Double Spin', 'Doble giro'],
+  ['Kick Tap', 'Patada y toque'],
+  ['Whip Turns', 'Giros de látigo'],
+  ['Swivels to Pull Back', 'Giros de pies con retroceso'],
+  ['Half Time', 'Medio tiempo'],
+];
+
+const plan = [
+  ['1', 'Solo oído', 'Sin pasos. Unos 10 minutos al día buscando y palmeando el golpe abierto de la conga en el 2 y el 6.', 'Modo ritmo en On2: el 2 y el 6 se marcan en ámbar. Sube el volumen de la percusión y baja el resto.'],
+  ['2', 'Básico en silencio y lento', 'Contar en voz alta sin música, a mitad de velocidad: básico adelante, atrás y lateral en On2.', 'Metrónomo solo, sin canción, a 90 bpm o menos.'],
+  ['3', 'Básico con música', 'Canciones lentas primero (unos 90 bpm), diciendo "dos" y "seis" en el quiebre; luego tempo social. Sumar giro derecha e izquierda como shines.', 'Velocidad al 70-80 % sin cambiar el tono; subir 5 % cada vez que el quiebre se sostiene.'],
+  ['4', 'Shines conocidos en On2', 'Los shines que ya salen en On1 (Suzy Q, cross step, taps, flares) ahora con el quiebre en el 2.', 'Marcar el 1 con la canción real y repetir la misma frase de 8.'],
+  ['5', 'Pareja en sala de práctica', 'Cross body lead, giro a la derecha e inside turn con alguien paciente, en práctica, no en social. Parar y reiniciar cuando el quiebre se corra.', 'Stems: dejar solo piano y percusión para oír el tumbao bajo los giros.'],
+  ['6', 'Solo sociales On2', 'El primer mes, solo noches dedicadas al On2; evitar pistas mixtas hasta que el 2 salga sin pensar.', '—'],
+];
+
+const sources = [
+  ['The Mambo Guild · Salsa On2 shines: the 12 footwork steps', 'https://www.themamboguild.com/blog/salsa-on2-shines'],
+  ['The Mambo Guild · Switch from salsa On1 to On2 in 6 weeks', 'https://www.themamboguild.com/blog/switch-from-salsa-on1-to-on2'],
+  ['Salsa Vida · New York style salsa (On2)', 'https://www.salsavida.com/salsa-dance-terms/new-york-style-salsa-on-2/'],
+  ['Salsa Vida · Eddie Torres', 'https://www.salsavida.com/instructors/eddie-torres/'],
+  ['Ballroom Extra · American Rhythm syllabus, edición NDCA 2026', 'https://ballroomextra.com/american-rhythm-syllabus/'],
+  ['NDCA · Approved figures, elements and restrictions (enero 2026, PDF)', 'https://www.ndca.org/pdf/2026%20January%20-%205%20-%20NDCA%20APPROVED%20JANUARY%202026.pdf'],
+  ['Dance Vision · What is a syllabus?', 'https://dancevision.com/syllabus-methodology'],
+  ['National Dance Teachers of America · Syllabi American Rhythm', 'https://nationaldanceteachersofamerica.com/syllabi-american-rhythm/'],
+];
+---
+<Base title="Syllabus de mambo" description="Apuntes de alumno sobre el syllabus del mambo: cómo se cuenta el On2, los shines base de la tradición de Nueva York, las figuras de salón del NDCA y un plan de seis semanas para pasar de On1 a On2." side="dance">
+  <div class="eyebrow mb-2">Baile</div>
+  <h1 class="display font-bold text-4xl">Syllabus de mambo (salsa On2)</h1>
+  <p class="muted mt-2 max-w-xl">Apuntes de alumno. Reuní lo que encontré publicado sobre cómo se organiza la enseñanza del mambo: el conteo, el orden de los shines, los niveles de las escuelas de Nueva York y el syllabus de salón de competencia. Nada de esto es un método propio; las fuentes están al final.</p>
+
+  <nav class="flex flex-wrap gap-2 mt-6 text-sm no-print" aria-label="Secciones">
+    {sections.map((s) => <a href={`#${s.id}`} class="chip hover:border-amber">{s.label}</a>)}
+  </nav>
+
+  <section id="dos-syllabus" class="mt-10 scroll-mt-20">
+    <h2 class="display font-bold text-2xl">Dos syllabus para un mismo nombre</h2>
+    <div class="prose-basic max-w-3xl mt-3">
+      <p>Un syllabus es la lista de figuras y técnicas que una escuela espera que sepas en cada nivel, en orden. En el mambo conviven dos listas que no se parecen mucho:</p>
+      <ul>
+        <li><strong>El de salón.</strong> Mambo es una de las cinco danzas del American Rhythm que regula el NDCA (National Dance Council of America) en Estados Unidos. Tiene figuras con nombre oficial, niveles Bronce, Plata y Oro y reglas de ritmo para competir. Es el que enseñan las cadenas de baile de salón.</li>
+        <li><strong>El de la calle, o de Nueva York.</strong> El mambo que se baila en las sociales, la salsa On2. No hay un syllabus oficial: Eddie Torres ordenó el método en los años setenta y cada escuela arma sus propios niveles. Lo que sí está bastante asentado es el orden en que se aprenden los shines y qué pasos de pareja van primero.</li>
+      </ul>
+      <p>"Mambo" y "On2" se usan casi como sinónimos en las academias, pero el mambo es una tradición anterior a la salsa, de la época del Palladium. Esta página sigue las dos listas por separado.</p>
+    </div>
+  </section>
+
+  <section id="conteo" class="mt-10 scroll-mt-20">
+    <h2 class="display font-bold text-2xl">Cómo se cuenta el On2</h2>
+    <div class="prose-basic max-w-3xl mt-3">
+      <p>La música se cuenta en frases de ocho tiempos. Lo que cambia entre estilos es en qué tiempo cae el <strong>quiebre</strong>, el paso que cambia de dirección.</p>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-6 mt-4 max-w-3xl">
+      <div>
+        <div class="eyebrow mb-2">On2 · quiebre en 2 y 6</div>
+        <ol class="grid grid-cols-8 gap-1.5 md:gap-2" aria-label="Conteo On2: el 2 y el 6 destacados">
+          {counts.map((c) => <li data-tone={on2.has(c) ? 'idle-break' : 'idle'} class="count-cell rounded-xl text-center font-bold display py-3 text-xl md:text-2xl">{c}</li>)}
+        </ol>
+      </div>
+      <div>
+        <div class="eyebrow mb-2">On1 · quiebre en 1 y 5</div>
+        <ol class="grid grid-cols-8 gap-1.5 md:gap-2" aria-label="Conteo On1: el 1 y el 5 destacados">
+          {counts.map((c) => <li data-tone={on1.has(c) ? 'idle-break' : 'idle'} class="count-cell rounded-xl text-center font-bold display py-3 text-xl md:text-2xl">{c}</li>)}
+        </ol>
+      </div>
+    </div>
+    <div class="prose-basic max-w-3xl mt-4">
+      <ul>
+        <li><strong>Eddie Torres On2 (ET2).</strong> Se pisa en 1-2-3 y 5-6-7, con pausa en 4 y 8. El quiebre cae en el 2 y en el 6. Es lo que enseñan la mayoría de las academias y lo que marca el reproductor de este sitio en modo On2.</li>
+        <li><strong>Power 2.</strong> Se pisa en 2-3-4 y 6-7-8, con pausa en 1 y 5. El quiebre sigue en el 2 y el 6, pero la secuencia empieza un tiempo más tarde. Viene del mambo del Palladium y de la escuela Razz M'Tazz.</li>
+        <li><strong>On1.</strong> Mismos pies y mismo orden de pasos; el quiebre cae en el 1 y el 5. Pasar de uno a otro es mover el quiebre, no aprender pasos nuevos.</li>
+        <li><strong>La pista está en la conga.</strong> El golpe abierto del tumbao cae en el 2 y el 6, así que el On2 se oye en la percusión, no en la melodía. Algunos bailarines frasean además con la clave (2-3 o 3-2), sobre todo en los shines.</li>
+      </ul>
+      <p>Para oírlo, el <a href="/salsa/player">reproductor de práctica</a> deja marcar el 1 de la canción, elegir On1 u On2 y ver qué tiempos quiebran mientras suena.</p>
+    </div>
+  </section>
+
+  <section id="nueva-york" class="mt-10 scroll-mt-20">
+    <h2 class="display font-bold text-2xl">Tradición de Nueva York (Eddie Torres)</h2>
+    <div class="prose-basic max-w-3xl mt-3">
+      <p>El estilo salió del mambo del Palladium, en las comunidades puertorriqueña y nuyorican de Nueva York, con raíz en el son y el mambo cubanos e influencias del jazz, el swing y el tap. El hustle latino le dejó después los patrones largos de giros y el baile en línea. Eddie Torres no inventó el On2, pero fue quien ordenó los movimientos y el conteo en un método enseñable: a cada paso le puso nombre, desglosó el tiempo del 2 y lo difundió con clases, una compañía y videos. Su primer syllabus, de 1972, empezaba con el Suzy Q.</p>
+      <p>Las clases en esa tradición se dividen en dos bloques: <strong>shines</strong>, pasos solos y de pies, y <strong>pareja</strong>, donde se rota de compañero. Las escuelas publican los shines con un orden bastante estable, porque cada uno reutiliza una mecánica del anterior.</p>
+    </div>
+
+    <h3 class="display font-bold text-lg mt-6">Los 12 shines base, en orden</h3>
+    <div class="table-wrap table-wide mt-3">
+      <table>
+        <thead><tr><th>#</th><th>Shine</th><th>Conteo</th><th>Qué aporta</th></tr></thead>
+        <tbody>{shines.map(([n, name, count, note]) => <tr><td>{n}</td><td><strong>{name}</strong></td><td>{count}</td><td>{note}</td></tr>)}</tbody>
+      </table>
+    </div>
+    <p class="muted text-sm mt-2 max-w-3xl">Aprenderlos fuera de orden significa pelear con una mecánica que todavía no está construida: el chord step prepara el cruce del Suzy Q, el heel twist reutiliza su cadera, flare y kick son taps lanzados, y los giros se montan sobre el básico.</p>
+
+    <h3 class="display font-bold text-lg mt-8">Pareja, por nivel</h3>
+    <p class="muted text-sm mt-1 max-w-3xl">Síntesis de cómo lo organizan varias escuelas de On2 (Baila DC, PASOFino, Mambo Productions). No es un estándar: los nombres de nivel y la cantidad de figuras cambian de una academia a otra.</p>
+    <div class="grid md:grid-cols-3 gap-4 mt-4">
+      <div class="card p-4">
+        <div class="eyebrow mb-1">Nivel 1 · Básico</div>
+        <ul class="text-sm leading-relaxed list-disc pl-4 mt-2">
+          <li>Tiempo: encontrar el 2 y el 6 con la conga.</li>
+          <li>Básico adelante, atrás y lateral; postura y marco.</li>
+          <li>Giro a la derecha y a la izquierda.</li>
+          <li>Cross body lead e inside turn.</li>
+          <li>Shines 1 a 6 de la tabla.</li>
+          <li>Salida: guiar o seguir un básico y los giros sin perder el quiebre.</li>
+        </ul>
+      </div>
+      <div class="card p-4">
+        <div class="eyebrow mb-1">Nivel 2 · Intermedio</div>
+        <ul class="text-sm leading-relaxed list-disc pl-4 mt-2">
+          <li>Unos 10 patrones de pareja con técnica de guía y seguimiento.</li>
+          <li>Variaciones del cross body lead: con giro, con cambio de mano, con check.</li>
+          <li>Giros múltiples y preparación de spins.</li>
+          <li>Unos 20 shines fundamentales (los 12 base y sus variantes).</li>
+          <li>Combinar shines propios en frases de 8.</li>
+        </ul>
+      </div>
+      <div class="card p-4">
+        <div class="eyebrow mb-1">Nivel 3 · Avanzado</div>
+        <ul class="text-sm leading-relaxed list-disc pl-4 mt-2">
+          <li>Shines intermedios y avanzados (unos 20 más), con body movement.</li>
+          <li>Combinaciones largas y transiciones entre pareja y shines.</li>
+          <li>Musicalidad: frasear con la clave, acentos, cortes y la sección de mambo de la canción.</li>
+          <li>Improvisación en social.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="ndca" class="mt-10 scroll-mt-20">
+    <h2 class="display font-bold text-2xl">Syllabus de salón: NDCA 2026</h2>
+    <div class="prose-basic max-w-3xl mt-3">
+      <p>En el baile de salón americano el mambo tiene lista oficial de figuras por nivel, publicada por el NDCA y usada por los sistemas de medallas de Dance Vision y las cadenas de academias. Es la versión de competencia: se baila con marco cerrado, las figuras tienen nombre fijo y en Bronce el ritmo debe ser <strong>2-3, 4-1</strong>, es decir, se pisa en 2, 3 y 4 con el 1 retenido. Los nombres van en inglés porque así se examinan; la glosa es mía.</p>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-6 mt-4">
+      <div class="min-w-0">
+        <div class="eyebrow mb-2">Bronce · 18 figuras</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Figura</th><th>En español</th></tr></thead>
+            <tbody>{ndcaBronze.map(([en, es]) => <tr><td><strong>{en}</strong></td><td>{es}</td></tr>)}</tbody>
+          </table>
+        </div>
+      </div>
+      <div class="min-w-0">
+        <div class="eyebrow mb-2">Plata · 10 figuras</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Figura</th><th>En español</th></tr></thead>
+            <tbody>{ndcaSilver.map(([en, es]) => <tr><td><strong>{en}</strong></td><td>{es}</td></tr>)}</tbody>
+          </table>
+        </div>
+        <div class="eyebrow mt-6 mb-2">Oro</div>
+        <p class="text-sm leading-relaxed max-w-md">No hay lista cerrada: se permiten figuras avanzadas. En Plata el trabajo lado a lado y en sombra se limita a figuras reconocibles y los cambios de ritmo solo dentro de ellas; en Oro el trabajo separado de la pareja no puede pasar de 4 compases.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="plan" class="mt-10 scroll-mt-20">
+    <h2 class="display font-bold text-2xl">Plan On1 → On2 en seis semanas</h2>
+    <div class="prose-basic max-w-3xl mt-3">
+      <p>Bailo los dos estilos, así que me interesó este plan para mover el quiebre del 1 al 2 sin perder el On1. La idea de fondo: primero el oído, después el básico sin música, después con música lenta, y recién al final la pareja y la social. La columna de la derecha es cómo lo apoyo con el reproductor del sitio.</p>
+    </div>
+    <div class="table-wrap table-wide mt-4">
+      <table>
+        <thead><tr><th>Semana</th><th>Foco</th><th>Qué practicar</th><th>Con el reproductor</th></tr></thead>
+        <tbody>{plan.map(([w, focus, what, tool]) => <tr><td>{w}</td><td><strong>{focus}</strong></td><td>{what}</td><td>{tool}</td></tr>)}</tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="clases" class="mt-10 scroll-mt-20">
+    <h2 class="display font-bold text-2xl">Clases relacionadas</h2>
+    <p class="muted mt-2 max-w-xl">Grabaciones de clases On2 a las que fui como alumno. La lista completa, por academia, está en <a href="/salsa/clases" class="underline decoration-[var(--amber)]">Clases en video</a>.</p>
+    {videos.length > 0 && (
+      <ul class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+        {videos.map((v) => (
+          <li><Card href={`/salsa/clases/${v.id}`} title={v.data.title} subtitle={`${v.data.style}${v.data.likes ? ` · ♥ ${v.data.likes}` : ''}`} side="dance" tags={v.data.figures} /></li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+  <section id="fuentes" class="mt-10 scroll-mt-20">
+    <h2 class="display font-bold text-2xl">Fuentes</h2>
+    <div class="prose-basic max-w-3xl mt-3">
+      <ul>
+        {sources.map(([label, url]) => <li><a href={url} rel="noopener">{label}</a></li>)}
+      </ul>
+      <p class="muted text-sm">Los niveles de pareja resumen las descripciones públicas de cursos de Baila DC, PASOFino Dance y Mambo Productions. Consultado el 28 de octubre de 2026.</p>
+    </div>
+  </section>
+</Base>
