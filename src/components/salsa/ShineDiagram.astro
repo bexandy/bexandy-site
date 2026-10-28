@@ -57,6 +57,11 @@ const FOOT = 'M0,-19 C7,-19 10,-12 10,-4 C10,3 9,8 8,13 C7,18 4,20 0,20 C-4,20 -
     </label>
   </div>
   <figcaption class="muted text-xs mt-3">{shine.note}</figcaption>
+  {shine.videos.length > 0 && (
+    <ul class="mt-2 text-xs flex flex-col gap-1">
+      {shine.videos.map((v) => <li><a href={v.url} rel="noopener" target="_blank" class="underline decoration-[var(--amber)]">Ver en video: {v.title}</a> <span class="muted">· {v.by}</span></li>)}
+    </ul>
+  )}
 </figure>
 
 <script>
