@@ -93,3 +93,25 @@ body {
 .count-cell[data-tone="break"], .count-cell[data-tone="step"], .count-cell[data-tone="pause"] { animation: count-hit .22s cubic-bezier(.2, .9, .3, 1.2) both; }
 @keyframes count-hit { from { transform: scale(1.22); } to { transform: scale(1.06); } }
 @media (prefers-reduced-motion: reduce) { .count-cell { animation: none !important; transform: none !important; } }
+
+/* Diagramas de huellas del syllabus (ShineDiagram.astro): pies con transición, peso = relleno. */
+.shine-floor { max-height: 15rem; }
+.shine-slot { stroke: var(--border); stroke-width: 1.5; stroke-dasharray: 3 4; }
+.shine-label { font: 600 7px var(--font-sans); fill: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+.shine-face, .shine-foot, .shine-ring { transition: transform .28s cubic-bezier(.2, .8, .3, 1); transform-origin: 0 0; }
+.shine-face.no-anim, .shine-reduced .shine-face, .shine-reduced .shine-foot, .shine-reduced .shine-ring { transition: none; }
+.shine-foot path { fill: var(--card); stroke-width: 2; }
+.shine-foot.L path { stroke: var(--fg); }
+.shine-foot.R path { stroke: var(--amber); }
+.shine-foot[data-w="1"].L path { fill: var(--fg); }
+.shine-foot[data-w="1"].R path { fill: var(--amber); }
+.shine-foot text { font: 700 10px var(--font-display); text-anchor: middle; fill: var(--fg); pointer-events: none; }
+.shine-foot[data-w="1"].L text { fill: var(--bg); }
+.shine-foot[data-w="1"].R text { fill: var(--amber-ink); }
+.shine-foot[data-act="kick"] path, .shine-foot[data-act="flare"] path { stroke-dasharray: 4 3; }
+.shine-ring { fill: none; stroke: var(--amber); stroke-width: 1.5; opacity: 0; }
+.shine-ring[data-on="1"] { opacity: .8; animation: shine-tap .5s ease-out both; }
+@keyframes shine-tap { from { r: 10; opacity: .9; } to { r: 22; opacity: 0; } }
+.count-mini { border-width: 1.5px; }
+.shine-play[data-playing="1"] { border-color: var(--amber); color: var(--amber); }
+.shine-tempo { padding-right: .3rem; }

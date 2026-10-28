@@ -27,7 +27,7 @@ npx wrangler deploy  # publica dist/ en Cloudflare (requiere login o CLOUDFLARE_
 | Galería de retratos IA | `scripts/images/gallery.txt` → `src/data/gallery.ts` + `src/assets/gallery/` |
 | Tipografías | `astro.config.mjs` (`fonts`: Bricolage Grotesque y Manrope autoalojadas, con fallbacks de métricas ajustadas) |
 | Reproductor de salsa | `src/components/salsa/player/` (análisis de tempo en `analysis/`) |
-| Syllabus de mambo (apuntes, fuentes públicas) | `src/pages/salsa/syllabus.astro` → `/salsa/syllabus` |
+| Syllabus de mambo (apuntes, fuentes públicas) | `src/pages/salsa/syllabus.astro` → `/salsa/syllabus`; huellas de los 12 shines en `src/data/shines.ts`, diagrama animado en `src/components/salsa/ShineDiagram.astro` |
 | Cabeceras COOP/COEP para el reproductor | `public/_headers` |
 | Despliegue | `wrangler.jsonc`, `.github/workflows/deploy.yml` |
 

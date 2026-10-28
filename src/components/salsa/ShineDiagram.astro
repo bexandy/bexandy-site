@@ -1,0 +1,149 @@
+---
+/**
+ * Diagrama de huellas animado de un shine: dos pies vistos desde arriba que recorren los
+ * 8 tiempos (play, paso a paso, tempo). Los datos vienen de src/data/shines.ts.
+ * Sin React: un script pequeño por página mueve los pies con transiciones CSS.
+ */
+import type { Shine } from '../../data/shines';
+interface Props { shine: Shine }
+const { shine } = Astro.props;
+const first = shine.steps[0];
+const counts = [1, 2, 3, 4, 5, 6, 7, 8];
+const tone = (c: number) => (shine.accents.includes(c) ? 'idle-break' : 'idle');
+const foot = (f: [number, number, number?]) => `translate(${f[0]}px, ${f[1]}px) rotate(${f[2] ?? 0}deg)`;
+const FOOT = 'M0,-19 C7,-19 10,-12 10,-4 C10,3 9,8 8,13 C7,18 4,20 0,20 C-4,20 -7,18 -8,13 C-9,8 -10,3 -10,-4 C-10,-12 -7,-19 0,-19 Z';
+---
+<figure class="shine card p-4 flex flex-col" data-shine={JSON.stringify({ steps: shine.steps, accents: shine.accents })} id={`shine-${shine.id}`}>
+  <div class="flex items-baseline justify-between gap-2">
+    <div class="eyebrow">Shine {shine.n}</div>
+    <div class="muted text-xs">{shine.count}</div>
+  </div>
+  <h4 class="display font-bold text-lg leading-tight mt-1">{shine.name}</h4>
+
+  <svg viewBox="-100 -70 200 140" class="shine-floor w-full mt-3" role="img" aria-label={`Huellas de ${shine.name}, tiempo a tiempo`}>
+    <defs>
+      <marker id={`arrow-${shine.id}`} viewBox="0 0 6 6" refX="3" refY="3" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L6,3 L0,6 Z" fill="var(--muted)" /></marker>
+    </defs>
+    <line x1="0" y1="56" x2="0" y2="-56" class="shine-slot" marker-end={`url(#arrow-${shine.id})`} />
+    <text x="6" y="-50" class="shine-label">adelante</text>
+    <g class="shine-face" style={`transform: rotate(${first.face ?? 0}deg)`}>
+      <circle class="shine-ring" r="18" cx="0" cy="0" style={`transform: ${foot(first.R)}`} />
+      <g class="shine-foot L" data-w={first.w.includes('L') ? '1' : '0'} style={`transform: ${foot(first.L)}`}>
+        <path d={FOOT} />
+        <text y="4">I</text>
+      </g>
+      <g class="shine-foot R" data-w={first.w.includes('R') ? '1' : '0'} style={`transform: ${foot(first.R)}`}>
+        <path d={FOOT} transform="scale(-1,1)" />
+        <text y="4">D</text>
+      </g>
+    </g>
+  </svg>
+
+  <ol class="grid grid-cols-8 gap-1 mt-2" aria-hidden="true">
+    {counts.map((c) => <li data-tone={c === 1 ? (shine.accents.includes(1) ? 'break' : 'step') : tone(c)} data-c={c} class="count-cell count-mini rounded-md text-center font-bold display py-1 text-sm">{c}</li>)}
+  </ol>
+  <p class="shine-step text-sm mt-2 min-h-[2.5rem]" aria-live="off">{first.t}</p>
+
+  <div class="flex items-center gap-2 mt-2 no-print">
+    <button type="button" class="shine-play chip hover:border-amber" aria-label="Reproducir" data-playing="0">▶ Reproducir</button>
+    <button type="button" class="shine-next chip hover:border-amber" aria-label="Siguiente tiempo">Siguiente ›</button>
+    <label class="ml-auto muted text-xs flex items-center gap-1">Tempo
+      <select class="shine-tempo chip bg-transparent" aria-label="Tempo en pulsos por minuto">
+        <option value="60">60</option>
+        <option value="80" selected>80</option>
+        <option value="100">100</option>
+        <option value="120">120</option>
+      </select>
+    </label>
+  </div>
+  <figcaption class="muted text-xs mt-3">{shine.note}</figcaption>
+</figure>
+
+<script>
+  type Foot = [number, number, number?];
+  interface Step { L: Foot; R: Foot; w: string; t: string; face?: number; act?: string; actFoot?: 'L' | 'R' }
+  interface Data { steps: Step[]; accents: number[] }
+
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tf = (f: Foot) => `translate(${f[0]}px, ${f[1]}px) rotate(${f[2] ?? 0}deg)`;
+  let playing: Diagram | null = null;
+
+  class Diagram {
+    i = 0;
+    timer = 0;
+    data: Data;
+    face: SVGGElement;
+    feet: Record<'L' | 'R', SVGGElement>;
+    ring: SVGCircleElement;
+    cells: HTMLElement[];
+    label: HTMLElement;
+    play: HTMLButtonElement;
+    tempo: HTMLSelectElement;
+
+    constructor(public el: HTMLElement) {
+      this.data = JSON.parse(el.dataset.shine!);
+      this.face = el.querySelector('.shine-face')!;
+      this.feet = { L: el.querySelector('.shine-foot.L')!, R: el.querySelector('.shine-foot.R')! };
+      this.ring = el.querySelector('.shine-ring')!;
+      this.cells = [...el.querySelectorAll<HTMLElement>('.count-mini')];
+      this.label = el.querySelector('.shine-step')!;
+      this.play = el.querySelector('.shine-play')!;
+      this.tempo = el.querySelector('.shine-tempo')!;
+      this.play.addEventListener('click', () => (this.timer ? this.stop() : this.start()));
+      el.querySelector('.shine-next')!.addEventListener('click', () => { this.stop(); this.go(this.i + 1); });
+      this.tempo.addEventListener('change', () => { if (this.timer) this.start(); });
+    }
+
+    go(i: number) {
+      const n = this.data.steps.length;
+      const wrap = i >= n;
+      this.i = ((i % n) + n) % n;
+      const st = this.data.steps[this.i];
+      // Al volver al 1 tras un giro, el cuerpo vuelve a 0° sin animar la vuelta atrás.
+      if (wrap && st.face !== undefined) {
+        this.face.classList.add('no-anim');
+        this.face.style.transform = `rotate(${st.face}deg)`;
+        void this.face.getBoundingClientRect();
+        this.face.classList.remove('no-anim');
+      } else if (st.face !== undefined) this.face.style.transform = `rotate(${st.face}deg)`;
+      for (const f of ['L', 'R'] as const) {
+        this.feet[f].style.transform = tf(st[f]);
+        this.feet[f].dataset.w = st.w.includes(f) ? '1' : '0';
+        this.feet[f].dataset.act = st.actFoot === f ? st.act : '';
+      }
+      const actFoot = st.actFoot ? st[st.actFoot] : null;
+      this.ring.style.transform = actFoot ? tf(actFoot) : tf(st.R);
+      this.ring.dataset.on = st.act ? '1' : '0';
+      this.cells.forEach((c, k) => {
+        const count = k + 1;
+        const acc = this.data.accents.includes(count);
+        c.dataset.tone = count === this.i + 1 ? (acc ? 'break' : 'step') : acc ? 'idle-break' : 'idle';
+      });
+      this.label.textContent = st.t;
+    }
+
+    start() {
+      if (playing && playing !== this) playing.stop();
+      playing = this;
+      clearInterval(this.timer);
+      const ms = 60000 / Number(this.tempo.value);
+      this.timer = window.setInterval(() => this.go(this.i + 1), ms);
+      this.play.textContent = '⏸ Pausa';
+      this.play.dataset.playing = '1';
+      this.play.setAttribute('aria-label', 'Pausar');
+    }
+
+    stop() {
+      clearInterval(this.timer);
+      this.timer = 0;
+      if (playing === this) playing = null;
+      this.play.textContent = '▶ Reproducir';
+      this.play.dataset.playing = '0';
+      this.play.setAttribute('aria-label', 'Reproducir');
+    }
+  }
+
+  const diagrams = [...document.querySelectorAll<HTMLElement>('[data-shine]')].map((el) => new Diagram(el));
+  document.addEventListener('visibilitychange', () => { if (document.hidden) diagrams.forEach((d) => d.stop()); });
+  if (reduced) document.documentElement.classList.add('shine-reduced');
+</script>
