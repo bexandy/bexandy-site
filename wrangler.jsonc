@@ -6,10 +6,17 @@
     { "pattern": "bexandyrodriguez.com", "custom_domain": true },
     { "pattern": "www.bexandyrodriguez.com", "custom_domain": true }
   ],
-  // Sitio estático puro: sin código de Worker, solo assets. Los requests estáticos no consumen cuota.
+  // Sitio estático: los assets los sirve Cloudflare sin pasar por el Worker (no consumen cuota).
+  // Solo /api/* entra al Worker (worker/index.ts): POST /api/marks guarda marcas del 1 en KV.
+  "main": "worker/index.ts",
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page",
-    "html_handling": "auto-trailing-slash"
-  }
+    "html_handling": "auto-trailing-slash",
+    "run_worker_first": ["/api/*"]
+  },
+  "kv_namespaces": [
+    { "binding": "MARKS", "id": "0c69be3535f549a287d03705f314e6b4" }
+  ]
+  // Secreto MARK_KEY (clave compartida para enviar marcas): `wrangler secret put MARK_KEY`; en local, .dev.vars.
 }

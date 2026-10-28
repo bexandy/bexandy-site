@@ -29,3 +29,6 @@ pnpm-debug.log*
 
 # binarios de ONNX Runtime copiados en el build
 public/ort/
+
+# marcas del 1 descargadas de KV (pull-marks.mjs); la fuente de verdad es labels.json
+scripts/beat-eval/marks/

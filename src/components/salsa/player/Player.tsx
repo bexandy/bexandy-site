@@ -41,6 +41,11 @@ export default function Player() {
   const [solo, setSolo] = useState<string | null>(null);
   const [exporting, setExporting] = useState<string | null>(null);
   const [exportMsg, setExportMsg] = useState<string | null>(null);
+  const [send, setSend] = useState<{ open: boolean; by: string; key: string; status: 'idle' | 'sending' | 'ok' | 'error'; msg?: string }>(() => {
+    let by = '', key = '';
+    try { by = localStorage.getItem('salsa-mark-by') ?? ''; key = localStorage.getItem('salsa-mark-key') ?? ''; } catch { /* sin storage */ }
+    return { open: false, by, key, status: 'idle' };
+  });
   const [sep, setSep] = useState<{ status: SepStatus; loaded?: number; total?: number; step?: number; steps?: number; provider?: string; message?: string; seconds?: number }>({ status: 'idle' });
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -245,11 +250,12 @@ export default function Player() {
   }
 
   /** Descarga la marca del 1 como JSON con el instante en segundos: sirve de etiqueta para scripts/beat-eval (import-mark.mjs) aunque cambie la rejilla. */
-  function exportMark() {
+  // La marca: instante en segundos de los primeros 1 según el bailarín, más contexto del detector.
+  function buildMark() {
     const a = audioRef.current;
-    if (!file || !analysis || !a) return;
+    if (!file || !analysis || !a) return null;
     const ones = beats.filter((_, i) => countOf(i) === 1);
-    const mark = {
+    return {
       format: 'bexandy-salsa-mark/1',
       song: file.name, size: file.size, duration: Number(a.duration.toFixed(3)),
       detector: DETECTOR_VERSION, bpm: Number(analysis.bpm.toFixed(2)), style, downbeatIndex: downbeat,
@@ -257,11 +263,34 @@ export default function Player() {
       autoDownbeatIndex: analysis.downbeatIndex, autoConfidence: Number(analysis.downbeatConfidence.toFixed(2)),
       date: new Date().toISOString().slice(0, 10),
     };
+  }
+
+  function exportMark() {
+    const mark = buildMark();
+    if (!mark || !file) return;
     const blob = new Blob([JSON.stringify(mark, null, 1)], { type: 'application/json' });
     const href = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = href; link.download = `marca-${file.name.replace(/\.[^.]+$/, '')}.json`; link.click();
     setTimeout(() => URL.revokeObjectURL(href), 1000);
+  }
+
+  // Envía la marca al sitio (POST /api/marks, Worker + KV) con nombre y clave compartida; nada más sale del equipo.
+  async function sendMark() {
+    const mark = buildMark();
+    if (!mark) return;
+    const by = send.by.trim(), key = send.key.trim();
+    if (!by || !key) { setSend((x) => ({ ...x, open: true, status: 'idle', msg: 'Escribe tu nombre y la clave de envío.' })); return; }
+    setSend((x) => ({ ...x, status: 'sending', msg: 'Enviando…' }));
+    try {
+      const r = await fetch('/api/marks', { method: 'POST', headers: { 'content-type': 'application/json', 'x-mark-key': key }, body: JSON.stringify({ ...mark, by }) });
+      const body = await r.json().catch(() => ({}));
+      if (!r.ok) { setSend((x) => ({ ...x, open: true, status: 'error', msg: body.error ?? `error ${r.status}` })); return; }
+      try { localStorage.setItem('salsa-mark-by', by); localStorage.setItem('salsa-mark-key', key); } catch { /* sin storage */ }
+      setSend((x) => ({ ...x, open: false, status: 'ok', msg: `Marca enviada: ${mark.song} (${mark.ones.length} unos)` }));
+    } catch {
+      setSend((x) => ({ ...x, open: true, status: 'error', msg: 'Sin conexión; usa "Guardar marca" y envía el archivo.' }));
+    }
   }
 
   useEffect(() => {
@@ -336,11 +365,25 @@ export default function Player() {
                     <button className="card px-2 py-1" onClick={() => { setDownbeat((d) => (d + 7) % 8); setUserSetDownbeat(true); }} title="Flecha izquierda">◀ 1 pulso</button>
                     <button className="card px-2 py-1" onClick={() => { setDownbeat((d) => (d + 1) % 8); setUserSetDownbeat(true); }} title="Flecha derecha">1 pulso ▶</button>
                     <button className="card px-2 py-1" onClick={() => { setDownbeat((d) => (d + 4) % 8); setUserSetDownbeat(true); }} title="Si el conteo va al revés (el 1 suena donde pisas el 5)">1 ⇄ 5</button>
-                    <button className="card px-2 py-1" onClick={exportMark} title="Descarga un JSON con el instante del 1 para mejorar el detector (scripts/beat-eval)">Guardar marca</button>
                     <select className="card px-2 py-1 ml-auto" value={style} onChange={(e) => setStyle(e.target.value as 'On1' | 'On2')}>
                       <option>On1</option><option>On2</option>
                     </select>
                   </div>
+                  <div className="flex flex-wrap gap-2 items-center">
+                    <button className="card px-2 py-1" onClick={exportMark} title="Descarga un JSON con el instante del 1 para mejorar el detector (scripts/beat-eval)">Guardar marca</button>
+                    <button className="card px-2 py-1" onClick={send.open ? () => setSend((x) => ({ ...x, open: false })) : sendMark} disabled={send.status === 'sending'} title="Envía la marca al sitio para calibrar el detector (hace falta la clave de envío)">
+                      {send.open ? 'Cancelar' : 'Enviar marca'}
+                    </button>
+                    {send.msg && <span className={send.status === 'error' ? 'text-[var(--amber)]' : 'muted'} role="status">{send.msg}</span>}
+                  </div>
+                  {send.open && (
+                    <form className="flex flex-wrap gap-2 items-center" onSubmit={(e) => { e.preventDefault(); void sendMark(); }}>
+                      <input className="card px-2 py-1 w-36" placeholder="Tu nombre" value={send.by} autoComplete="nickname" onChange={(e) => setSend((x) => ({ ...x, by: e.target.value }))} />
+                      <input className="card px-2 py-1 w-36" placeholder="Clave de envío" type="password" value={send.key} autoComplete="off" onChange={(e) => setSend((x) => ({ ...x, key: e.target.value }))} />
+                      <button type="submit" className="btn solid text-xs" disabled={send.status === 'sending'}>Enviar</button>
+                      <span className="muted text-xs">Se guardan en este navegador para la próxima vez.</span>
+                    </form>
+                  )}
                   <label className="flex items-center gap-2"><input type="checkbox" checked={metronome} onChange={(e) => setMetronome(e.target.checked)} /> Metrónomo (acento en 1 y 5)</label>
                 </div>
 
