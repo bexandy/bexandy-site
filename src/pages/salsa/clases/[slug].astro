@@ -4,6 +4,7 @@ import { getCollection, render } from 'astro:content';
 import VideoEmbed from '../../../components/VideoEmbed.astro';
 import { academies } from '../../../data/orgs';
 import { poster } from '../../../lib/videoPosters';
+import { figureName, figureHref } from '../../../data/figures';
 export async function getStaticPaths() {
   const videos = await getCollection('videos', ({ data }) => !data.draft);
   return videos.map((v) => ({ params: { slug: v.id }, props: { video: v } }));
@@ -14,12 +15,17 @@ const d = video.data;
 const mmss = (t: number) => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
 const academy = academies.find((a) => a.id === d.academy);
 ---
-<Base title={d.title} side="dance" description={`Clase de salsa ${d.level} (${d.style}): ${d.figures.join(', ')}`}>
+<Base title={d.title} side="dance" description={`Clase de salsa ${d.level} (${d.style})${d.figures.length ? `: ${d.figures.map(figureName).join(', ')}` : ''}`}>
   <article class="max-w-3xl mx-auto">
     <h1 class="display font-bold text-4xl">{d.title}</h1>
     <p class="muted mt-1">{d.level} · {d.style}{d.song && ` · ${d.song}`}{d.bpm && ` · ${d.bpm} bpm`} · {d.date.toLocaleDateString('es-CL', { timeZone: 'UTC' })}{d.likes ? ` · ♥ ${d.likes}` : ''}</p>
     {academy && <p class="text-sm mt-1">Grabado en <a href={academy.url ?? `https://www.instagram.com/${academy.instagram}/`} class="underline decoration-[var(--amber)]">{academy.name}</a></p>}
     {d.tiktokId && <p class="text-sm mt-1"><a href={`https://www.tiktok.com/@bexandy.rodriguez/video/${d.tiktokId}`} class="underline decoration-[var(--amber)]">Ver en TikTok</a></p>}
+    {d.figures.length > 0 && (
+      <ul class="flex flex-wrap gap-1.5 mt-3" aria-label="Figuras trabajadas">
+        {d.figures.map((f) => <li><a href={figureHref(f)} class="chip hover:border-amber">{figureName(f)}</a></li>)}
+      </ul>
+    )}
 
     <div class="mt-6"><VideoEmbed youtubeId={d.youtubeId} tiktokId={d.tiktokId} title={d.title} poster={poster(d.poster)} /></div>
 

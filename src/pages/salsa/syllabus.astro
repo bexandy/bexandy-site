@@ -4,10 +4,17 @@ import Card from '../../components/Card.astro';
 import { getCollection } from 'astro:content';
 import ShineDiagram from '../../components/salsa/ShineDiagram.astro';
 import { shines } from '../../data/shines';
+import { figureName, figureHref } from '../../data/figures';
+
+// Cuántas clases del sitio están etiquetadas con cada figura (`figures` en la ficha): enlaza shines y figuras NDCA a /salsa/clases/figura/<slug>.
+const all = await getCollection('videos', ({ data }) => !data.draft);
+const figureCounts = all.flatMap((v) => v.data.figures).reduce((m, f) => m.set(f, (m.get(f) ?? 0) + 1), new Map<string, number>());
+const classes = (slug?: string) => (slug && figureCounts.get(slug) ? { href: figureHref(slug), n: figureCounts.get(slug)! } : undefined);
+// Slug de figura del sitio para las figuras NDCA que tienen equivalente en las clases.
+const ndcaSlug: Record<string, string> = { 'Cross Body Lead': 'cross-body-lead', 'Open Break': 'open-break', 'Open Break with Underarm Turn': 'inside-turn', 'Underarm Turn Left': 'inside-turn', 'Cross Over': 'cross-over', 'Double Spin': 'giro-doble' };
 
 // Clases del sitio bailadas en On2, en el mismo orden que /salsa/clases (destacadas, "me gusta", fecha).
-// Cuando los videos tengan `figures` llenas se podrá cruzar cada figura con sus clases.
-const videos = (await getCollection('videos', ({ data }) => !data.draft && data.style === 'On2'))
+const videos = all.filter((v) => v.data.style === 'On2')
   .sort((a, b) => (b.data.featured ? 1 : 0) - (a.data.featured ? 1 : 0) || b.data.likes - a.data.likes || b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 6);
 
@@ -141,7 +148,7 @@ const sources = [
     <h3 class="display font-bold text-lg mt-6">Los 12 shines base, en orden</h3>
     <p class="muted text-sm mt-1 max-w-3xl">Cada tarjeta muestra las huellas vistas desde arriba, desde el bailarín: izquierda en negro, derecha en ámbar, relleno el pie que lleva el peso. Pulsa reproducir o avanza tiempo a tiempo. Son esquemas para ubicarse, no una notación exacta.</p>
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-      {shines.map((sh) => <ShineDiagram shine={sh} />)}
+      {shines.map((sh) => <ShineDiagram shine={sh} classes={classes(sh.id)} />)}
     </div>
     <p class="muted text-sm mt-2 max-w-3xl">Aprenderlos fuera de orden significa pelear con una mecánica que todavía no está construida: el chord step prepara el cruce del Suzy Q, el heel twist reutiliza su cadera, flare y kick son taps lanzados, y los giros se montan sobre el básico.</p>
 
@@ -192,7 +199,7 @@ const sources = [
         <div class="table-wrap">
           <table>
             <thead><tr><th>Figura</th><th>En español</th></tr></thead>
-            <tbody>{ndcaBronze.map(([en, es]) => <tr><td><strong>{en}</strong></td><td>{es}</td></tr>)}</tbody>
+            <tbody>{ndcaBronze.map(([en, es]) => <tr><td><strong>{en}</strong></td><td>{es}{classes(ndcaSlug[en]) && <> <a href={classes(ndcaSlug[en])!.href} class="underline decoration-[var(--amber)] whitespace-nowrap">{classes(ndcaSlug[en])!.n} {classes(ndcaSlug[en])!.n === 1 ? 'clase' : 'clases'}</a></>}</td></tr>)}</tbody>
           </table>
         </div>
       </div>
@@ -201,7 +208,7 @@ const sources = [
         <div class="table-wrap">
           <table>
             <thead><tr><th>Figura</th><th>En español</th></tr></thead>
-            <tbody>{ndcaSilver.map(([en, es]) => <tr><td><strong>{en}</strong></td><td>{es}</td></tr>)}</tbody>
+            <tbody>{ndcaSilver.map(([en, es]) => <tr><td><strong>{en}</strong></td><td>{es}{classes(ndcaSlug[en]) && <> <a href={classes(ndcaSlug[en])!.href} class="underline decoration-[var(--amber)] whitespace-nowrap">{classes(ndcaSlug[en])!.n} {classes(ndcaSlug[en])!.n === 1 ? 'clase' : 'clases'}</a></>}</td></tr>)}</tbody>
           </table>
         </div>
         <div class="eyebrow mt-6 mb-2">Oro</div>
@@ -229,7 +236,7 @@ const sources = [
     {videos.length > 0 && (
       <ul class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
         {videos.map((v) => (
-          <li><Card href={`/salsa/clases/${v.id}`} title={v.data.title} subtitle={`${v.data.style}${v.data.likes ? ` · ♥ ${v.data.likes}` : ''}`} side="dance" tags={v.data.figures} /></li>
+          <li><Card href={`/salsa/clases/${v.id}`} title={v.data.title} subtitle={`${v.data.style}${v.data.likes ? ` · ♥ ${v.data.likes}` : ''}`} side="dance" tags={v.data.figures.map(figureName)} /></li>
         ))}
       </ul>
     )}

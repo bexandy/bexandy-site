@@ -1,0 +1,51 @@
+---
+/**
+ * Clases del sitio etiquetadas con una figura (`figures` en la ficha del video).
+ * Una página estática por figura usada; el syllabus y la lista de clases enlazan aquí.
+ */
+import Base from '../../../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import { poster } from '../../../../lib/videoPosters';
+import { figures, figureName } from '../../../../data/figures';
+
+export async function getStaticPaths() {
+  const videos = await getCollection('videos', ({ data }) => !data.draft);
+  const slugs = [...new Set(videos.flatMap((v) => v.data.figures))];
+  return slugs.map((figura) => ({ params: { figura } }));
+}
+
+const { figura } = Astro.params;
+const name = figureName(figura);
+const group = figures[figura]?.group;
+const groupLabel = { shine: 'Shine', pareja: 'Figura de pareja', cubana: 'Casino', ritmo: 'Ritmo' } as const;
+const videos = (await getCollection('videos', ({ data }) => !data.draft && data.figures.includes(figura)))
+  .sort((a, b) => (b.data.featured ? 1 : 0) - (a.data.featured ? 1 : 0) || b.data.likes - a.data.likes || b.data.date.valueOf() - a.data.date.valueOf());
+const fmt = (d: Date) => d.toLocaleDateString('es-CL', { year: 'numeric', month: 'short', timeZone: 'UTC' });
+const isShine = group === 'shine' && figura !== 'shines';
+---
+<Base title={`Clases con ${name}`} description={`Clases de salsa en video donde se trabaja ${name}.`} side="dance">
+  <div class="eyebrow mb-2">{group ? groupLabel[group] : 'Figura'}</div>
+  <h1 class="display font-bold text-4xl">{name}</h1>
+  <p class="muted mt-2 max-w-xl">
+    {videos.length === 1 ? 'Una clase' : `${videos.length} clases`} a las que fui como alumno donde se trabaja esta figura.
+    {isShine && <> El paso, tiempo a tiempo, está en el <a href={`/salsa/syllabus#shine-${figura}`} class="underline decoration-[var(--amber)]">syllabus de mambo</a>.</>}
+    {' '}Todas las clases, por academia, en <a href="/salsa/clases" class="underline decoration-[var(--amber)]">Clases en video</a>.
+  </p>
+
+  <ul class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
+    {videos.map((v, k) => (
+      <li>
+        <a href={`/salsa/clases/${v.id}`} class="card block h-full hover:border-amber transition-colors overflow-hidden">
+          {poster(v.data.poster) && <div class="aspect-[4/5] overflow-hidden"><Image src={poster(v.data.poster)!} alt="" width={400} widths={[300, 400, 600]} sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 100vw" class="w-full h-full object-cover" loading={k < 4 ? 'eager' : 'lazy'} fetchpriority={k < 2 ? 'high' : undefined} /></div>}
+          <div class="p-4">
+            {v.data.featured && <div class="eyebrow mb-1">Destacado</div>}
+            <h3 class="display font-bold leading-tight">{v.data.title}</h3>
+            <p class="muted text-sm mt-1">{fmt(v.data.date)} · {v.data.style}{v.data.likes ? ` · ♥ ${v.data.likes}` : ''}</p>
+            <ul class="flex flex-wrap gap-1 mt-2">{v.data.figures.slice(0, 4).map((f) => <li class="chip">{figureName(f)}</li>)}</ul>
+          </div>
+        </a>
+      </li>
+    ))}
+  </ul>
+</Base>

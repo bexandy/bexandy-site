@@ -5,8 +5,8 @@
  * Sin React: un script pequeño por página mueve los pies con transiciones CSS.
  */
 import type { Shine } from '../../data/shines';
-interface Props { shine: Shine }
-const { shine } = Astro.props;
+interface Props { shine: Shine; /** Clases del sitio etiquetadas con este shine */ classes?: { href: string; n: number } }
+const { shine, classes } = Astro.props;
 const first = shine.steps[0];
 const counts = [1, 2, 3, 4, 5, 6, 7, 8];
 const tone = (c: number) => (shine.accents.includes(c) ? 'idle-break' : 'idle');
@@ -57,6 +57,7 @@ const FOOT = 'M0,-19 C7,-19 10,-12 10,-4 C10,3 9,8 8,13 C7,18 4,20 0,20 C-4,20 -
     </label>
   </div>
   <figcaption class="muted text-xs mt-3">{shine.note}</figcaption>
+  {classes && <p class="text-xs mt-2"><a href={classes.href} class="underline decoration-[var(--amber)]">{classes.n === 1 ? 'Una clase del sitio' : `${classes.n} clases del sitio`} con este paso</a></p>}
   {shine.videos.length > 0 && (
     <ul class="mt-2 text-xs flex flex-col gap-1">
       {shine.videos.map((v) => <li><a href={v.url} rel="noopener" target="_blank" class="underline decoration-[var(--amber)]">Ver en video: {v.title}</a> <span class="muted">· {v.by}</span></li>)}
