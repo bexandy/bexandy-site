@@ -14,4 +14,9 @@ const ia = tools.filter((t) => t.data.category === 'ia');
   <div class="grid md:grid-cols-2 gap-4">{dev.map((t) => <Card href={`/dev/${t.id}`} title={t.data.title} subtitle={t.data.summary} />)}</div>
   <h2 class="display font-bold text-2xl mt-8 mb-3">Inteligencia artificial</h2>
   <div class="grid md:grid-cols-2 gap-4">{ia.map((t) => <Card href={`/dev/${t.id}`} title={t.data.title} subtitle={t.data.summary} />)}</div>
+  <h2 class="display font-bold text-2xl mt-8 mb-3">Aplicaciones</h2>
+  <p class="muted mb-3">Proyectos propios que corren en mi servidor. A diferencia de las utilidades, requieren cuenta.</p>
+  <div class="grid md:grid-cols-2 gap-4">
+    <Card href="https://idiomas.bexandyrodriguez.com/chat" eyebrow="Privado · requiere cuenta" title="Tutor de idiomas" subtitle="Conversación en inglés con corrección, perfil vivo, escenarios, repaso espaciado y nivelación. Laravel + Livewire con la API de Claude; voz solo en el navegador." tags={['Laravel', 'Livewire', 'Claude API', 'PWA']} />
+  </div>
 </Base>
